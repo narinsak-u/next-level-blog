@@ -5,7 +5,7 @@ import { MantineProvider, localStorageColorSchemeManager } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 
 // import Player from "@/components/common/Player";
-import ThemeCheck from "@/components/common/ThemeCheck";
+import ThemeSync from "@/components/common/ThemeCheck";
 import { theme } from "@/styles/theme";
 
 export default function MantineProviders({
@@ -28,7 +28,7 @@ export default function MantineProviders({
       colorSchemeManager={colorSchemeManager}
       theme={theme}
     >
-      <ThemeCheck>{children}</ThemeCheck>
+      <ThemeSync>{children}</ThemeSync>
       {/* <Player opened={opened} setOpened={setOpened} /> */}
     </MantineProvider>
   );

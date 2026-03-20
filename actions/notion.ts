@@ -81,6 +81,33 @@ export const getPostsByCategory = async (
   return pageData;
 };
 
+export const getPostById = async (postId: string) => {
+  const queryParams = {
+    filter: {
+      and: [
+        {
+          property: "id",
+          rich_text: {
+            equals: postId,
+          },
+        },
+        {
+          property: "Status",
+          status: {
+            equals: "Done",
+          },
+        },
+      ],
+    },
+  };
+
+  const results = await queryNotionDataSources(queryParams);
+  if (!results.length) return null;
+
+  const [pageData] = postMapping(results);
+  return pageData ?? null;
+};
+
 export const getPage = async (pageId: string) => {
   const response = await notion.pages.retrieve({ page_id: pageId });
   return response;

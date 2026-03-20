@@ -5,6 +5,54 @@ import { BrandFacebook } from "tabler-icons-react";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { TwitterIcon } from "../icons/Icons";
 
+const shareButtonStyles = {
+  color: "orange" as const,
+  size: "lg" as const,
+  radius: "sm" as const,
+  variant: "filled" as const,
+  className: "!bg-orange-500 dark:!bg-amber-900",
+};
+
+interface FacebookShareButtonProps {
+  url: string;
+  hashtag?: string;
+}
+
+const FacebookShareButtonExplicit = ({ url, hashtag }: FacebookShareButtonProps) => (
+  <Box className="flex justify-center items-center mb-3">
+    <ActionIcon component="div" {...shareButtonStyles}>
+      <FacebookShareButton
+        hashtag={hashtag}
+        url={url}
+        style={{ display: "grid", placeItems: "center" }}
+      >
+        <BrandFacebook size={18} className="dark:text-white" />
+      </FacebookShareButton>
+    </ActionIcon>
+  </Box>
+);
+
+interface TwitterShareButtonProps {
+  url: string;
+  hashtag?: string;
+  title?: string;
+}
+
+const TwitterShareButtonExplicit = ({ url, hashtag, title }: TwitterShareButtonProps) => (
+  <Box className="flex justify-center items-center mb-3">
+    <ActionIcon component="div" {...shareButtonStyles}>
+      <TwitterShareButton
+        url={url}
+        title={title || "New post, let's explore"}
+        hashtags={hashtag ? [hashtag] : ["#alohadancemeow"]}
+        style={{ display: "grid", placeItems: "center" }}
+      >
+        <TwitterIcon />
+      </TwitterShareButton>
+    </ActionIcon>
+  </Box>
+);
+
 interface ShareButtonProps {
   platform: "facebook" | "twitter";
   url: string;
@@ -13,44 +61,10 @@ interface ShareButtonProps {
 }
 
 const ShareButton = ({ platform, url, hashtag, title }: ShareButtonProps) => {
-  const commonProps = {
-    color: "orange" as const,
-    size: "lg" as const,
-    radius: "sm" as const,
-    variant: "filled" as const,
-    className: "!bg-orange-500 dark:!bg-amber-900",
-  };
-
   if (platform === "facebook") {
-    return (
-      <Box className="flex justify-center items-center mb-3">
-        <ActionIcon component="div" {...commonProps}>
-          <FacebookShareButton
-            hashtag={hashtag}
-            url={url}
-            style={{ display: "grid", placeItems: "center" }}
-          >
-            <BrandFacebook size={18} className="dark:text-white" />
-          </FacebookShareButton>
-        </ActionIcon>
-      </Box>
-    );
+    return <FacebookShareButtonExplicit url={url} hashtag={hashtag} />;
   }
-
-  return (
-    <Box className="flex justify-center items-center mb-3">
-      <ActionIcon component="div" {...commonProps}>
-        <TwitterShareButton
-          url={url}
-          title={title || "New post, let's explore"}
-          hashtags={hashtag ? [hashtag] : ["#alohadancemeow"]}
-          style={{ display: "grid", placeItems: "center" }}
-        >
-          <TwitterIcon />
-        </TwitterShareButton>
-      </ActionIcon>
-    </Box>
-  );
+  return <TwitterShareButtonExplicit url={url} hashtag={hashtag} title={title} />;
 };
 
 interface ShareGroupProps {

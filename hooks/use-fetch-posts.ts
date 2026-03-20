@@ -1,7 +1,9 @@
 import { useCallback } from "react";
 import { PageDataSchemaType } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchPostsByCategory } from "@/actions/get-post-by-cat";
+import { getPostsByCategory } from "@/actions/notion";
+
+const POSTS_PER_PAGE = 6;
 
 interface Props {
   categoryName: string;
@@ -14,18 +16,20 @@ const useFetchPosts = ({ categoryName }: Props) => {
       initialPageParam: 1,
 
       queryFn: async ({ pageParam }) => {
-        return (await fetchPostsByCategory(
+        return (await getPostsByCategory(
           categoryName,
+          POSTS_PER_PAGE,
           pageParam
         )) as PageDataSchemaType[];
       },
 
       getNextPageParam(lastPage, allPages) {
-        //   return lastPage && lastPage.length > 0
-        //     ? allPages.length + 1
-        //     : undefined;
-        //   //   return lastPage.nextPageParam;
-        // },
+        if (!lastPage || lastPage.length === 0) {
+          return undefined;
+        }
+        if (lastPage.length < POSTS_PER_PAGE) {
+          return undefined;
+        }
         return allPages.length + 1;
       },
       initialData: {
