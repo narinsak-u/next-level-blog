@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { Metadata } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 // import { ogNoteImage } from "@/site/data";
 
 import NotePage from "./components/NotePage";

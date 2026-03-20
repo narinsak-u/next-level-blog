@@ -2,7 +2,6 @@
 
 import { format, parseISO } from "date-fns";
 import { Center, Space } from "@mantine/core";
-// import Breadcrumbs from "@/components/contents/Breadcrumbs";
 import Header from "@/components/layout/Header";
 import TagItem from "@/app/posts/components/TagItem";
 import { PageDataSchemaType } from "@/types";
@@ -31,9 +30,6 @@ const ContentTitle = ({ postData }: Props) => {
       )}
       <Header title={postData.title} />
       <TagItem tags={postData.tags} />
-      {/* <div className="md:hidden">
-        <Breadcrumbs />
-      </div> */}
       <Space h="xs" />
     </Center>
   );

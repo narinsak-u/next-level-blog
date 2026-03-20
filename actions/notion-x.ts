@@ -1,16 +1,10 @@
 "use server";
 
 import api from "@/lib/notion-api";
-import { revalidatePath } from "next/cache";
+import type { ExtendedRecordMap } from "notion-types";
 
-type PageContentFetcher = (slug: string) => Promise<any>;
+type PageContentFetcher = (slug: string) => Promise<ExtendedRecordMap | null>;
 
-/**
- * # Using react-notion-x for rendering content.
- * @author unoffial api (react-notion-x)
- * @param pageId (notion-post-ID)
- * @returnsType ExtendedRecordMap
- */
 const fetchPageContent: PageContentFetcher = async (pageId: string) => {
   if (!pageId) return null;
 
@@ -23,12 +17,8 @@ const fetchPageContent: PageContentFetcher = async (pageId: string) => {
   }
 };
 
-// Helper function to fetch content by page ID from environment variables
-const fetchContentById = async (pageId: string, pathToRevalidate: string) => {
+const fetchContentById = async (pageId: string) => {
   if (!pageId) throw new Error("Page ID is required");
-  // console.log("fetchContentById", pageId);
-
-  // revalidatePath(pathToRevalidate, "page");
   return fetchPageContent(pageId);
 };
 
@@ -36,15 +26,15 @@ export const getPageContent = async (slug: string) => fetchPageContent(slug);
 
 export const getAboutPageContent = async () => {
   const aboutPageId = process.env.NOTION_ABOUT_PAGE_ID as string;
-  return fetchContentById(aboutPageId, "/about");
+  return fetchContentById(aboutPageId);
 };
 
 export const getNotePageContent = async () => {
   const notePageId = process.env.NOTION_NOTE_PAGE_ID as string;
-  return fetchContentById(notePageId, "/note");
+  return fetchContentById(notePageId);
 };
 
 export const getProjectPageContent = async () => {
   const projectPageId = process.env.NOTION_PROJECT_PAGE_ID as string;
-  return fetchContentById(projectPageId, "/project");
+  return fetchContentById(projectPageId);
 };

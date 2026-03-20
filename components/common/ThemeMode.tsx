@@ -1,24 +1,16 @@
 "use client";
 
 import {
-  useMantineColorScheme,
   SegmentedControl,
   Group,
   Center,
   Box,
 } from "@mantine/core";
-import { useEffect } from "react";
 import { Sun, Moon } from "tabler-icons-react";
+import { useTheme } from "@/hooks/useTheme";
 
 const ThemeMode = () => {
-  const { colorScheme, toggleColorScheme, setColorScheme } =
-    useMantineColorScheme();
-
-  useEffect(() => {
-    if (colorScheme) {
-      setColorScheme(colorScheme);
-    }
-  }, [colorScheme, setColorScheme]);
+  const { colorScheme, toggle } = useTheme();
 
   return (
     <Group justify="center" my="md">
@@ -27,7 +19,7 @@ const ThemeMode = () => {
         style={{ fontSize: "14px", gap: "6px" }}
         defaultValue={colorScheme}
         value={colorScheme}
-        onChange={() => toggleColorScheme()}
+        onChange={() => toggle()}
         data={[
           {
             value: "light",

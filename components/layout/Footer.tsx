@@ -1,6 +1,6 @@
 "use client";
 
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import { Center, Text } from "@mantine/core";
 
 const Footer = () => {

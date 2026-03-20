@@ -1,26 +1,37 @@
+import type { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { defaultImage } from "@/site/data";
 import { PageDataSchema } from "@/types";
 
-export const postMapping = (data: any[]) => {
+type NotionPage = QueryDatabaseResponse["results"][number];
+
+const DEFAULT_DATE = "2023-07-27T17:12:00.000Z";
+const DEFAULT_DESCRIPTION = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?";
+
+export const postMapping = (data: NotionPage[]) => {
   try {
     if (!data.length) return [];
 
-    return data.map((page: any) => {
+    return data.map((page: NotionPage) => {
+      const properties = page as { properties?: Record<string, unknown> };
+      const titleProperty = properties.properties?.Name as { title?: Array<{ plain_text?: string }> } | undefined;
+      const descProperty = properties.properties?.Description as { rich_text?: Array<{ plain_text?: string }> } | undefined;
+      const tagsProperty = properties.properties?.Tags as { multi_select?: Array<{ id: string; name: string; color: string }> } | undefined;
+      const categoryProperty = properties.properties?.Category as { select?: { name?: string } } | undefined;
+
       const post = {
-        id: page?.id,
-        title: page?.properties?.Name?.title[0]?.plain_text ?? "title",
-        createdTime: page?.created_time ?? "2023-07-27T17:12:00.000Z",
-        lastUpdated: page?.last_edited_time ?? "2023-07-27T17:12:00.000Z",
-        tags: page?.properties?.Tags?.multi_select ?? [],
-        description:
-          page?.properties?.Description?.rich_text[0]?.plain_text ??
-          `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?`,
-        coverImage:
-          page?.cover?.external?.url ?? page?.cover?.file?.url ?? defaultImage,
-        authorId: page?.created_by?.id,
-        lastEditedBy: page?.last_edited_by?.id,
-        icon: page?.icon?.emoji,
-        category: page?.properties?.Category?.select?.name,
+        id: page.id,
+        title: titleProperty?.title?.[0]?.plain_text ?? "title",
+        createdTime: page.created_time ?? DEFAULT_DATE,
+        lastUpdated: page.last_edited_time ?? DEFAULT_DATE,
+        tags: tagsProperty?.multi_select ?? [],
+        description: descProperty?.rich_text?.[0]?.plain_text ?? DEFAULT_DESCRIPTION,
+        coverImage: (page as { cover?: { external?: { url: string }; file?: { url: string } } }).cover?.external?.url 
+          ?? (page as { cover?: { external?: { url: string }; file?: { url: string } } }).cover?.file?.url 
+          ?? defaultImage,
+        authorId: (page as { created_by?: { id: string } }).created_by?.id ?? "",
+        lastEditedBy: (page as { last_edited_by?: { id: string } }).last_edited_by?.id ?? "",
+        icon: (page as { icon?: { emoji?: string } }).icon?.emoji ?? "",
+        category: categoryProperty?.select?.name ?? "",
       };
 
       return PageDataSchema.parse(post);

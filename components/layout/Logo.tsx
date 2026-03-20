@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Center } from "@mantine/core";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import { RocketIcon } from "../icons/Icons";
 
 const IconLogo = () => (

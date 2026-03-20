@@ -2,6 +2,7 @@
 
 import { ActionIcon, Divider, Space, Timeline } from "@mantine/core";
 import { Hash, LayoutGrid, LayoutList } from "tabler-icons-react";
+import { useMemo } from "react";
 
 import Menu from "@/components/layout/Menu";
 import Layout from "@/components/layout/Layout";
@@ -26,8 +27,8 @@ const PostsPageLayout = ({ children, posts }: Props) => {
 
   if (!posts) return <Loader />;
 
-  const tags = getTags(posts);
-  const categoryCount = getCategory(posts).length;
+  const tags = useMemo(() => getTags(posts), [posts]);
+  const categoryCount = useMemo(() => getCategory(posts).length, [posts]);
 
   return (
     <>
@@ -40,7 +41,6 @@ const PostsPageLayout = ({ children, posts }: Props) => {
           <Space h="md" />
 
           <Timeline
-            // active={0}
             bulletSize={24}
             lineWidth={2}
             style={{ padding: "0" }}

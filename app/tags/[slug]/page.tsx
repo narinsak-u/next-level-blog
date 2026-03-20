@@ -1,6 +1,6 @@
 import { getAllPosts } from "@/actions/notion";
 import { Metadata, ResolvingMetadata } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 
 import TagPage from "@/app/tags/components/TagPage";
 // import { ogTagImage } from "@/site/data";

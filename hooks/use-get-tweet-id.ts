@@ -12,15 +12,18 @@ const useGetTweetId = ({ recordMap }: Props) => {
         (b) => b.value.type === "tweet"
       );
 
-      if (!tweetBlock) return null;
+      if (!tweetBlock?.length) return null;
 
-      const url = tweetBlock[0].value.properties?.source[0][0] as string;
+      const url = tweetBlock[0]?.value?.properties?.source?.[0]?.[0] as string | undefined;
+      if (!url) return null;
+
       const str = url.split("/");
       const id = str[str.length - 1];
 
       return id;
     } catch (error) {
-      console.log(error);
+      console.error("Error extracting tweet ID:", error);
+      return null;
     }
   }, [recordMap]);
 

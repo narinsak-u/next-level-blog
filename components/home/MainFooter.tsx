@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import XLogoIcon from "@/components/icons/x";
 import SteamLogoIcon from "@/components/icons/steam";
 import Link from "next/link";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import { Github } from "lucide-react";
 
 // import { ActionIcon } from '@mantine/core';

@@ -3,7 +3,7 @@ import { getPostById } from "@/actions/get-post-by-id";
 import { getPageContent } from "@/actions/notion-x";
 import { PostTagSchemaType } from "@/types";
 
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import Content from "@/components/contents/Content";
 
 type Props = {

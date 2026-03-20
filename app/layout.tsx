@@ -7,7 +7,7 @@ import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 
 import type { Metadata } from "next";
 import { jetBrains_mono } from "./fonts";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 // import { ogHomeImage } from "@/site/data";
 
 import { Analytics } from "@vercel/analytics/react";

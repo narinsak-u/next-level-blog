@@ -1,51 +1,22 @@
 "use server";
 
+import type { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { notion } from "@/lib/notion-client";
-// import crypto from "crypto";
-// import { kv } from "@vercel/kv";
-
-// import { revalidatePath } from "next/cache";
 import { postMapping } from "@/helpers/post-mapping";
 
 type NotionQueryParams = {
-  filter: any;
-  sorts: any[];
+  filter: QueryDatabaseResponse["results"] extends Array<infer T> ? Record<string, unknown> : never;
+  sorts: QueryDatabaseResponse["results"] extends Array<infer T> ? Array<Record<string, unknown>> : never;
 };
 
-// Helper function to hash data
-// const hashData = (data: any) => {
-//   return crypto.createHash("sha256").update(JSON.stringify(data)).digest("hex");
-// };
+const DEFAULT_POST_LIMIT = 6;
 
-// Function to query Notion data sources
 const queryNotionDataSources = async (queryParams: NotionQueryParams) => {
-  // const cacheKey = `queryCache-${hashData(queryParams)}`;
-  // const cachedData = await kv.get(cacheKey);
-  // const cachedHash = await kv.get(`${cacheKey}-hash`);
-
   try {
-    // const response = await notion.databases.retrieve({
-    //   database_id: process.env.NOTION_DATABASE_ID as string,
-    //   ...queryParams,
-    // });
-
     const response = await notion.dataSources.query({
       data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
       ...queryParams,
     });
-
-    // const newHash = hashData(response.results);
-
-    // if (cachedHash === newHash) {
-    //   console.log("Returning cached data");
-    //   return JSON.parse(cachedData as any);
-    // }
-
-    // // If the data has changed, update the cache
-    // await kv.set(cacheKey, JSON.stringify(response.results), { ex: 60 * 60 }); // Cache for 1 hour
-    // await kv.set(`${cacheKey}-hash`, newHash, { ex: 60 * 60 }); // Cache for 1 hour
-
-    // console.log(response, "response");
 
     return response.results;
   } catch (error) {
@@ -54,10 +25,6 @@ const queryNotionDataSources = async (queryParams: NotionQueryParams) => {
   }
 };
 
-/**
- * Get all published posts in Notion
- * @returnsType PageData[]
- */
 export const getAllPosts = async () => {
   const queryParams: NotionQueryParams = {
     filter: {
@@ -75,26 +42,17 @@ export const getAllPosts = async () => {
   };
 
   const results = await queryNotionDataSources(queryParams);
-  // console.log(results, "results");
 
   if (!results.length) return [];
 
   const pageData = postMapping(results);
-  // revalidatePath("/posts", "page");
 
   return pageData;
 };
 
-/**
- * Get posts by category defined in Notion
- * @param categoryName
- * @param limit
- * @param page
- * @returnsType PageData[]
- */
 export const getPostsByCategory = async (
   categoryName: string,
-  limit: number = 6,
+  limit: number = DEFAULT_POST_LIMIT,
   page: number
 ) => {
   const queryParams: NotionQueryParams = {
@@ -129,12 +87,6 @@ export const getPostsByCategory = async (
   return pageData;
 };
 
-// export const getUser = cache(async (userId: string) => {
-//   const response = await notion.users.retrieve({ user_id: userId });
-//   return response;
-// });
-
-// Retrieve a specific page from Notion
 export const getPage = async (pageId: string) => {
   const response = await notion.pages.retrieve({ page_id: pageId });
   return response;

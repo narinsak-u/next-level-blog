@@ -6,7 +6,7 @@ type Store = {
   toggle: () => void;
 };
 
-const useLayoutStore = create<Store>()(
+export const useLayoutStore = create<Store>()(
   persist(
     (set) => ({
       isGrid: true,
@@ -15,8 +15,13 @@ const useLayoutStore = create<Store>()(
     {
       name: "layout-store",
       storage: createJSONStorage(() => localStorage),
+      skipHydrationWarning: true,
     }
   )
 );
+
+const useLayoutStoreHydrated = () => {
+  return useLayoutStore((state) => state);
+};
 
 export default useLayoutStore;

@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { Metadata } from "next";
 import { getAllPosts } from "@/actions/notion";
 
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 // import { ogPoststImage } from "@/site/data";
 
 import PostsPageLayout from "@/app/posts/components/PostsPageLayout";

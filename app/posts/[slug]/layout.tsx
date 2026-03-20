@@ -7,7 +7,7 @@ import { getPostById } from "@/actions/get-post-by-id";
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/components/layout/PageLayout";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import Share from "@/components/contents/Share";
 
 type Params = Promise<{ slug: string }>;
@@ -19,8 +19,10 @@ type Props = {
 
 const layout = async ({ children, params }: Props) => {
   const { slug } = await params;
-  const posts = await getAllPosts();
-  const postData = await getPostById(slug);
+  const [posts, postData] = await Promise.all([
+    getAllPosts(),
+    getPostById(slug),
+  ]);
 
   if (!postData) return <Loader />;
 

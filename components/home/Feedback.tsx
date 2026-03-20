@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { SmallFeatherIcon } from "@/components/icons/Icons";
 import { useViewportSize } from "@mantine/hooks";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 
 const FeedbackComponent = () => {
   const { width } = useViewportSize();
