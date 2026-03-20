@@ -37,15 +37,15 @@
 - `styles/`: Global CSS and theme overrides.
 
 ## Building and Running
-The project uses `npm` for dependency management and scripts.
+The project uses `bun` for dependency management and scripts.
 
 | Command | Action |
 | :--- | :--- |
-| `npm run dev` | Starts the development server with **Turbopack** |
-| `npm run pwa` | Starts dev server with **experimental HTTPS** for PWA testing |
-| `npm run build` | Builds the application for production |
-| `npm run start` | Starts the production server |
-| `npm run lint` | Runs ESLint to check for code quality issues |
+| `bun run dev` | Starts the development server with **Turbopack** |
+| `bun run pwa` | Starts dev server with **experimental HTTPS** for PWA testing |
+| `bun run build` | Builds the application for production |
+| `bun run start` | Starts the production server |
+| `bun run lint` | Runs ESLint to check for code quality issues |
 
 ## Development Conventions
 - **Server Actions:** Use `use server` directives in `actions/` for all data fetching logic from Notion.

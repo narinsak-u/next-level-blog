@@ -11,15 +11,15 @@
 
 ```bash
 # Development
-npm run dev              # Start dev server with Turbopack
-npm run pwa              # Dev server with experimental HTTPS
+bun run dev              # Start dev server with Turbopack
+bun run pwa              # Dev server with experimental HTTPS
 
 # Build
-npm run build            # Production build
-npm run start            # Start production server
+bun run build            # Production build
+bun run start            # Start production server
 
 # Linting
-npm run lint             # Run ESLint (next lint)
+bun run lint             # Run ESLint (next lint)
 
 # No test framework configured - do not add tests
 ```

@@ -35,12 +35,12 @@ E2E:      Critical user flows (login, checkout, form submissions)
 
 ```bash
 # Install Vitest
-npm install -D vitest @vitest/ui jsdom
-npm install -D @testing-library/react @testing-library/dom @testing-library/jest-dom
+bun add -D vitest @vitest/ui jsdom
+bun add -D @testing-library/react @testing-library/dom @testing-library/jest-dom
 
 # Install Playwright
-npm install -D @playwright/test
-npx playwright install chromium
+bun add -D @playwright/test
+bunx playwright install chromium
 ```
 
 ## Vitest Configuration
@@ -184,13 +184,13 @@ test.describe('Home Page', () => {
 ### Run Commands
 ```bash
 # Unit/Integration
-npm run test
-npm run test:watch
-npm run test:coverage
+bun run test
+bun run test:watch
+bun run test:coverage
 
 # E2E
-npx playwright test
-npx playwright test --ui
+bunx playwright test
+bunx playwright test --ui
 ```
 ```
 

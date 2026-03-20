@@ -9,12 +9,13 @@ const useGetTweetId = ({ recordMap }: Props) => {
   const tweetId = useMemo(() => {
     try {
       const tweetBlock = Object.values(recordMap.block).filter(
-        (b) => b.value.type === "tweet"
+        (b) => "type" in b.value && (b.value as { type?: string }).type === "tweet"
       );
 
       if (!tweetBlock?.length) return null;
 
-      const url = tweetBlock[0]?.value?.properties?.source?.[0]?.[0] as string | undefined;
+      const block = tweetBlock[0]?.value as { properties?: { source?: string[][] } };
+      const url = block?.properties?.source?.[0]?.[0] as string | undefined;
       if (!url) return null;
 
       const str = url.split("/");

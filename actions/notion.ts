@@ -1,22 +1,16 @@
 "use server";
 
-import type { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 import { notion } from "@/lib/notion-client";
 import { postMapping } from "@/helpers/post-mapping";
 
-type NotionQueryParams = {
-  filter: QueryDatabaseResponse["results"] extends Array<infer T> ? Record<string, unknown> : never;
-  sorts: QueryDatabaseResponse["results"] extends Array<infer T> ? Array<Record<string, unknown>> : never;
-};
-
 const DEFAULT_POST_LIMIT = 6;
 
-const queryNotionDataSources = async (queryParams: NotionQueryParams) => {
+const queryNotionDataSources = async (queryParams: Record<string, unknown>) => {
   try {
     const response = await notion.dataSources.query({
       data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
       ...queryParams,
-    });
+    } as Parameters<typeof notion.dataSources.query>[0]);
 
     return response.results;
   } catch (error) {
@@ -26,7 +20,7 @@ const queryNotionDataSources = async (queryParams: NotionQueryParams) => {
 };
 
 export const getAllPosts = async () => {
-  const queryParams: NotionQueryParams = {
+  const queryParams = {
     filter: {
       property: "Status",
       status: {
@@ -55,7 +49,7 @@ export const getPostsByCategory = async (
   limit: number = DEFAULT_POST_LIMIT,
   page: number
 ) => {
-  const queryParams: NotionQueryParams = {
+  const queryParams = {
     filter: {
       and: [
         {

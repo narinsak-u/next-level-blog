@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
+import { siteMetadata } from "@/site/siteMetadata";
 import { getAllPosts } from "@/actions/notion";
 
 export async function generateSitemaps() {

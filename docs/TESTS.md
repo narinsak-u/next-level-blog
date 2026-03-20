@@ -409,19 +409,19 @@ export const server = setupServer(...handlers);
 
 ```bash
 # Run all tests
-npm test
+bun test
 
 # Run with coverage
-npm test -- --coverage
+bun test -- --coverage
 
 # Run E2E
-npm run test:e2e
+bun run test:e2e
 
 # Run in watch mode
-npm test -- --watch
+bun test -- --watch
 
 # Update snapshots
-npm test -- --updateSnapshot
+bun test -- --updateSnapshot
 ```
 
 ---
@@ -437,14 +437,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm test -- --coverage
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun test -- --coverage
       - uses: codecov/codecov-action@v4
-      - run: npm run test:e2e
+      - run: bun run test:e2e
 ```
 
 ---

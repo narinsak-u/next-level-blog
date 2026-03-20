@@ -15,7 +15,7 @@ export const useLayoutStore = create<Store>()(
     {
       name: "layout-store",
       storage: createJSONStorage(() => localStorage),
-      skipHydrationWarning: true,
+      skipHydration: true,
     }
   )
 );

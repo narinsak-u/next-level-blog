@@ -25,32 +25,32 @@ tests/
 
 ```bash
 # Run all tests
-npm test
+bun test
 
 # Run tests once (CI mode)
-npm run test:run
+bun run test:run
 
 # Run with coverage
-npm run test:coverage
+bun run test:coverage
 
 # Watch mode
-npm run test:watch
+bun run test:watch
 ```
 
 ### End-to-End Tests (Playwright)
 
 ```bash
 # Install Playwright browsers (first time)
-npx playwright install
+bunx playwright install
 
 # Run E2E tests
-npm run test:e2e
+bun run test:e2e
 
 # Run with UI mode
-npm run test:e2e:ui
+bun run test:e2e:ui
 
 # Debug mode
-npm run test:e2e:debug
+bun run test:e2e:debug
 ```
 
 ## Writing Tests
@@ -115,7 +115,7 @@ Global mocks are configured in `tests/setup.ts`:
 Coverage reports are generated when running with `--coverage`:
 
 ```bash
-npm run test:coverage
+bun run test:coverage
 ```
 
 ## CI Integration
