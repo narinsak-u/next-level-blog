@@ -10,6 +10,25 @@ import {
   type ReactNode,
 } from "react";
 
+/**
+ * MusicPlayerContext - Global audio playback state management
+ *
+ * Provides a unified API for controlling background music across the app:
+ * - Play/pause toggle with HTMLAudioElement ref
+ * - Volume control with immediate DOM update
+ * - Sync state between audio element and React state
+ *
+ * @example
+ * ```tsx
+ * // In root layout
+ * <MusicPlayerProvider src="/song.mp3" defaultVolume={0.3}>
+ *   {children}
+ * </MusicPlayerProvider>
+ *
+ * // Anywhere in the app
+ * const { togglePlay, volume, setVolume } = useMusicPlayer();
+ * ```
+ */
 interface MusicPlayerContextValue {
   isPlaying: boolean;
   togglePlay: () => void;
@@ -22,9 +41,15 @@ interface MusicPlayerContextValue {
 
 const MusicPlayerContext = createContext<MusicPlayerContextValue | null>(null);
 
+/**
+ * Provider component for music playback
+ * Creates an invisible audio element and manages its state
+ */
 interface MusicPlayerProviderProps {
   children: ReactNode;
+  /** URL path to audio file (default: /assets/lan-ting-xu.mp3) */
   src?: string;
+  /** Initial volume 0-1 (default: 0.3) */
   defaultVolume?: number;
 }
 
@@ -42,6 +67,7 @@ const MusicPlayerProvider = ({
     if (!el) return;
 
     el.volume = defaultVolume;
+    setVolumeState(defaultVolume);
 
     const handleEnded = () => setIsPlaying(false);
     el.addEventListener("ended", handleEnded);
@@ -49,7 +75,7 @@ const MusicPlayerProvider = ({
     return () => {
       el.removeEventListener("ended", handleEnded);
     };
-  }, [defaultVolume]);
+  }, []);
 
   const togglePlay = useCallback(() => {
     const el = audioRef.current;

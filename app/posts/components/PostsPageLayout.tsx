@@ -17,18 +17,35 @@ import { getTags } from "@/helpers/get-all-tags";
 import { getCategory } from "@/helpers/get-unique-category";
 import useLayoutStore from "@/hooks/use-layout-store";
 
+/**
+ * PostsPageLayout - Main layout wrapper for the posts listing page
+ *
+ * Renders the posts page shell including:
+ * - Spotlight search overlay (keyboard shortcut: Cmd+K)
+ * - Tag/category timeline navigation
+ * - Grid/List view toggle (persisted in layout store)
+ *
+ * @example
+ * ```tsx
+ * <PostsPageLayout posts={posts}>
+ *   <PostsList />
+ * </PostsPageLayout>
+ * ```
+ */
 type Props = {
+  /** React children rendered after the header/timeline section */
   children: React.ReactNode;
+  /** Array of validated post data from Notion CMS */
   posts: PageDataSchemaType[];
 };
 
 const PostsPageLayout = ({ children, posts }: Props) => {
   const { isGrid, toggle } = useLayoutStore();
 
-  if (!posts) return <Loader />;
-
   const tags = useMemo(() => getTags(posts), [posts]);
   const categoryCount = useMemo(() => getCategory(posts).length, [posts]);
+
+  if (!posts) return <Loader />;
 
   return (
     <>

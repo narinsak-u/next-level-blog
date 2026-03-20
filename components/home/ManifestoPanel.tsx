@@ -10,19 +10,47 @@ import {
   type ReactNode,
 } from "react";
 import { Button as CNButton, buttonVariants } from "@/components/ui/button";
-import { AnimatePresence, motion } from "framer-motion";
+import { LazyMotion, AnimatePresence, m, domAnimation } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
+/**
+ * Context value for ManifestoPanel state management
+ * @internal
+ */
 interface ManifestoContextValue {
+  /** Whether the panel content is visible */
   isOpen: boolean;
+  /** Opens the manifesto panel */
   open: () => void;
+  /** Closes the manifesto panel */
   close: () => void;
+  /** Toggles panel visibility */
   toggle: () => void;
 }
 
 const ManifestoContext = createContext<ManifestoContextValue | null>(null);
 
+/**
+ * ManifestoPanel - Compound component for expandable intro/manifesto content
+ *
+ * Renders a collapsible panel with:
+ * - Trigger button that slides text when open
+ * - Animated content reveal with backdrop blur
+ * - Close button and Escape key support
+ *
+ * @example
+ * ```tsx
+ * <ManifestoPanel>
+ *   <IntroContent />
+ *   <ManifestoPanel.Trigger>Read More</ManifestoPanel.Trigger>
+ *   <ManifestoPanel.Content>
+ *     <ManifestoPanel.CloseButton />
+ *     <LongText />
+ *   </ManifestoPanel.Content>
+ * </ManifestoPanel>
+ * ```
+ */
 interface ManifestoPanelProps {
   children: ReactNode;
 }
@@ -52,6 +80,11 @@ const ManifestoPanel = ({ children }: ManifestoPanelProps) => {
   );
 };
 
+/**
+ * Trigger button that opens the manifesto panel
+ * Displays inside the panel; text slides left when panel opens
+ * @see ManifestoPanel - Parent compound component
+ */
 interface ManifestoTriggerProps {
   children?: ReactNode;
   className?: string;
@@ -61,23 +94,23 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
   const { isOpen, toggle } = useManifesto();
 
   return (
-    <motion.div
+    <m.div
       layout="position"
       transition={{ type: "spring", stiffness: 60, damping: 10, mass: 0.8 }}
       key="button"
       className={cn(isOpen ? "my-6" : "mt-6", className)}
     >
       <CNButton className={cn("relative px-8 cursor-pointer")} onClick={toggle}>
-        <motion.span
+        <m.span
           animate={{ x: isOpen ? -16 : 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="inline-block"
         >
           {children || "Manifesto"}
-        </motion.span>
+        </m.span>
 
         {isOpen && (
-          <motion.div
+          <m.div
             className={cn(
               buttonVariants({ variant: "iconButton", size: "icon" }),
               "absolute -top-px -right-px aspect-square cursor-pointer"
@@ -87,13 +120,18 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
             transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
           >
             <X className="size-5 text-primary-foreground" />
-          </motion.div>
+          </m.div>
         )}
       </CNButton>
-    </motion.div>
+    </m.div>
   );
 };
 
+/**
+ * Animated container for manifesto panel content
+ * Only renders children when panel is open (returns null otherwise)
+ * @see ManifestoPanel - Parent compound component
+ */
 interface ManifestoContentProps {
   children: ReactNode;
   className?: string;
@@ -105,7 +143,7 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
   if (!isOpen) return null;
 
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -132,10 +170,15 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
       )}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 };
 
+/**
+ * Close button positioned in top-right corner of content area
+ * Alternative to pressing Escape key
+ * @see ManifestoPanel - Parent compound component
+ */
 interface ManifestoCloseButtonProps {
   className?: string;
 }
