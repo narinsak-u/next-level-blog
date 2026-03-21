@@ -9,9 +9,9 @@ import { Metadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
 // import { ogNoteImage } from "@/site/data";
 
-import NotePage from "./components/NotePage";
 import Content from "@/components/contents/Content";
-import { getNotePageContent } from "@/actions/notion-x";
+import { fetchStaticPageContent } from "@/actions/posts";
+import NotePage from "./components/NotePage";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Notes`,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 const Note = async () => {
-  const recordMap = await getNotePageContent();
+  const recordMap = await fetchStaticPageContent("note");
 
   return <NotePage>{recordMap && <Content recordMap={recordMap} />}</NotePage>;
 };

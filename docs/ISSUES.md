@@ -92,9 +92,15 @@
 
 ### Architecture
 
-- [x] **ThemeMode state hydration mismatch**
-  - Location: `hooks/use-layout-store.ts`
-  - Fix: Added `skipHydrationWarning: true`
+- [x] **Fragmented Notion CMS access**
+  - Location: `actions/notion.ts`, `actions/notion-x.ts`, `helpers/post-mapping.ts`
+  - Fix: Consolidated into deep `actions/posts.ts` module.
+- [x] **Redundant Server Action wrappers**
+  - Location: `actions/get-post-by-id.ts`, `actions/get-post-by-cat.ts`
+  - Fix: Removed redundant layers in favor of direct imports from the deep module.
+- [x] **Domain logic trapped in React Hooks**
+  - Location: `hooks/use-get-posts-by-tag.ts`, `use-get-related-posts.ts`
+  - Fix: Extracted to pure functions in `lib/post-logic.ts`.
 
 ---
 
@@ -146,6 +152,9 @@
 
 | Issue | File | Fix |
 |-------|------|-----|
+| Architecture: Fragmented logic | `actions/notion.ts`, etc. | Unified `actions/posts.ts` |
+| Architecture: Redundant wrappers | `actions/get-post-by-id.ts` | Deleted redundant files |
+| Architecture: Trapped logic | `hooks/use-get-related-posts.ts` | Extracted `lib/post-logic.ts` |
 | Security: Unprotected endpoint | `app/api/revalidate/route.ts` | Added secret token |
 | Security: CSP too restrictive | `next.config.ts` | Updated CSP headers |
 | Performance: Waterfall fetch | `app/posts/[slug]/layout.tsx` | Promise.all |

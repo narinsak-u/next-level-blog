@@ -3,7 +3,7 @@ import Menu from "@/components/layout/Menu";
 import PageLayout from "@/components/layout/PageLayout";
 import Spotlight from "@/components/common/Spotlight";
 import BackToPosts from "@/app/tags/components/BackToPosts";
-import { getAllPosts } from "@/actions/notion";
+import { fetchAllPosts } from "@/actions/posts";
 
 type Params = Promise<{ slug: string }>;
 
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const layout = async ({ children, params }: Props) => {
-  const posts = await getAllPosts();
+  const posts = await fetchAllPosts();
   const { slug } = await params;
 
   return (

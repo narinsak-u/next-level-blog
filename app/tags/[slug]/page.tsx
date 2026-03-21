@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/actions/notion";
+import { fetchAllPosts } from "@/actions/posts";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
 
@@ -27,7 +27,7 @@ export async function generateMetadata(
 
 const Tag = async ({ params }: Props) => {
   const { slug } = await params;
-  const posts = await getAllPosts();
+  const posts = await fetchAllPosts();
 
   return <TagPage posts={posts} tagname={slug} />;
 };

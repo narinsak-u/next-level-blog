@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { PageDataSchemaType } from "@/types";
+import { filterPostsByTag } from "@/lib/post-logic";
 
 type Props = {
   posts: PageDataSchemaType[];
@@ -7,16 +8,10 @@ type Props = {
 };
 
 const useGetPostsByTag = ({ posts, tagname }: Props) => {
-  const filteredPosts = useMemo(() => {
-    const post =
-      (posts &&
-        posts.filter((post: PageDataSchemaType) =>
-          post.tags?.some((t: any) => t?.name === tagname)
-        )) ??
-      [];
-
-    return post;
-  }, [tagname, posts]);
+  const filteredPosts = useMemo(
+    () => filterPostsByTag(posts, tagname),
+    [tagname, posts]
+  );
 
   return { filteredPosts };
 };

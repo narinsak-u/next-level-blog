@@ -87,7 +87,7 @@ const ShareGroup = ({
           <Text tt="uppercase" c="dimmed">
             Share
           </Text>
-          <div className="!bg-orange-500 dark:!bg-amber-900 my-3 p-0 h-20 w-[2px] mx-auto" />
+          <div className="bg-orange-500! dark:bg-amber-900! my-3 p-0 h-20 w-[2px] mx-auto" />
           {children || (
             <>
               <ShareButton platform="facebook" url={postLink} hashtag={hashtag} />

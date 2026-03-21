@@ -1,7 +1,7 @@
 export const revalidate = 120;
 
 import { Metadata } from "next";
-import { getAllPosts } from "@/actions/notion";
+import { fetchAllPosts } from "@/actions/posts";
 
 import { siteMetadata } from "@/site/siteMetadata";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const Posts = async () => {
-  const posts = await getAllPosts();
+  const posts = await fetchAllPosts();
 
   return <PostsPageLayout posts={posts} />;
 };

@@ -2,21 +2,23 @@
 
 ## Notion CMS Integration
 
-The core of the application is its integration with Notion. It uses two distinct approaches:
+The application integrates with Notion through a unified, "deep" access layer that encapsulates both the official and unofficial SDKs.
 
-### 1. Official Notion SDK (`@notionhq/client`)
-Used for querying the blog database, filtering by status/category, and retrieving metadata.
-- **Data Source:** Notion Database (configured via `NOTION_DATA_SOURCE_ID`).
-- **Logic Location:** `actions/notion.ts`
+### 1. Unified Posts Module (`actions/posts.ts`)
+This module provides a single entry point for all blog post data and hides the implementation details of the Notion APIs.
+- **Data Source:** Notion Database (configured via `NOTION_DATA_SOURCE_ID`) and individual Page content.
 - **Key Methods:**
-  - `getAllPosts()`: Fetches all posts where `Status` is "Done".
-  - `getPostsByCategory()`: Filters posts by the `Category` select property.
-  - `getPage()`: Retrieves basic page metadata.
+  - `fetchPosts(options)`: A flexible, cached function to fetch posts with support for categories, status filtering, and pagination.
+  - `fetchAllPosts()`: A convenience wrapper for fetching the entire post database.
+  - `fetchPostById(id)`: Fetches metadata for a single post.
+  - `fetchPostContent(pageId)`: Uses `notion-client` to fetch the deep record map for high-fidelity rendering.
+  - `fetchStaticPageContent(type)`: Fetches content for fixed pages like About, Note, or Projects.
 
-### 2. Unofficial Notion API (`notion-client`)
-Used for retrieving the full `recordMap` of a page to render it with `react-notion-x`.
-- **Logic Location:** `actions/notion-x.ts`
-- **Key Method:** `fetchPageContent(pageId)`: Fetches the deep record map required for the high-fidelity renderer.
+### 2. Domain Logic Layer (`lib/post-logic.ts`)
+Pure business logic for managing post data is decoupled from both the data source (Notion) and the UI (React).
+- **Key Methods:**
+  - `filterPostsByTag(posts, tagName)`: Pure function for client-side or server-side tag filtering.
+  - `getRelatedPosts(posts, currentPostId, tags)`: Pure logic to find matching posts based on shared tags.
 
 ## API Endpoints (Next.js Routes)
 
@@ -56,10 +58,11 @@ Used for retrieving the full `recordMap` of a page to render it with `react-noti
 
 ## Data Transformation Flow
 
-1. **Fetch:** Notion SDK returns a complex JSON object.
-2. **Transform:** `helpers/post-mapping.ts` iterates through `results`, extracting fields like `Name`, `Tags`, `Cover`, and `Description`.
+1. **Fetch:** `actions/posts.ts` queries Notion using the appropriate SDK.
+2. **Transform:** Mapping logic is internal to the posts module. It extracts fields like `Name`, `Tags`, `Cover`, and `Description`.
 3. **Validate:** `PageDataSchema.parse(post)` ensures the transformed object conforms to the application's internal types.
-4. **Deliver:** The UI receives a clean `PageDataSchemaType` object, reducing coupling with the Notion API structure.
+4. **Deliver:** The UI receives a clean `PageDataSchemaType` object.
+5. **Compute:** Hooks and components use `lib/post-logic.ts` to derive additional state (like related posts) from the clean data.
 
 ## Component Composition Patterns
 

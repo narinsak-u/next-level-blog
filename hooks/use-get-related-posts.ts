@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { PageDataSchemaType, PostTagSchemaType } from "@/types";
+import { getRelatedPosts } from "@/lib/post-logic";
 
 type Props = {
   postId: string;
@@ -8,22 +9,10 @@ type Props = {
 };
 
 const useGetRelatedPosts = ({ postId, posts, postTags }: Props) => {
-  // # Get posts that matched with tags, except itself
-  const relatedPosts = useMemo(() => {
-    try {
-      if (!posts && !postTags) return [];
-
-      const tagnames = postTags.map((t) => t.name);
-      const matchedPosts = posts.filter(
-        (post) =>
-          post.tags.find((t) => tagnames.includes(t.name)) && post.id !== postId
-      );
-      return matchedPosts.slice(0, 3);
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }, [postId, posts, postTags]);
+  const relatedPosts = useMemo(
+    () => getRelatedPosts(posts, postId, postTags),
+    [postId, posts, postTags]
+  );
 
   return { relatedPosts };
 };

@@ -8,11 +8,10 @@ import ContentTitle from "@/components/contents/ContentTitle";
 import ScrollToTop from "@/components/common/ScrollToTop";
 
 import { cache } from "react";
-import { getAllPosts } from "@/actions/notion";
-import { getPostById as _getPostById } from "@/actions/notion";
+import { fetchAllPosts, fetchPostById as _fetchPostById } from "@/actions/posts";
 
-// React.cache() deduplicates getPostById across generateMetadata, page, and layout
-const getPostById = cache(_getPostById);
+// React.cache() deduplicates fetchPostById across generateMetadata, page, and layout
+const fetchPostById = cache(_fetchPostById);
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/components/layout/PageLayout";
@@ -29,8 +28,8 @@ type Props = {
 const layout = async ({ children, params }: Props) => {
   const { slug } = await params;
   const [posts, postData] = await Promise.all([
-    getAllPosts(),
-    getPostById(slug),
+    fetchAllPosts(),
+    fetchPostById(slug),
   ]);
 
   if (!postData) return <Loader />;

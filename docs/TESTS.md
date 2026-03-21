@@ -22,17 +22,15 @@ This test plan outlines comprehensive testing strategy for the Notion-powered bl
 ```
 tests/
 ├── unit/
-│   ├── helpers/
-│   │   └── post-mapping.test.ts
 │   ├── lib/
+│   │   ├── post-logic.test.ts
 │   │   ├── utils.test.ts
 │   │   └── errors.test.ts
 │   └── context/
 │       └── music-player-context.test.tsx
 ├── integration/
 │   ├── actions/
-│   │   ├── notion.test.ts
-│   │   └── notion-x.test.ts
+│   │   └── posts.test.ts
 │   └── components/
 │       ├── Credit.test.tsx
 │       ├── MusicPlayer.test.tsx
@@ -55,41 +53,17 @@ tests/
 
 ## Unit Tests
 
-### 1. `helpers/post-mapping.test.ts`
+### 1. `lib/post-logic.test.ts`
 
-**Test File:** `tests/unit/helpers/post-mapping.test.ts`
+**Test File:** `tests/unit/lib/post-logic.test.ts`
 
 | ID | Test Case | Expected |
 |----|-----------|----------|
-| PM-001 | Valid Notion response maps correctly | Returns `PageDataSchemaType[]` with all fields |
-| PM-002 | Empty array returns empty array | Returns `[]` |
-| PM-003 | Missing optional fields use defaults | `coverImage` defaults to `defaultImage` |
-| PM-004 | Invalid data throws Zod error | `console.error` called, returns `[]` |
-| PM-005 | Null title uses fallback "title" | Title defaults to `"title"` |
-| PM-006 | Multi-select tags parsed correctly | Returns array of tag objects |
-| PM-007 | Date fields handle null | Uses `DEFAULT_DATE` fallback |
-
-**Mock Data:**
-```typescript
-const validNotionPage = {
-  id: "uuid-123",
-  created_time: "2024-01-15T10:00:00.000Z",
-  last_edited_time: "2024-01-20T15:30:00.000Z",
-  properties: {
-    Name: { title: [{ plain_text: "Test Post" }] },
-    Description: { rich_text: [{ plain_text: "Test description" }] },
-    Tags: { multi_select: [{ id: "1", name: "React", color: "blue" }] },
-    Category: { select: { name: "Tech" } },
-    Status: { status: { name: "Done" } }
-  },
-  cover: { external: { url: "https://example.com/cover.jpg" } },
-  created_by: { id: "user-123" },
-  last_edited_by: { id: "user-456" },
-  icon: { emoji: "🎉" }
-};
-```
-
----
+| PL-001 | `filterPostsByTag()` filters by name | Correct subset of posts |
+| PL-002 | `filterPostsByTag()` handles non-existent tag | Returns `[]` |
+| PL-003 | `getRelatedPosts()` finds shared tags | Correct related posts |
+| PL-004 | `getRelatedPosts()` excludes current post | Current post not in results |
+| PL-005 | `getRelatedPosts()` respects limit | Result count <= limit |
 
 ### 2. `lib/utils.test.ts`
 
@@ -156,17 +130,16 @@ const validNotionPage = {
 
 ## Integration Tests
 
-### 6. `actions/notion.test.ts`
+### 6. `actions/posts.test.ts`
 
-**Test File:** `tests/integration/actions/notion.test.ts`
+**Test File:** `tests/integration/actions/posts.test.ts`
 
 | ID | Test Case | Expected |
 |----|-----------|----------|
-| AN-001 | `getAllPosts()` returns posts | Array of posts on success |
-| AN-002 | `getAllPosts()` with no posts | Returns `[]` |
-| AN-003 | `getPostsByCategory()` filters correctly | Only specified category |
-| AN-004 | `getPage()` retrieves single page | Single page object |
-| AN-005 | API error throws `NotionAPIError` | Error caught and logged |
+| AP-001 | `fetchPosts()` returns mapped posts | Array of clean post objects |
+| AP-002 | `fetchPostById()` returns single post | One mapped post or null |
+| AP-003 | `fetchPostContent()` returns recordMap | ExtendedRecordMap from unofficial API |
+| AP-004 | `fetchStaticPageContent()` uses correct env | Content for specific page type |
 
 **Mock with MSW:**
 ```typescript

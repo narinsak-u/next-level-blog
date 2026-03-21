@@ -11,7 +11,7 @@ import { siteMetadata } from "@/site/siteMetadata";
 
 import ProjectPage from "./components/ProjectPage";
 import Content from "@/components/contents/Content";
-import { getProjectPageContent } from "@/actions/notion-x";
+import { fetchStaticPageContent } from "@/actions/posts";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Hobbies`,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 const Projects = async () => {
-  const recordMap = await getProjectPageContent();
+  const recordMap = await fetchStaticPageContent("project");
 
   return (
     <ProjectPage>{recordMap && <Content recordMap={recordMap} />}</ProjectPage>

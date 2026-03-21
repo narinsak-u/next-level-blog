@@ -28,9 +28,9 @@ The project serves as a personal portfolio and knowledge-sharing hub. It is desi
 ├── hooks/           → Custom React hooks
 │   ├── useTheme.ts
 │   └── use-layout-store.ts
-├── actions/         → Server Actions for Notion API
-├── helpers/         → Data transformation utilities
-├── lib/             → Utilities and constants
+├── actions/         → Unified Server Actions for Notion CMS
+├── lib/             → Utilities, constants, and domain logic
+│   ├── post-logic.ts   → Pure domain logic for posts
 │   ├── utils.ts
 │   ├── constants.ts
 │   └── errors.ts
@@ -65,9 +65,10 @@ Global state management using React Context:
 ## Core Workflows
 
 1. **Content Management:** The author writes and manages posts in a Notion database.
-2. **Data Transformation:** Server Actions fetch data, and `postMapping` ensures it matches the `PageDataSchema`.
-3. **Rendering:** Individual posts are rendered using `react-notion-x`, providing a nearly perfect representation of Notion's blocks.
-4. **Performance:** Infinite scrolling is used for the post list, and critical components are dynamically imported to reduce bundle size.
+2. **Data Access:** The unified `actions/posts.ts` module fetches and maps data internally, ensuring it matches the `PageDataSchema`.
+3. **Domain Logic:** Business rules (like post relation and tag filtering) are processed in `lib/post-logic.ts`.
+4. **Rendering:** Individual posts are rendered using `react-notion-x`, providing a nearly perfect representation of Notion's blocks.
+5. **Performance:** Infinite scrolling, `React.cache()`, and dynamic imports are used to optimize performance.
 
 ## Technology Stack
 

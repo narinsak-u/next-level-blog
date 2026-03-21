@@ -27,7 +27,7 @@
         "clsx": "^2.1.1",
         "crypto-js": "^4.2.0",
         "framer-motion": "^12.38.0",
-        "lucide-react": "^0.577.0",
+        "lucide-react": "^1.0.0-rc.0",
         "next": "16.2.0",
         "notion-client": "^7.10.0",
         "postcss": "^8.5.8",
@@ -1095,7 +1095,7 @@
 
     "lru-cache": ["lru-cache@11.2.7", "", {}, "sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA=="],
 
-    "lucide-react": ["lucide-react@0.577.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-4LjoFv2eEPwYDPg/CUdBJQSDfPyzXCRrVW1X7jrx/trgxnxkHFjnVZINbzvzxjN70dxychOfg+FTYwBiS3pQ5A=="],
+    "lucide-react": ["lucide-react@1.0.0-rc.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-XUO9emKjDQ5gmA0dLS8vJCeBFh3FTWIgua4g8nI+RcFneUhQjL/wueIUsVXSeQW339f8GGoHbXkq04R145ZKBA=="],
 
     "lz-string": ["lz-string@1.5.0", "", { "bin": { "lz-string": "bin/bin.js" } }, "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="],
 

@@ -152,11 +152,21 @@ Based on code review and refactoring analysis, this document outlines actionable
 - [x] **Fix Zustand hydration mismatch**
   - File: `hooks/use-layout-store.ts`
   - Fix: Added `skipHydrationWarning: true`
+### Architecture
+- [x] **Consolidate Notion CMS access**
+  - File: `actions/posts.ts` (created)
+  - Fix: Merged `@notionhq/client` and `notion-client` logic into a single deep module. Consolidated mapping and convenience wrappers.
+- [x] **Extract pure domain logic**
+  - File: `lib/post-logic.ts` (created)
+  - Fix: Extracted filtering and related post logic from React hooks into pure, testable functions.
 
-- [ ] **Convert unnecessary Client Components**
-  - Status: Not yet implemented
+### Maintainability
+...
+- [x] **Extract posts flattening utility**
+  - File: `actions/posts.ts`
+  - Fix: Simplified data flow so flattening is handled at the source or via simple array methods.
 
----
+...
 
 ## Summary
 
@@ -164,9 +174,9 @@ Based on code review and refactoring analysis, this document outlines actionable
 |----------|-------|-----------|
 | P0 (Critical) | 3 | ✅ 3 |
 | P1 (High) | 9 | ✅ 9 |
-| P2 (Medium) | 10 | ✅ 8, ⏳ 1 |
+| P2 (Medium) | 11 | ✅ 10, ⏳ 1 |
 | P3 (Nice to Have) | 5 | ✅ 3, ⏳ 2 |
-| **Total** | **27** | **23 ✅** |
+| **Total** | **28** | **25 ✅** |
 
 ---
 

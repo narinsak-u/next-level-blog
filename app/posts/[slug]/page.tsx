@@ -1,14 +1,13 @@
 import { Metadata, ResolvingMetadata } from "next";
 import { cache } from "react";
-import { getPostById as _getPostById } from "@/actions/notion";
-import { getPageContent } from "@/actions/notion-x";
+import { fetchPostById as _fetchPostById, fetchPostContent } from "@/actions/posts";
 import { PostTagSchemaType } from "@/types";
 
 import { siteMetadata } from "@/site/siteMetadata";
 import Content from "@/components/contents/Content";
 
-// React.cache() deduplicates getPostById across generateMetadata and layout
-const getPostById = cache(_getPostById);
+// React.cache() deduplicates fetchPostById across generateMetadata and layout
+const fetchPostById = cache(_fetchPostById);
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,7 +18,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
-  const postData = await getPostById(slug);
+  const postData = await fetchPostById(slug);
   if (!postData) return {};
 
   // optionally access and extend (rather than replace) parent metadata
@@ -42,7 +41,7 @@ export async function generateMetadata(
 
 const Post = async ({ params }: Props) => {
   const { slug } = await params;
-  const recordMap = await getPageContent(slug);
+  const recordMap = await fetchPostContent(slug);
 
   return recordMap && <Content recordMap={recordMap} />;
 };

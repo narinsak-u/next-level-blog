@@ -41,7 +41,7 @@ const Footer = () => {
             </Text>
             <Text
               fz={"xs"}
-              className="!text-neutral-400 hover:!text-orange-500"
+              className="text-neutral-400! hover:text-orange-500!"
               component="a"
               target={"_blank"}
               referrerPolicy="no-referrer"
@@ -54,7 +54,7 @@ const Footer = () => {
             </Text>
             <Text
               fz={"xs"}
-              className="!text-neutral-400 hover:!text-orange-500"
+              className="text-neutral-400! hover:text-orange-500!"
               component="a"
               target={"_blank"}
               referrerPolicy="no-referrer"
@@ -67,7 +67,7 @@ const Footer = () => {
             </Text>
             <Text
               fz={"xs"}
-              className="!text-neutral-400 hover:!text-orange-500"
+              className="text-neutral-400! hover:text-orange-500!"
               component="a"
               target={"_blank"}
               referrerPolicy="no-referrer"
