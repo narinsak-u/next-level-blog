@@ -5,7 +5,6 @@ import Shortcuts from "./Shortcuts";
 import CustomBlockquote from "./CustomBlockquote";
 
 import FirstContent from "../contents/content-1.mdx";
-import ContentWrapper from "@/components/contents/ContentWrapper";
 
 type Props = {
   children: React.ReactNode;
@@ -25,7 +24,7 @@ const NotePage = ({ children }: Props) => {
         />
         <Space h={"lg"} />
 
-        <ContentWrapper>
+        <div>
           <Divider label="Content from Notion" labelPosition="center" />
           {children}
           <Space h={"lg"} />
@@ -34,7 +33,7 @@ const NotePage = ({ children }: Props) => {
           <div className="prose">
             <FirstContent />
           </div>
-        </ContentWrapper>
+        </div>
 
         <Space h={"lg"} />
         <Divider />

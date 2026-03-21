@@ -1,9 +1,18 @@
+// Notion content styles — scoped to pages that render Notion content
+import "react-notion-x/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import "katex/dist/katex.min.css";
+
 import Layout from "@/components/layout/Layout";
 import ContentTitle from "@/components/contents/ContentTitle";
 import ScrollToTop from "@/components/common/ScrollToTop";
 
+import { cache } from "react";
 import { getAllPosts } from "@/actions/notion";
-import { getPostById } from "@/actions/get-post-by-id";
+import { getPostById as _getPostById } from "@/actions/notion";
+
+// React.cache() deduplicates getPostById across generateMetadata, page, and layout
+const getPostById = cache(_getPostById);
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/components/layout/PageLayout";

@@ -1,7 +1,7 @@
 "use client";
 
 import { PageDataSchemaType } from "@/types";
-import { PostCardBase } from "@/components/ui/PostCard";
+import { PostCardGrid } from "@/components/ui/PostCard";
 
 interface PostCardProps {
   post: PageDataSchemaType;
@@ -17,9 +17,8 @@ const PostCard = ({
   showDescription,
 }: PostCardProps) => {
   return (
-    <PostCardBase
+    <PostCardGrid
       post={post}
-      layout="grid"
       showImage={showImage}
       showTags={showTags}
       showDescription={showDescription}

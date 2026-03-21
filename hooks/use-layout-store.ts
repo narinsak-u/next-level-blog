@@ -20,8 +20,4 @@ export const useLayoutStore = create<Store>()(
   )
 );
 
-const useLayoutStoreHydrated = () => {
-  return useLayoutStore((state) => state);
-};
-
 export default useLayoutStore;

@@ -1,10 +1,14 @@
 import { Metadata, ResolvingMetadata } from "next";
-import { getPostById } from "@/actions/get-post-by-id";
+import { cache } from "react";
+import { getPostById as _getPostById } from "@/actions/notion";
 import { getPageContent } from "@/actions/notion-x";
 import { PostTagSchemaType } from "@/types";
 
 import { siteMetadata } from "@/site/siteMetadata";
 import Content from "@/components/contents/Content";
+
+// React.cache() deduplicates getPostById across generateMetadata and layout
+const getPostById = cache(_getPostById);
 
 type Props = {
   params: Promise<{ slug: string }>;

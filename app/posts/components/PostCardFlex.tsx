@@ -1,7 +1,7 @@
 "use client";
 
 import { PageDataSchemaType } from "@/types";
-import { PostCardBase } from "@/components/ui/PostCard";
+import { PostCardList } from "@/components/ui/PostCard";
 
 interface PostCardFlexProps {
   post: PageDataSchemaType;
@@ -10,11 +10,8 @@ interface PostCardFlexProps {
 
 const PostCardFlex = ({ post, showDescription }: PostCardFlexProps) => {
   return (
-    <PostCardBase
+    <PostCardList
       post={post}
-      layout="list"
-      showImage={false}
-      showTags={false}
       showDescription={showDescription}
     />
   );

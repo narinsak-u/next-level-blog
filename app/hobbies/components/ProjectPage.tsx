@@ -1,7 +1,6 @@
 "use client";
 
 import { Container, Divider, Space } from "@mantine/core";
-import ContentWrapper from "@/components/contents/ContentWrapper";
 import CustomBlockquote from "@/app/note/components/CustomBlockquote";
 
 type Props = {
@@ -20,7 +19,7 @@ const ProjectPage = ({ children }: Props) => {
         />
         <Space h={"xl"} />
         <Divider label="Recent Projects" labelPosition="center" />
-        <ContentWrapper>{children}</ContentWrapper>
+        <div>{children}</div>
         <Space h={"lg"} />
         <Space h={"lg"} />
       </Container>

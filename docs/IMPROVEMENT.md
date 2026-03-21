@@ -206,3 +206,80 @@ Based on code review and refactoring analysis, this document outlines actionable
 - ✅ Fixed waterfall fetching
 - ✅ Memoized calculations
 - ⏳ Pagination (remaining)
+
+---
+
+## Vercel React Best Practices Audit (2026-03-21)
+
+Based on the [Vercel React Best Practices](https://vercel.com/blog/react-best-practices) guidelines (62 rules across 8 categories). Rules are referenced by their rule ID prefix.
+
+**Status: ✅ ALL ITEMS COMPLETED**
+
+### CRITICAL
+
+- [x] **`async-parallel` — Waterfall in post detail page**
+  - File: `app/posts/[slug]/page.tsx`, `app/posts/[slug]/layout.tsx`
+  - Fix: Applied `React.cache()` to `getPostById` to deduplicate across `generateMetadata`, page, and layout
+
+- [x] **`bundle-dynamic-imports` — Heavy CSS loaded globally**
+  - File: `app/layout.tsx` → `app/posts/[slug]/layout.tsx`, `app/about/page.tsx`, `app/hobbies/page.tsx`, `app/note/page.tsx`
+  - Fix: Moved `react-notion-x`, `prismjs`, `katex` CSS imports from root layout to only the pages that use Notion content
+
+### HIGH
+
+- [x] **`server-dedup-props` — Duplicate data serialization in RSC payload**
+  - File: `app/posts/page.tsx`, `app/posts/components/PostsPageLayout.tsx`
+  - Fix: Moved `TimelineContent` inside `PostsPageLayout` so `posts` is only serialized once
+
+- [x] **`server-parallel-fetching` — All pages use `force-dynamic`**
+  - Files: `app/posts/page.tsx`, `app/about/page.tsx`, `app/hobbies/page.tsx`, `app/note/page.tsx`
+  - Fix: Replaced `force-dynamic` with ISR — `revalidate = 120` (posts), `revalidate = 300` (about/hobbies/note)
+
+- [x] **Images `unoptimized: true` disables all optimization**
+  - File: `next.config.ts`
+  - Fix: Removed `unoptimized: true` to enable Next.js automatic image optimization
+
+### MEDIUM
+
+- [x] **`rerender-no-inline-components` — `ClientComponent` mount guard blanks SSR**
+  - File: `app/layout.tsx`
+  - Fix: Removed `ClientComponent` wrapper — `ColorSchemeScript` + `suppressHydrationWarning` already handle theme SSR
+
+- [x] **No-op `"use client"` component adds to client bundle**
+  - Files: `app/about/components/AboutPage.tsx`, `app/hobbies/components/ProjectPage.tsx`, `app/note/components/NotePage.tsx`
+  - Fix: Replaced `ContentWrapper` with plain `<div>` in all consumers
+
+- [x] **`rerender-functional-setstate` — Ineffective `useCallback` in `useFetchPosts`**
+  - File: `hooks/use-fetch-posts.ts`
+  - Fix: Removed unnecessary `useCallback`, pass `fetchNextPage` directly from React Query
+
+### LOW
+
+- [x] **Dead code: `useLayoutStoreHydrated`**
+  - File: `hooks/use-layout-store.ts`
+  - Fix: Removed unused function
+
+- [x] **Unnecessary wrapper: `actions/get-post-by-id.ts`**
+  - File: `app/posts/[slug]/page.tsx`, `app/posts/[slug]/layout.tsx`
+  - Fix: Updated imports to use `getPostById` from `actions/notion` directly
+
+### Bonus Fix
+
+- [x] **Pre-existing type error: `PostCardBase` export missing**
+  - Files: `app/posts/components/PostCard.tsx`, `app/posts/components/PostCardFlex.tsx`
+  - Fix: Updated to use `PostCardGrid` and `PostCardList` exports from `components/ui/PostCard`
+
+### Audit Summary
+
+| Priority | Rule | File | Status |
+|----------|------|------|--------|
+| CRITICAL | `async-parallel` | `app/posts/[slug]/page.tsx` | ✅ |
+| CRITICAL | `bundle-dynamic-imports` | `app/layout.tsx` | ✅ |
+| HIGH | `server-dedup-props` | `app/posts/page.tsx` | ✅ |
+| HIGH | `force-dynamic` everywhere | 4 pages | ✅ |
+| HIGH | `unoptimized: true` | `next.config.ts` | ✅ |
+| MEDIUM | Mount guard blanks SSR | `app/layout.tsx` | ✅ |
+| MEDIUM | No-op client component | 3 page components | ✅ |
+| MEDIUM | Ineffective `useCallback` | `use-fetch-posts.ts` | ✅ |
+| LOW | Dead code | `use-layout-store.ts` | ✅ |
+| LOW | Unnecessary wrapper | `get-post-by-id.ts` | ✅ |

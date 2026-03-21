@@ -1,4 +1,9 @@
-export const dynamic = 'force-dynamic'
+export const revalidate = 300;
+
+// Notion content styles
+import "react-notion-x/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import "katex/dist/katex.min.css";
 
 import { Metadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";

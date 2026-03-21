@@ -23,7 +23,6 @@ const nextConfig: NextConfig = {
         hostname: "s3.us-west-2.amazonaws.com",
       },
     ],
-    unoptimized: true,
   },
 
   // Securing application

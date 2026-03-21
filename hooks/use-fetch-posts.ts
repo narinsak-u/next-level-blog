@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { PageDataSchemaType } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPostsByCategory } from "@/actions/notion";
@@ -38,18 +37,10 @@ const useFetchPosts = ({ categoryName }: Props) => {
       },
     });
 
-  // const posts = data?.pages.flatMap((page) => page) ?? [];
   const posts =
     data && data.pages.flatMap((page) => page || []).filter(Boolean);
 
-  // handle loading next page
-  const loadNextPost = useCallback(async () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      await fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  return { posts, loadNextPost, isFetchingNextPage, hasNextPage };
+  return { posts, loadNextPost: fetchNextPage, isFetchingNextPage, hasNextPage };
 };
 
 export default useFetchPosts;
