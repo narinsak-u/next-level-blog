@@ -1,11 +1,11 @@
-export const revalidate = 120;
-
 import { Metadata } from "next";
-import { fetchAllPosts } from "@/actions/posts";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
 import { siteMetadata } from "@/site/siteMetadata";
 
-import PostsPageLayout from "@/app/posts/components/PostsPageLayout";
+import PostsPageClient from "@/app/posts/components/PostsPageClient";
+import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/actions/posts";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Posts`,
@@ -13,9 +13,21 @@ export const metadata: Metadata = {
 };
 
 const Posts = async () => {
-  const posts = await fetchAllPosts();
+  const queryClient = new QueryClient();
 
-  return <PostsPageLayout posts={posts} />;
+  await queryClient.prefetchQuery({
+    queryKey: useFetchAllPosts.getQueryKey(),
+    queryFn: async () => {
+      const posts = await fetchAllPosts();
+      return posts;
+    },
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PostsPageClient />
+    </HydrationBoundary>
+  );
 };
 
 export default Posts;

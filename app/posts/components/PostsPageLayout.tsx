@@ -66,7 +66,7 @@ const PostsPageLayout = ({ posts }: Props) => {
                   size="md"
                   radius="sm"
                   variant="filled"
-                  className="!bg-orange-500 dark:!bg-amber-900"
+                  className="bg-orange-500! dark:bg-amber-900!"
                   onClick={() => toggle()}
                 >
                   {isGrid ? (

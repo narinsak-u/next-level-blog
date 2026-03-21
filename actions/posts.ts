@@ -126,19 +126,18 @@ export const fetchAllPosts = cache(async (): Promise<PageDataSchemaType[]> => {
  */
 export const fetchPostById = cache(async (postId: string): Promise<PageDataSchemaType | null> => {
   try {
-    const response = await officialClient.dataSources.query({
-      data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
-      filter: {
-        and: [
-          { property: "id", rich_text: { equals: postId } },
-          { property: "Status", status: { equals: "Done" } },
-        ],
-      },
-    } as any);
+    const page = await officialClient.pages.retrieve({
+      page_id: postId,
+    }) as any;
 
-    if (!response.results.length) return null;
+    if (!page) return null;
 
-    const [post] = mapNotionResultsToPosts(response.results);
+    // Only return the post if its Status is strictly "Done", to match the original function's intent
+    if (page.properties?.Status?.status?.name !== "Done") {
+      return null;
+    }
+
+    const [post] = mapNotionResultsToPosts([page] as any);
     return post ?? null;
   } catch (error) {
     console.error(`Failed to fetch post by ID ${postId}:`, error);

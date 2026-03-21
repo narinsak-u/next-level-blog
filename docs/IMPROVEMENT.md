@@ -279,6 +279,77 @@ Based on the [Vercel React Best Practices](https://vercel.com/blog/react-best-pr
   - Files: `app/posts/components/PostCard.tsx`, `app/posts/components/PostCardFlex.tsx`
   - Fix: Updated to use `PostCardGrid` and `PostCardList` exports from `components/ui/PostCard`
 
+---
+
+## TanStack Query Caching Implementation (2026-03-22)
+
+### Problem
+- Posts refetch every time user navigates between pages (posts → tag → posts)
+- React's `cache()` only deduplicates within a single request, not across navigations
+- Initial page load shows empty posts before data arrives
+
+### Solution
+Implemented proper TanStack Query caching with SSR prefetching:
+
+**1. QueryProvider Configuration** (`components/providers/query-provider.tsx`)
+```typescript
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,      // 1 minute
+      gcTime: 5 * 60 * 1000,     // 5 minutes
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+```
+
+**2. SSR Prefetch Pattern** (used in `app/posts/page.tsx`, `app/tags/[slug]/page.tsx`, `app/posts/[slug]/layout.tsx`)
+```typescript
+const Posts = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: useFetchAllPosts.getQueryKey(),
+    queryFn: () => fetchAllPosts(),
+  });
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PostsPageClient />
+    </HydrationBoundary>
+  );
+};
+```
+
+### Files Created/Modified
+
+| File | Change |
+|------|--------|
+| `components/providers/query-provider.tsx` | Added default options (staleTime, gcTime) |
+| `hooks/use-fetch-all-posts.ts` | New - TanStack Query hook for all posts |
+| `hooks/use-fetch-posts-by-tag.ts` | New - Filters from cached posts |
+| `app/posts/components/PostsPageClient.tsx` | New - Client component using cached data |
+| `app/tags/components/TagPageClient.tsx` | New - Client component using cached data |
+| `components/common/SpotlightClient.tsx` | New - Spotlight using cached data |
+| `components/contents/RelatedPostsWrapper.tsx` | New - Related posts using cached data |
+| `app/posts/page.tsx` | Updated to use SSR prefetching |
+| `app/tags/[slug]/page.tsx` | Updated to use SSR prefetching |
+| `app/posts/[slug]/layout.tsx` | Updated to use SSR prefetching |
+| `app/tags/[slug]/layout.tsx` | Updated to use client Spotlight |
+| `components/contents/ContentBody.tsx` | Updated to use RelatedPostsWrapper |
+
+### Key Patterns
+
+1. **SSR Prefetch + Hydration**: Server prefetches, client hydrates - no loading spinner on first load
+2. **Single Query Key**: All pages use `["posts", "all"]` for shared cache
+3. **Client-side Filtering**: Tag pages filter from cached data, no additional API calls
+4. **Hybrid Pagination**: Posts page uses `useInfiniteQuery` for load-more, with fallback to cached data
+
+### Prevent This Issue
+- Always use TanStack Query with SSR prefetching for client-side data
+- Never rely on React's `cache()` alone for navigation-level caching
+- Test navigation: posts → detail → posts to verify no refetch
+
 ### Audit Summary
 
 | Priority | Rule | File | Status |

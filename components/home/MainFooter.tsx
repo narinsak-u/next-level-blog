@@ -1,10 +1,9 @@
-// import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "@/components/ui/button";
 import XLogoIcon from "@/components/icons/x";
 import SteamLogoIcon from "@/components/icons/steam";
 import Link from "next/link";
 import { siteMetadata } from "@/site/siteMetadata";
-import { Github } from "lucide-react";
+import { IconBrandGithub } from "@tabler/icons-react";
 
 // import { ActionIcon } from '@mantine/core';
 
@@ -16,8 +15,7 @@ const MainFooter = () => {
         className={buttonVariants({ size: "icon-xl" })}
         href={siteMetadata.github}
       >
-        {/* <GitHubLogoIcon className="size-6" /> */}
-        <Github className="size-6" />
+        <IconBrandGithub className="size-6" />
       </Link>
       <Link
         target="_blank"

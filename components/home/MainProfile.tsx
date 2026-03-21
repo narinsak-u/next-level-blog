@@ -42,9 +42,9 @@ const MainProfile = () => {
       <div className="flex flex-col mb-12 items-center min-h-0 shrink w-full">
         <ManifestoPanel>
           <AnimatePresenceGuard>
-            <IntroPanel />
-            <ManifestoPanel.Trigger />
-            <ManifestoPanel.Content>
+            <IntroPanel key="intro-panel" />
+            <ManifestoPanel.Trigger key="manifesto-trigger" />
+            <ManifestoPanel.Content key="manifesto-content">
               <ManifestoPanel.CloseButton />
               <article className="relative text-white overflow-y-auto pretty-scrollbar italic p-6 h-full [&_p]:my-4">
                 <p>Feel pain. Contemplate pain. Accept pain. Know pain.</p>
@@ -56,7 +56,7 @@ const MainProfile = () => {
                 <p>SHINRA TENSEI!!!</p>
               </article>
             </ManifestoPanel.Content>
-            <MenuPanel />
+            <MenuPanel key="menu-panel" />
           </AnimatePresenceGuard>
         </ManifestoPanel>
       </div>

@@ -1,6 +1,7 @@
 import { PageDataSchemaType } from "@/types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchPosts } from "@/actions/posts";
+import { useEffect } from "react";
 
 const POSTS_PER_PAGE = 6;
 
@@ -9,7 +10,10 @@ interface Props {
 }
 
 const useFetchPosts = ({ categoryName }: Props) => {
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+  const queryClient = useQueryClient();
+  const cachedPosts = queryClient.getQueryData<PageDataSchemaType[]>(["posts", "all"]);
+
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, dataUpdatedAt } =
     useInfiniteQuery({
       queryKey: ["posts", categoryName],
       initialPageParam: 1,
@@ -31,16 +35,35 @@ const useFetchPosts = ({ categoryName }: Props) => {
         }
         return allPages.length + 1;
       },
-      initialData: {
-        pages: [],
-        pageParams: [1],
-      },
+      
+      placeholderData: (previousData) => previousData,
     });
 
-  const posts =
-    data && data.pages.flatMap((page) => page || []).filter(Boolean);
+  const posts = data?.pages.flatMap((page) => page || []).filter(Boolean) ?? [];
 
-  return { posts, loadNextPost: fetchNextPage, isFetchingNextPage, hasNextPage };
+  useEffect(() => {
+    if (cachedPosts && posts.length === 0 && !isLoading) {
+      const categoryPosts = cachedPosts.filter(
+        (post) => post.category?.toLowerCase() === categoryName.toLowerCase()
+      );
+      if (categoryPosts.length > 0) {
+        queryClient.setQueryData(["posts", categoryName], {
+          pages: [categoryPosts.slice(0, POSTS_PER_PAGE)],
+          pageParams: [1],
+        });
+      }
+    }
+  }, [cachedPosts, categoryName, posts.length, isLoading, queryClient]);
+
+  return { 
+    posts: posts.length > 0 ? posts : (cachedPosts?.filter(
+      (post) => post.category?.toLowerCase() === categoryName.toLowerCase()
+    ) ?? []), 
+    loadNextPost: fetchNextPage, 
+    isFetchingNextPage, 
+    hasNextPage,
+    isLoading 
+  };
 };
 
 export default useFetchPosts;

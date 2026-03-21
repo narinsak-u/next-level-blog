@@ -14,7 +14,7 @@ type Props = {
 
 const CATEGORY_CONFIGS = [
   {
-    key: "i-learned",
+    key: "today-i-learned",
     description: "Sharing tidbits of wisdom I picked up today, maybe something you'll find useful too.",
   },
   {

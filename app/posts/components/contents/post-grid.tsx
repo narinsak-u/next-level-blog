@@ -16,8 +16,6 @@ const PostGrid = ({ categoryName, description }: Props) => {
   const { posts, loadNextPost, isFetchingNextPage, hasNextPage } =
     useFetchPosts({ categoryName });
 
-  // console.log(hasNextPage, isFetchingNextPage);
-
   if (!posts || !posts.length) return null;
 
   return (

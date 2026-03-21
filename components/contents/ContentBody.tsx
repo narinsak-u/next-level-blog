@@ -5,16 +5,15 @@ import { Suspense } from "react";
 import { Space, Box, Divider } from "@mantine/core";
 import { PageDataSchemaType } from "@/types";
 import Loader from "../common/Loader";
-import RelatedPosts from "./RelatedPosts";
+import RelatedPostsWrapper from "./RelatedPostsWrapper";
 import Comments from "./Comments";
 
 type Props = {
-  posts: PageDataSchemaType[];
   postData: PageDataSchemaType;
   children: React.ReactNode;
 };
 
-const ContentBody = ({ posts, children, postData }: Props) => {
+const ContentBody = ({ children, postData }: Props) => {
   return (
     <Suspense fallback={<Loader />}>
       <div className="w-full m-auto max-w-3xl">
@@ -31,7 +30,7 @@ const ContentBody = ({ posts, children, postData }: Props) => {
           ))}
         </Box>
 
-        <RelatedPosts posts={posts} postData={postData} />
+        <RelatedPostsWrapper postData={postData} />
         <Divider className="my-14" />
         <Comments />
       </div>

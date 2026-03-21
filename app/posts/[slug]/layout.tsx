@@ -6,11 +6,14 @@ import "katex/dist/katex.min.css";
 import Layout from "@/components/layout/Layout";
 import ContentTitle from "@/components/contents/ContentTitle";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import SpotlightClient from "@/components/common/SpotlightClient";
 
 import { cache } from "react";
-import { fetchAllPosts, fetchPostById as _fetchPostById } from "@/actions/posts";
+import { fetchPostById as _fetchPostById } from "@/actions/posts";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/actions/posts";
 
-// React.cache() deduplicates fetchPostById across generateMetadata, page, and layout
 const fetchPostById = cache(_fetchPostById);
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
@@ -27,33 +30,45 @@ type Props = {
 
 const layout = async ({ children, params }: Props) => {
   const { slug } = await params;
-  const [posts, postData] = await Promise.all([
-    fetchAllPosts(),
-    fetchPostById(slug),
-  ]);
+  const postData = await fetchPostById(slug);
 
   if (!postData) return <Loader />;
 
-  return (
-    <Layout>
-      <PageLayout>
-        <div className="relative h-full p-0 mt-3">
-          <ContentTitle postData={postData} />
-          <div className="sticky top-5 z-10 left-0">
-            {postData && (
-              <Share
-                postLink={`${siteMetadata.siteAddress}/posts/${postData.id}`}
-              />
-            )}
-          </div>
-          <ContentBody posts={posts} postData={postData}>
-            <div>{children}</div>
-          </ContentBody>
+  const queryClient = new QueryClient();
 
-          <ScrollToTop />
-        </div>
-      </PageLayout>
-    </Layout>
+  await queryClient.prefetchQuery({
+    queryKey: useFetchAllPosts.getQueryKey(),
+    queryFn: async () => {
+      const posts = await fetchAllPosts();
+      return posts;
+    },
+  });
+
+  return (
+    <>
+      <SpotlightClient />
+      <Layout>
+        <PageLayout>
+          <div className="relative h-full p-0 mt-3">
+            <ContentTitle postData={postData} />
+            <div className="sticky top-5 z-10 left-0">
+              {postData && (
+                <Share
+                  postLink={`${siteMetadata.siteAddress}/posts/${postData.id}`}
+                />
+              )}
+            </div>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <ContentBody postData={postData}>
+                <div>{children}</div>
+              </ContentBody>
+            </HydrationBoundary>
+
+            <ScrollToTop />
+          </div>
+        </PageLayout>
+      </Layout>
+    </>
   );
 };
 

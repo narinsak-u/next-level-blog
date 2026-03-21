@@ -22,6 +22,11 @@
   - Location: `app/posts/[slug]/layout.tsx`
   - Fix: Used `Promise.all([getAllPosts(), getPostById(slug)])` for parallel fetching
 
+- [x] **Posts refetch on every navigation**
+  - Location: `app/posts/page.tsx`, `app/tags/[slug]/page.tsx`, `app/posts/[slug]/layout.tsx`
+  - Issue: React's `cache()` doesn't persist across navigations, initial load shows empty posts
+  - Fix: Implemented TanStack Query with SSR prefetching (`HydrationBoundary` + `dehydrate`)
+
 ### Robustness
 
 - [x] **Non-null assertion crash risk**
@@ -166,3 +171,4 @@
 | Pattern: Redundant effect | `ThemeMode.tsx` | Removed effect |
 | Architecture: Hydration | `use-layout-store.ts` | skipHydrationWarning |
 | Typo: siteMatedata | `site/siteMetadata.ts` | Renamed |
+| **Performance: Posts refetch on navigation** | Multiple files | TanStack Query caching with SSR prefetch |
