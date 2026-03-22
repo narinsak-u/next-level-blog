@@ -35,4 +35,20 @@ export const siteMetadata = {
       },
     },
   },
+
+  home: {
+    intro: {
+      en: "Hi there! I'm Hai — 海 — aka: alohadancemeow",
+      zh: "大家好，我叫海，很高兴认识你们。",
+    },
+    manifesto: {
+      trigger: "Manifesto",
+      paragraphs: [
+        "Feel pain. Contemplate pain. Accept pain. Know pain.",
+        "Those who do not understand true pain will never understand true peace. I will never forget Yahiko's pain.",
+        "And now... this world shall know pain.",
+        "SHINRA TENSEI!!!",
+      ],
+    },
+  },
 };

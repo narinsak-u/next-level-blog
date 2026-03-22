@@ -2,10 +2,10 @@
 
 import { LazyMotion, m } from "framer-motion";
 import { domAnimation } from "framer-motion";
-import { ManifestoPanel } from "./ManifestoPanel";
-import AnimatePresenceGuard from "@/components/ui/AnimatePresenceGuard";
+import { ManifestoPanel, useManifesto } from "./ManifestoPanel";
 import Menu from "./Menu";
 import { ANIMATION } from "@/lib/constants";
+import { siteMetadata } from "@/site/siteMetadata";
 
 /**
  * MainProfile - Primary landing page hero section
@@ -28,36 +28,31 @@ const MainProfile = () => {
       <LazyMotion features={domAnimation}>
         <m.div
           layout="position"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT }}
         >
           <p className="font-serif uppercase tracking-[0.4em] leading-relaxed text-center text-xs short:lg:text-xs text-foreground">
-            Personal Home
+            {siteMetadata.homeTitle}
           </p>
           <h1 className="font-serif text-4xl italic short:lg:text-8xl lg:text-8xl sm:text-6xl text-foreground">
-            Alohadancemeow®
+            {siteMetadata.author}®
           </h1>
         </m.div>
       </LazyMotion>
 
       <div className="flex flex-col mb-12 items-center min-h-0 shrink w-full">
         <ManifestoPanel>
-          <AnimatePresenceGuard>
-            <IntroPanel key="intro-panel" />
-            <ManifestoPanel.Trigger key="manifesto-trigger" />
-            <ManifestoPanel.Content key="manifesto-content">
-              <ManifestoPanel.CloseButton />
-              <article className="relative text-white overflow-y-auto pretty-scrollbar italic p-6 h-full [&_p]:my-4">
-                <p>Feel pain. Contemplate pain. Accept pain. Know pain.</p>
-                <p>
-                  Those who do not understand true pain will never understand
-                  true peace. I will never forget Yahiko's pain.
-                </p>
-                <p>And now... this world shall know pain.</p>
-                <p>SHINRA TENSEI!!!</p>
-              </article>
-            </ManifestoPanel.Content>
-            <MenuPanel key="menu-panel" />
-          </AnimatePresenceGuard>
+          <IntroPanel />
+          <ManifestoPanel.Trigger />
+          <ManifestoPanel.Content>
+            <article className="relative text-white overflow-y-auto pretty-scrollbar italic p-6 h-full [&_p]:my-4">
+              {siteMetadata.home.manifesto.paragraphs.map((text, i) => (
+                <p key={i}>{text}</p>
+              ))}
+            </article>
+          </ManifestoPanel.Content>
+          <MenuPanel />
         </ManifestoPanel>
       </div>
     </div>
@@ -67,32 +62,20 @@ const MainProfile = () => {
 const IntroPanel = () => {
   return (
     <m.div
-      key="newsletter"
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{
-        scale: 1,
-        opacity: 1,
-        transition: {
-          delay: ANIMATION.DELAY,
-          duration: ANIMATION.DURATION,
-          ease: ANIMATION.EASE_OUT,
-        },
-      }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: ANIMATION.DELAY, duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT }}
     >
       <div className="flex flex-col gap-4 w-full max-w-xl md:gap-6 lg:gap-8">
         <m.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{
-            duration: ANIMATION.DURATION,
-            ease: ANIMATION.EASE_OUT,
-            delay: ANIMATION.DELAY,
-          }}
+          transition={{ duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT, delay: ANIMATION.DELAY + 0.1 }}
           className="text-base short:lg:text-lg sm:text-lg font-medium text-center text-foreground text-pretty"
         >
-          {`Hi there! I'm Hai — 海 — aka: alohadancemeow`}
+          {siteMetadata.home.intro.en}
           <br />
-          {`大家好，我叫海，很高兴认识你们。`}
+          {siteMetadata.home.intro.zh}
         </m.p>
       </div>
     </m.div>
@@ -100,29 +83,21 @@ const IntroPanel = () => {
 };
 
 const MenuPanel = () => {
+  const { isOpen } = useManifesto();
+
+  if (isOpen) return null;
+
   return (
     <m.div
-      key="menu"
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{
-        scale: 1,
-        opacity: 1,
-        transition: {
-          delay: ANIMATION.DELAY,
-          duration: ANIMATION.DURATION,
-          ease: ANIMATION.EASE_OUT,
-        },
-      }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: ANIMATION.DELAY + 0.15, duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT }}
     >
       <div className="flex flex-col gap-4 w-full max-w-xl md:gap-6 lg:gap-8">
         <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{
-            duration: ANIMATION.DURATION,
-            ease: ANIMATION.EASE_OUT,
-            delay: ANIMATION.DELAY,
-          }}
+          transition={{ duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT, delay: ANIMATION.DELAY + 0.25 }}
           className="text-base short:lg:text-lg sm:text-lg lg:text-xl font-medium text-center text-foreground text-pretty"
         >
           <Menu />

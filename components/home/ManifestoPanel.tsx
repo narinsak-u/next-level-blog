@@ -13,6 +13,8 @@ import { Button as CNButton, buttonVariants } from "@/components/ui/button";
 import { LazyMotion, AnimatePresence, m, domAnimation } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import { ANIMATION } from "@/lib/constants";
+import { siteMetadata } from "@/site/siteMetadata";
 
 /**
  * Context value for ManifestoPanel state management
@@ -74,9 +76,11 @@ const ManifestoPanel = ({ children }: ManifestoPanelProps) => {
   }, [isOpen]);
 
   return (
-    <ManifestoContext.Provider value={{ isOpen, open, close, toggle }}>
-      {children}
-    </ManifestoContext.Provider>
+    <LazyMotion features={domAnimation}>
+      <ManifestoContext.Provider value={{ isOpen, open, close, toggle }}>
+        {children}
+      </ManifestoContext.Provider>
+    </LazyMotion>
   );
 };
 
@@ -96,17 +100,17 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
   return (
     <m.div
       layout="position"
-      transition={{ type: "spring", stiffness: 60, damping: 10, mass: 0.8 }}
+      transition={{ duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT }}
       key="button"
       className={cn(isOpen ? "my-6" : "mt-6", className)}
     >
       <CNButton className={cn("relative px-8 cursor-pointer")} onClick={toggle}>
         <m.span
           animate={{ x: isOpen ? -16 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           className="inline-block"
         >
-          {children || "Manifesto"}
+          {children || siteMetadata.home.manifesto.trigger}
         </m.span>
 
         {isOpen && (
@@ -115,9 +119,9 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
               buttonVariants({ variant: "iconButton", size: "icon" }),
               "absolute -top-px -right-px aspect-square cursor-pointer"
             )}
-            initial={{ opacity: 0, scale: 0.8, rotate: -40 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut", delay: 0.3 }}
+            initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.25 } }}
+            exit={{ opacity: 0, scale: 0.5, rotate: 90, transition: { duration: 0.2 } }}
           >
             <X className="size-5 text-primary-foreground" />
           </m.div>
@@ -140,37 +144,22 @@ interface ManifestoContentProps {
 const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
   const { isOpen } = useManifesto();
 
-  if (!isOpen) return null;
-
   return (
-    <m.div
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={{
-        visible: {
-          opacity: 1,
-          scale: 1,
-          transition: { delay: 0.3, duration: 0.3, ease: "easeOut" },
-        },
-        hidden: {
-          opacity: 0,
-          scale: 0.9,
-          transition: { duration: 0.3, ease: "easeOut" },
-        },
-        exit: {
-          opacity: 0,
-          scale: 0.9,
-          transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] },
-        },
-      }}
-      className={cn(
-        "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center backdrop-blur-xl text-balance border-2 border-border/50 bg-primary/20 max-w-3xl text-foreground rounded-3xl ring-1 ring-offset-primary/10 ring-border/10 ring-offset-2 shadow-button",
-        className
+    <AnimatePresence>
+      {isOpen && (
+        <m.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0, transition: { duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT } }}
+          exit={{ opacity: 0, y: -8, transition: { duration: 0.25, ease: [0.4, 0, 0.6, 1] } }}
+          className={cn(
+            "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center backdrop-blur-xl text-balance border-2 border-border/50 bg-primary/20 max-w-3xl text-foreground rounded-3xl ring-1 ring-offset-primary/10 ring-border/10 ring-offset-2 shadow-button",
+            className
+          )}
+        >
+          {children}
+        </m.div>
       )}
-    >
-      {children}
-    </m.div>
+    </AnimatePresence>
   );
 };
 

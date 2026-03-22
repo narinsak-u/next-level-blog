@@ -1,13 +1,19 @@
 export const ANIMATION = {
-  DURATION: 0.3,
-  DELAY: 0.3,
-  EASE_OUT: "easeOut",
+  DURATION: 0.4,
+  DELAY: 0.1,
+  EASE_OUT: [0.33, 1, 0.68, 1] as const,
   EASE_OUT_OPACITY: [0.25, 0.46, 0.45, 0.94] as const,
   SPRING: {
     type: "spring" as const,
-    stiffness: 60,
-    damping: 10,
+    stiffness: 120,
+    damping: 14,
     mass: 0.8,
+  },
+  SPRING_SLOW: {
+    type: "spring" as const,
+    stiffness: 80,
+    damping: 12,
+    mass: 1,
   },
 } as const;
 

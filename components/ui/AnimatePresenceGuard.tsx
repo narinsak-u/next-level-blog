@@ -7,11 +7,7 @@ type Props = {
 };
 
 const AnimatePresenceGuard = ({ children }: Props) => {
-  return (
-    <AnimatePresence mode="popLayout" propagate>
-      {children}
-    </AnimatePresence>
-  );
+  return <>{children}</>;
 };
 
 export default AnimatePresenceGuard;
