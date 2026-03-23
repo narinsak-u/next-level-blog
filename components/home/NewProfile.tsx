@@ -9,7 +9,7 @@ import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 const NewProfile = () => {
   return (
     <MusicPlayerProvider>
-      <main className="h-[100dvh] w-full">
+      <main className="h-dvh w-full">
         <div className="relative h-full w-full">
           <Credit />
           <Background

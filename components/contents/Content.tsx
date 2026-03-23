@@ -57,7 +57,7 @@ const Content = ({ recordMap }: Props) => {
         Pdf,
         Tweet: myTweet,
       }}
-      className="prose dark:prose-a:!border-amber-700 prose-blockquote:!border-amber-500 dark:prose-blockquote:!border-amber-700"
+      className="prose dark:prose-a:border-amber-700! prose-blockquote:border-amber-500! dark:prose-blockquote:border-amber-700!"
     />
   );
 };
