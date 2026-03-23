@@ -1,85 +1,67 @@
 "use client";
 
 import { siteMetadata } from "@/site/siteMetadata";
-import { Center, Text } from "@mantine/core";
+import { cn } from "@/lib/utils";
 
 const Footer = () => {
   return (
-    <div style={{ margin: "2rem 0" }}>
-      <Center style={{ fontWeight: "500", gap: "5px" }}>
-        <div className="flex flex-col items-center gap-y-1">
-          <div className="flex gap-1">
-            <Text>Made with 🧡</Text>
-
-            <Text
-              pl={8}
-              component="a"
-              href={`${siteMetadata.github}`}
-              target={"_blank"}
-              referrerPolicy="no-referrer"
-            >
-              {siteMetadata.title}
-            </Text>
-            <Text
-              fz={"xs"}
-              pl={8}
-              color="orange"
-              component="a"
-              href={`${siteMetadata.githubRepo}`}
-              target={"_blank"}
-              referrerPolicy="no-referrer"
-            >
-              {`${siteMetadata.version}`}
-            </Text>
-          </div>
-          <div className="flex gap-1 md:gap-2">
-            <Text fz={"xs"} c="dimmed">
-              {`©${new Date().getFullYear()} • `}
-            </Text>
-            <Text fz={"xs"} c="dimmed">
-              Powered by
-            </Text>
-            <Text
-              fz={"xs"}
-              className="text-neutral-400! hover:text-orange-500!"
-              component="a"
-              target={"_blank"}
-              referrerPolicy="no-referrer"
-              href="https://nextjs.org/"
-            >
-              Next
-            </Text>
-            <Text fz={"xs"} c="dimmed">
-              +
-            </Text>
-            <Text
-              fz={"xs"}
-              className="text-neutral-400! hover:text-orange-500!"
-              component="a"
-              target={"_blank"}
-              referrerPolicy="no-referrer"
-              href="https://www.notion.com/"
-            >
-              Notion
-            </Text>
-            <Text fz={"xs"} c="dimmed">
-              +
-            </Text>
-            <Text
-              fz={"xs"}
-              className="text-neutral-400! hover:text-orange-500!"
-              component="a"
-              target={"_blank"}
-              referrerPolicy="no-referrer"
-              href="https://mantine.dev/"
-            >
-              Mantine
-            </Text>
-            <Text>🎉</Text>
-          </div>
+    <footer className="py-8 px-4">
+      <div
+        className={cn(
+          "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3",
+          "text-xs text-foreground/40 uppercase tracking-widest"
+        )}
+      >
+        <span>{`© ${new Date().getFullYear()}`}</span>
+        <span className="hidden sm:inline text-foreground/20">•</span>
+        <a
+          href={siteMetadata.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-orange-500 transition-colors duration-200"
+        >
+          {siteMetadata.title}
+        </a>
+        <span className="hidden sm:inline text-foreground/20">•</span>
+        <div className="flex items-center gap-2">
+          <a
+            href="https://nextjs.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-orange-500 transition-colors duration-200"
+          >
+            Next.js
+          </a>
+          <span className="text-foreground/20">+</span>
+          <a
+            href="https://mantine.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-orange-500 transition-colors duration-200"
+          >
+            Mantine
+          </a>
+          <span className="text-foreground/20">+</span>
+          <a
+            href="https://www.notion.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-orange-500 transition-colors duration-200"
+          >
+            Notion
+          </a>
         </div>
-      </Center>
-    </div>
+        <span className="hidden sm:inline text-foreground/20">•</span>
+        <a
+          href={siteMetadata.githubRepo}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-orange-500 transition-colors duration-200"
+        >
+          {siteMetadata.version}
+        </a>
+      </div>
+    </footer>
   );
 };
 

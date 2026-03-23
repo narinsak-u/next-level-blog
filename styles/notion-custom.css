@@ -19,6 +19,9 @@ div[class*="tweet-container_"] {
   color: inherit !important;
   list-style-type: square !important;
 }
+.notion-page {
+  width: 100% !important;
+}
 
 .notion-code > code[class*="language-"],
 pre[class*="language-"] {

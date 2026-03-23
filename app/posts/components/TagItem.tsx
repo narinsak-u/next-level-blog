@@ -10,7 +10,7 @@ type Props = {
 
 const TagItem = ({ tags }: Props) => {
   const router = useRouter();
-  
+
   return (
     <Box
       style={{
@@ -25,7 +25,7 @@ const TagItem = ({ tags }: Props) => {
       {tags &&
         tags.map((tag, idx) => (
           <div key={idx}>
-            <Text
+            <p
               onClick={() => router.push(`/tags/${tag.name}`)}
               style={{
                 textDecoration: "none",
@@ -34,7 +34,7 @@ const TagItem = ({ tags }: Props) => {
               }}
             >
               {`#${tag.name}`}
-            </Text>
+            </p>
           </div>
         ))}
     </Box>

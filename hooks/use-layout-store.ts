@@ -9,7 +9,7 @@ type Store = {
 export const useLayoutStore = create<Store>()(
   persist(
     (set) => ({
-      isGrid: true,
+      isGrid: false,
       toggle: () => set((state) => ({ isGrid: !state.isGrid })),
     }),
     {

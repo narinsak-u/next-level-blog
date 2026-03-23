@@ -1,27 +1,23 @@
 "use client";
 
-import { Box } from "@mantine/core";
+import Link from "next/link";
 import { TagSchemaType } from "@/types";
-import { useRouter } from "next/navigation";
 
 type Props = {
   tags: TagSchemaType;
 };
 
 const TagsBanner = ({ tags }: Props) => {
-  const router = useRouter();
-
   return (
     <div className="flex flex-wrap gap-y-[3px] gap-x-[10px] text-xs">
       {Object.entries(tags).map((tag, i) => (
-        <Box
+        <Link
           key={i}
-          component="a"
-          className="cursor-pointer text-neutral-500 dark:hover:text-amber-700 hover:text-orange-400 font-medium text-xs leading-relaxed"
-          onClick={() => router.push(`/tags/${tag[0]}`)}
+          href={`/tags/${tag[0]}`}
+          className="cursor-pointer text-foreground/50 hover:text-orange-500 dark:hover:text-orange-400 font-medium text-xs leading-relaxed transition-colors duration-200"
         >
-          <span>{`#${tag[0]}(${tag[1]})`}</span>
-        </Box>
+          {`#${tag[0]}(${tag[1]})`}
+        </Link>
       ))}
     </div>
   );

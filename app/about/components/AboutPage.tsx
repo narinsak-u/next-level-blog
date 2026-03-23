@@ -5,9 +5,7 @@ import { Container, Divider, Space } from "@mantine/core";
 const AboutPage = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Space h="sm" />
       <Container
-        size={"sm"}
         className="my-0 md:m-auto w-full justify-center flex"
       >
         <div>{children}</div>

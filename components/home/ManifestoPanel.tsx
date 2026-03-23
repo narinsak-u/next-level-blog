@@ -152,7 +152,10 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
           animate={{ opacity: 1, y: 0, transition: { duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT } }}
           exit={{ opacity: 0, y: -8, transition: { duration: 0.25, ease: [0.4, 0, 0.6, 1] } }}
           className={cn(
-            "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center backdrop-blur-xl text-balance border-2 border-border/50 bg-primary/20 max-w-3xl text-foreground rounded-3xl ring-1 ring-offset-primary/10 ring-border/10 ring-offset-2 shadow-button",
+            "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center text-balance max-w-3xl text-foreground",
+            "bg-white/10 dark:bg-white/8 backdrop-blur-2xl",
+            "border border-white/15 ring-1 ring-orange-500/10",
+            "shadow-2xl shadow-black/30",
             className
           )}
         >
@@ -179,7 +182,7 @@ const ManifestoCloseButton = ({ className }: ManifestoCloseButtonProps) => {
     <button
       onClick={close}
       className={cn(
-        "absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors",
+        "absolute top-4 right-4 p-2 hover:bg-white/10 transition-colors",
         className
       )}
       aria-label="Close manifesto"

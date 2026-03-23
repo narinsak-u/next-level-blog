@@ -1,30 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { Center } from "@mantine/core";
 import { siteMetadata } from "@/site/siteMetadata";
 import { RocketIcon } from "../icons/Icons";
-
-const IconLogo = () => (
-  <Link href="/" className="inline-flex gap-2.5 items-center cursor-pointer">
-    <span style={{ fontSize: "20px" }}>
-      <RocketIcon />
-    </span>
-    <div style={{ fontWeight: "bold" }}>{siteMetadata.title}</div>
-  </Link>
-);
+import { cn } from "@/lib/utils";
 
 const Logo = () => {
   return (
-    <Center
-      inline
-      style={{
-        display: "flex",
-        margin: "2rem 0 1rem",
-      }}
-    >
-      <IconLogo />
-    </Center>
+    <div className="flex justify-center mt-6 mb-4">
+      <Link
+        href="/"
+        aria-label={`${siteMetadata.title} — Home`}
+        className={cn(
+          "inline-flex gap-2 items-center",
+          "text-foreground/80 hover:text-orange-500 transition-colors duration-200",
+          "text-sm font-semibold uppercase tracking-widest"
+        )}
+      >
+        <span className="opacity-70">
+          <RocketIcon />
+        </span>
+        {siteMetadata.title}
+      </Link>
+    </div>
   );
 };
 

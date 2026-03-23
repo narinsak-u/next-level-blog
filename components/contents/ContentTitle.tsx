@@ -1,7 +1,7 @@
 "use client";
 
 import { format, parseISO } from "date-fns";
-import { Center, Space } from "@mantine/core";
+import { Box, Center, Divider, Space } from "@mantine/core";
 import Header from "@/components/layout/Header";
 import TagItem from "@/app/posts/components/TagItem";
 import { PageDataSchemaType } from "@/types";
@@ -16,20 +16,17 @@ const ContentTitle = ({ postData }: Props) => {
 
   return (
     <Center className="flex flex-col gap-3">
-      {postData.lastUpdated ? (
-        <time dateTime={postData.lastUpdated} style={{ fontSize: "15px" }}>
-          {`Last updated: ${format(
-            parseISO(postData.lastUpdated),
-            "LLLL d, yyyy"
-          )}`}
-        </time>
-      ) : (
-        <time dateTime={postData.createdTime} style={{ fontSize: "15px" }}>
-          {`${format(parseISO(postData.createdTime), "LLLL d, yyyy")}`}
-        </time>
-      )}
-      <Header title={postData.title} />
-      <TagItem tags={postData.tags} />
+      {/* <Header title={postData.title} /> */}
+      {/* <time
+        dateTime={postData.lastUpdated ?? postData.createdTime}
+        className="text-xs uppercase tracking-widest text-foreground/40"
+      >
+        {format(
+          parseISO(postData.lastUpdated ?? postData.createdTime),
+          "yyyy-MM-dd"
+        )}
+      </time> */}
+      {/* <TagItem tags={postData.tags} /> */}
       <Space h="xs" />
     </Center>
   );

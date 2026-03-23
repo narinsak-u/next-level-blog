@@ -9,26 +9,21 @@ const BackToPosts = () => {
 
   return (
     <>
+    <Space h={"xs"} />
       <Divider
-        // size="sm"
         my="xs"
         variant="solid"
         labelPosition="center"
         label={
-          <UnstyledButton
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              // fontWeight: '500'
-            }}
+          <div
+            className="flex items-center cursor-pointer"
             onClick={() => router.push("/posts")}
           >
-            <ArrowBigLeftLine size={28} />
+            <ArrowBigLeftLine size={15} />
             <Box ml={5} mr={10}>
-              <Text>Back to Posts</Text>
+              <p className="mb-0!">Back to Posts</p>
             </Box>
-          </UnstyledButton>
+          </div>
         }
       />
       <Space h={"xs"} />

@@ -23,13 +23,7 @@ const EndSection = ({ posts }: Props) => {
           onClick={() => {
             if (scroll.y > 0) scrollTo({ y: 0 });
           }}
-          style={{
-            color: "orange",
-            cursor: "pointer",
-            "&:hover": {
-              textDecoration: "none",
-            },
-          }}
+          className="text-orange-500 hover:text-orange-400 cursor-pointer transition-colors duration-200"
         >
           Back to top ({`#${posts.length}`})
         </Text>

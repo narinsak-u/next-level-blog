@@ -10,9 +10,7 @@ type Props = {
 const ProjectPage = ({ children }: Props) => {
   return (
     <>
-      <Space h={"sm"} />
-      <Container size={"sm"} className="my-0 mx-2 md:m-auto w-full">
-        <Space h={"sm"} />
+      <Container className="my-0 mx-2 md:m-auto w-full">
         <CustomBlockquote
           cite="Unknown"
           quote="Until it's done, tell none. ✌️"

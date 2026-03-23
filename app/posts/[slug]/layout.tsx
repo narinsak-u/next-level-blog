@@ -20,6 +20,7 @@ import Loader from "@/components/common/Loader";
 import PageLayout from "@/components/layout/PageLayout";
 import { siteMetadata } from "@/site/siteMetadata";
 import Share from "@/components/contents/Share";
+import { Box, Divider } from "@mantine/core";
 
 type Params = Promise<{ slug: string }>;
 
@@ -50,6 +51,16 @@ const layout = async ({ children, params }: Props) => {
       <Layout>
         <PageLayout>
           <div className="relative h-full p-0 mt-3">
+            <Divider
+              my="sm"
+              variant="solid"
+              labelPosition="center"
+              label={
+                <Box ml={5} mr={10}>
+                  <p className="mb-0!">{`${postData.title}`}</p>
+                </Box>
+              }
+            />
             <ContentTitle postData={postData} />
             <div className="sticky top-5 z-10 left-0">
               {postData && (

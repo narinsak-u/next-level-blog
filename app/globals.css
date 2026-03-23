@@ -22,7 +22,7 @@
 
   color-scheme: var(--mantine-color-scheme);
 
-  --radius: 0.625rem;
+  --radius: 0rem;
 
   --background: oklch(1 0 0);
 
@@ -86,6 +86,18 @@
 
   --sidebar-ring: oklch(0.708 0 0);
 
+  /* Orange accent system */
+  --accent-orange: #F97316;
+  --accent-orange-muted: #EA580C;
+  --accent-orange-subtle: rgba(249, 115, 22, 0.12);
+  --accent-orange-border: rgba(249, 115, 22, 0.25);
+
+  /* Glass surface tokens */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg-hover: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-hover: rgba(255, 255, 255, 0.18);
+
   /* Spacing variables */
   --inset: min(2vw, 1.5rem);
   --sides: 1rem;
@@ -109,9 +121,9 @@ body {
   padding: 0;
   margin: 0;
   line-height: 1.75;
-  font-weight: "400";
-  font-size: "16px";
-  overflow-x: "hidden";
+  font-weight: 400;
+  font-size: 16px;
+  overflow-x: hidden;
 
   -webkit-font-smoothing: var(--mantine-webkit-font-smoothing);
   -moz-osx-font-smoothing: var(--mantine-moz-font-smoothing);
@@ -125,8 +137,8 @@ div {
 
 code {
   font-family: var(--mantine-font-family-monospace);
-  font-size: "14px";
-  padding: "4px";
+  font-size: 14px;
+  padding: 4px;
   background-color: light-dark(
     var(--mantine-color-grey-9),
     var(--mantine-color-gray-1)
@@ -134,24 +146,24 @@ code {
 }
 
 ul {
-  margin-bottom: "16px";
-  padding-left: "24px";
+  margin-bottom: 16px;
+  padding-left: 24px;
   list-style-type: square;
 }
 
 li {
-  font-size: "16px";
-  margin-bottom: "4px";
+  font-size: 16px;
+  margin-bottom: 4px;
   font-family: var(--mantine-font-family);
 }
 
 p {
-  margin-bottom: "16px";
+  margin-bottom: 16px;
 }
 
 a {
-  cursor: "pointer";
-  text-decoration: "none";
+  cursor: pointer;
+  text-decoration: none;
   /* color: light-dark(
     var(--mantine-primary-color-5),
     var(--mantine-primary-color-7)
@@ -159,8 +171,8 @@ a {
 }
 
 blockquote {
-  margin: "10px";
-  padding: "0 15px";
+  margin: 10px;
+  padding: 0 15px;
   color: light-dark(
     var(--mantine-primary-color-4),
     var(--mantine-primary-color-6)
@@ -206,6 +218,16 @@ strong {
   --mantine-color-body: var(--bg-dark-color);
   /* Make layout wrappers transparent so the body gradient shows through */
   --background: transparent;
+
+  /* Dark mode text tokens — override light-mode near-black values */
+  --foreground: oklch(0.94 0 0);
+  --card-foreground: oklch(0.94 0 0);
+  --popover-foreground: oklch(0.94 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: oklch(0.94 0 0);
+  --muted-foreground: oklch(0.62 0 0);
+  --accent-foreground: oklch(0.94 0 0);
+  --border: oklch(1 0 0 / 10%);
 }
 
 /* If the attribute is on an ancestor (usually html), still force body to use gradient */
@@ -213,8 +235,8 @@ strong {
 body[data-mantine-color-scheme="dark"] {
   background: linear-gradient(
     to bottom,
-    var(--bg-dark-color) 70%,
-    #4940375b 100%
+    var(--bg-dark-color) 60%,
+    rgba(120, 53, 15, 0.22) 100%
   ) !important;
 }
 

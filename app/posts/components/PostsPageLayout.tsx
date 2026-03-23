@@ -1,14 +1,13 @@
 "use client";
 
-import { ActionIcon, Divider, Space, Timeline } from "@mantine/core";
-import { Hash, LayoutGrid, LayoutList } from "tabler-icons-react";
+import { ActionIcon, Box, Divider, Space, Text } from "@mantine/core";
+import { LayoutGrid, LayoutList } from "tabler-icons-react";
 import { useMemo } from "react";
 
-import Menu from "@/components/layout/Menu";
+// import Menu from "@/components/layout/Menu";
 import Layout from "@/components/layout/Layout";
 import PageLayout from "@/components/layout/PageLayout";
 import Spotlight from "@/components/common/Spotlight";
-import SearchPost from "@/app/posts/components/SearchPost";
 import TagSection from "./contents/tag-section";
 import TimelineContent from "./contents/TimelineContent";
 import Loader from "@/components/common/Loader";
@@ -35,56 +34,52 @@ const PostsPageLayout = ({ posts }: Props) => {
       <Spotlight data={posts} />
       <Layout>
         <PageLayout>
-          <Menu title="alohadancemeow posts" />
-          <SearchPost />
+          {/* <Menu title="alohadancemeow posts" /> */}
 
-          <Space h="md" />
-
-          <Timeline
-            bulletSize={24}
-            lineWidth={2}
-            style={{ padding: "0" }}
-          >
-            <Timeline.Item
-              bullet={<Hash size={16} />}
-              title="CHOOSE YOUR CONTENT"
-            >
-              <TagSection tags={tags} categoryCount={categoryCount} />
-            </Timeline.Item>
-          </Timeline>
+          <Divider
+            my="sm"
+            variant="solid"
+            labelPosition="center"
+            label={
+              <Box ml={5} mr={10}>
+                <p className="mb-0!">Posts</p>
+              </Box>
+            }
+          />
+          <Space h="xs" />
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-widest text-foreground/50">
+              Choose your content
+            </p>
+            <TagSection tags={tags} categoryCount={categoryCount} />
+          </div>
 
           <Divider
             my="xs"
             labelPosition="right"
             label={
-              <div className="flex gap-2 justify-center items-center">
-                <div>Layout</div>
-
+              <>
+                <span className="text-xs uppercase tracking-widest text-foreground/50">
+                  Layout
+                </span>
                 <ActionIcon
                   component="div"
-                  color="orange"
                   size="md"
-                  radius="sm"
-                  variant="filled"
-                  className="bg-orange-500! dark:bg-amber-900!"
+                  radius={0}
+                  variant="subtle"
+                  className="bg-white/5 hover:bg-orange-500/15 border border-white/10 hover:border-orange-500/30 transition-all duration-200"
                   onClick={() => toggle()}
+                  aria-label={isGrid ? "Switch to list layout" : "Switch to grid layout"}
                 >
                   {isGrid ? (
-                    <LayoutGrid
-                      size={18}
-                      className="text-black dark:text-white"
-                    />
+                    <LayoutGrid size={16} className="text-orange-500" />
                   ) : (
-                    <LayoutList
-                      size={18}
-                      className="text-black dark:text-white"
-                    />
+                    <LayoutList size={16} className="text-orange-500" />
                   )}
                 </ActionIcon>
-              </div>
+              </>
             }
           />
-          <Space h="sm" />
           <TimelineContent posts={posts} />
           <Space h="lg" />
         </PageLayout>
