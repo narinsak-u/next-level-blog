@@ -23,8 +23,8 @@ const ContentBody = ({ children, postData }: Props) => {
 
         <Box className="flex justify-center items-center gap-2">
           <p className="mb-0!"> More in : </p>
-          {postData.tags.map((tag, i) => (
-            <Link key={i} href={`/tags/${tag.name}`}>
+          {postData.tags.map((tag) => (
+            <Link key={tag.id} href={`/tags/${tag.name}`}>
               <span className="decoration-none cursor-pointer">{`#${tag.name}`}</span>
             </Link>
           ))}

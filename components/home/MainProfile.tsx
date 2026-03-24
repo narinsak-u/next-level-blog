@@ -47,8 +47,8 @@ const MainProfile = () => {
           <ManifestoPanel.Trigger />
           <ManifestoPanel.Content>
             <article className="relative text-white overflow-y-auto pretty-scrollbar italic p-6 h-full [&_p]:my-4">
-              {siteMetadata.home.manifesto.paragraphs.map((text, i) => (
-                <p key={i}>{text}</p>
+              {siteMetadata.home.manifesto.paragraphs.map((text) => (
+                <p key={text}>{text}</p>
               ))}
             </article>
           </ManifestoPanel.Content>

@@ -25,7 +25,7 @@ const PostsPageLayout = ({ posts }: Props) => {
   const { isGrid, toggle } = useLayoutStore();
 
   const tags = useMemo(() => getTags(posts), [posts]);
-  const categoryCount = useMemo(() => getCategory(posts).length, [posts]);
+  const categoryCount = getCategory(posts).length;
 
   if (!posts) return <Loader />;
 

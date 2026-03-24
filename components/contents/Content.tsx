@@ -6,6 +6,7 @@ import { ExtendedRecordMap } from "notion-types";
 import { notFound } from "next/navigation";
 import { useCallback } from "react";
 import useGetTweetId from "@/hooks/use-get-tweet-id";
+import ContentErrorBoundary from "./ContentErrorBoundary";
 
 const Code = dynamic(() =>
   import("react-notion-x/build/third-party/code").then((m) => m.Code)
@@ -47,18 +48,20 @@ const Content = ({ recordMap }: Props) => {
   if (!recordMap) return notFound();
 
   return (
-    <NotionRenderer
-      recordMap={recordMap}
-      disableHeader
-      components={{
-        Code,
-        Equation,
-        Modal,
-        Pdf,
-        Tweet: myTweet,
-      }}
-      className="prose dark:prose-a:border-amber-700! prose-blockquote:border-amber-500! dark:prose-blockquote:border-amber-700!"
-    />
+    <ContentErrorBoundary>
+      <NotionRenderer
+        recordMap={recordMap}
+        disableHeader
+        components={{
+          Code,
+          Equation,
+          Modal,
+          Pdf,
+          Tweet: myTweet,
+        }}
+        className="prose dark:prose-a:border-amber-700! prose-blockquote:border-amber-500! dark:prose-blockquote:border-amber-700!"
+      />
+    </ContentErrorBoundary>
   );
 };
 

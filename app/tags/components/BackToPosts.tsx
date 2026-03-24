@@ -15,15 +15,15 @@ const BackToPosts = () => {
         variant="solid"
         labelPosition="center"
         label={
-          <div
-            className="flex items-center cursor-pointer"
+          <button
+            className="flex items-center cursor-pointer bg-transparent border-0 p-0"
             onClick={() => router.push("/posts")}
           >
             <ArrowBigLeftLine size={15} />
             <Box ml={5} mr={10}>
               <p className="mb-0!">Back to Posts</p>
             </Box>
-          </div>
+          </button>
         }
       />
       <Space h={"xs"} />

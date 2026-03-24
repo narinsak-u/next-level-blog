@@ -10,9 +10,9 @@ type Props = {
 const TagsBanner = ({ tags }: Props) => {
   return (
     <div className="flex flex-wrap gap-y-[3px] gap-x-[10px] text-xs">
-      {Object.entries(tags).map((tag, i) => (
+      {Object.entries(tags).map((tag) => (
         <Link
-          key={i}
+          key={tag[0]}
           href={`/tags/${tag[0]}`}
           className="cursor-pointer text-foreground/50 hover:text-orange-500 dark:hover:text-orange-400 font-medium text-xs leading-relaxed transition-colors duration-200"
         >

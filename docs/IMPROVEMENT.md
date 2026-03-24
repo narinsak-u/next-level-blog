@@ -364,3 +364,69 @@ const Posts = async () => {
 | MEDIUM | Ineffective `useCallback` | `use-fetch-posts.ts` | ✅ |
 | LOW | Dead code | `use-layout-store.ts` | ✅ |
 | LOW | Unnecessary wrapper | `get-post-by-id.ts` | ✅ |
+
+---
+
+## Code Review & Refactor Session (2026-03-24)
+
+Analysis via code-reviewer + code-refactorer agents. Surgical fixes targeting bugs, correctness, and consistency.
+
+### HIGH — Bugs / Correctness
+
+- [x] **`Comments.tsx` — Dead no-op useEffect**
+  - File: `components/contents/Comments.tsx`
+  - Fix: Removed `useEffect`, `setColorScheme` destructuring, and `useEffect` import
+
+- [x] **`use-fetch-posts.ts` — Duplicated filter + risky cache mutation**
+  - File: `hooks/use-fetch-posts.ts`
+  - Fix: Removed `useEffect`, `useQueryClient`, and `cachedPosts`; simplified to pure infinite query
+
+- [x] **`Content.tsx` — No error boundary around NotionRenderer**
+  - Files: `components/contents/Content.tsx`, `components/contents/ContentErrorBoundary.tsx` (new)
+  - Fix: Created class-based `ContentErrorBoundary`, wrapped `<NotionRenderer>`
+
+### MEDIUM — Code Quality / Consistency
+
+- [x] **`useTheme.ts` — New object literal every render**
+  - File: `hooks/useTheme.ts`
+  - Fix: Wrapped return value in `useMemo`
+
+- [x] **`HomePage.tsx` — Direct Mantine coupling instead of `useTheme`**
+  - File: `components/home/HomePage.tsx`
+  - Fix: Replaced `useMantineColorScheme` with `useTheme()` hook
+
+### LOW — Cleanup
+
+- [x] **Remove dead commented-out code**
+  - `components/layout/Layout.tsx`: removed `{/* <ThemeMode /> */}` + unused import
+  - `app/about/layout.tsx`: removed `{/* <Menu> */}` + unused import
+  - `components/providers/MantineProviders.tsx`: removed commented Player, hotkeys, and unused imports
+
+---
+
+## React Doctor Audit (2026-03-24)
+
+Score: **96 → 99 / 100**. 1 intentional warning remaining.
+
+### Fixed
+
+- [x] **Array index keys** (4 instances)
+  - `components/home/MainProfile.tsx`: `key={text}`
+  - `app/posts/components/TagsBanner.tsx`: `key={tag[0]}`
+  - `components/contents/ContentBody.tsx`: `key={tag.id}`
+  - `app/posts/components/TagItem.tsx`: `key={tag.id}` + replaced `<p onClick>` with `<Link>`
+
+- [x] **A11y: clickable non-interactive elements**
+  - `app/tags/components/BackToPosts.tsx`: `<div onClick>` → `<button>`
+  - `app/posts/components/TagItem.tsx`: `<p onClick>` → `<Link>`
+
+- [x] **Trivial `useMemo`**
+  - `app/posts/components/PostsPageLayout.tsx`: removed `useMemo` from `categoryCount`
+
+- [x] **Redundant `setVolumeState` in useEffect**
+  - `context/MusicPlayerContext.tsx`: removed from effect (state already initialized with it)
+
+### Remaining (intentional)
+
+- ⚠️ **`useState` initialized from prop `defaultVolume`** — `context/MusicPlayerContext.tsx:63`
+  - Intentional: `defaultVolume` is initial-only state; user volume changes independently. Not a bug.

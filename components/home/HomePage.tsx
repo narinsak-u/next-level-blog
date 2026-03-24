@@ -13,15 +13,15 @@ import {
   Box,
   Center,
   Kbd,
-  useMantineColorScheme,
   Image,
 } from "@mantine/core";
+import { useTheme } from "@/hooks/useTheme";
 
 import { Navigations } from "@/site/data";
 import FeedbackComponent from "./Feedback";
 
 const HomePage: React.FC = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, toggle: toggleColorScheme } = useTheme();
 
   return (
     <Container>

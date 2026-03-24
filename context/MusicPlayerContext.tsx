@@ -67,7 +67,6 @@ const MusicPlayerProvider = ({
     if (!el) return;
 
     el.volume = defaultVolume;
-    setVolumeState(defaultVolume);
 
     const handleEnded = () => setIsPlaying(false);
     el.addEventListener("ended", handleEnded);
