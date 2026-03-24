@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useHotkeys } from "@mantine/hooks";
 
 /**
  * MusicPlayerContext - Global audio playback state management
@@ -109,6 +110,8 @@ const MusicPlayerProvider = ({
     el.volume = vol;
     setVolumeState(vol);
   }, []);
+
+  useHotkeys([["ctrl+M", togglePlay]]);
 
   return (
     <MusicPlayerContext.Provider

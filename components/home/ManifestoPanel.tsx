@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -100,32 +99,34 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
   return (
     <m.div
       layout="position"
-      transition={{ duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT }}
+      transition={ANIMATION.SPRING}
       key="button"
       className={cn(isOpen ? "my-6" : "mt-6", className)}
     >
       <CNButton className={cn("relative px-8 cursor-pointer")} onClick={toggle}>
         <m.span
           animate={{ x: isOpen ? -16 : 0 }}
-          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ type: "spring", stiffness: 350, damping: 28 }}
           className="inline-block"
         >
           {children || siteMetadata.home.manifesto.trigger}
         </m.span>
 
-        {isOpen && (
-          <m.div
-            className={cn(
-              buttonVariants({ variant: "iconButton", size: "icon" }),
-              "absolute -top-px -right-px aspect-square cursor-pointer"
-            )}
-            initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.25 } }}
-            exit={{ opacity: 0, scale: 0.5, rotate: 90, transition: { duration: 0.2 } }}
-          >
-            <X className="size-5 text-primary-foreground" />
-          </m.div>
-        )}
+        <AnimatePresence>
+          {isOpen && (
+            <m.div
+              className={cn(
+                buttonVariants({ variant: "iconButton", size: "icon" }),
+                "absolute -top-px -right-px aspect-square cursor-pointer"
+              )}
+              initial={{ opacity: 0, scale: 0.4, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, transition: { type: "spring", stiffness: 420, damping: 22 } }}
+              exit={{ opacity: 0, scale: 0.4, rotate: 90, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } }}
+            >
+              <X className="size-5 text-primary-foreground" />
+            </m.div>
+          )}
+        </AnimatePresence>
       </CNButton>
     </m.div>
   );
@@ -148,9 +149,9 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
     <AnimatePresence>
       {isOpen && (
         <m.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0, transition: { duration: ANIMATION.DURATION, ease: ANIMATION.EASE_OUT } }}
-          exit={{ opacity: 0, y: -8, transition: { duration: 0.25, ease: [0.4, 0, 0.6, 1] } }}
+          initial={{ opacity: 0, y: 16, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 160, damping: 18, mass: 0.6 } }}
+          exit={{ opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.2, ease: [0.4, 0, 0.6, 1] } }}
           className={cn(
             "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center text-balance max-w-3xl text-foreground",
             "bg-white/10 dark:bg-white/8 backdrop-blur-2xl",
