@@ -7,6 +7,7 @@ export const siteMetadata = {
   description: "บล็อกเกอร์น่ะมีเยอะแล้ว นับฉันเข้าไปอีกสักคนจะเป็นอะไรไป ✌️",
   siteAddress: "https://alohadancemeow.dev",
   author: "alohadancemeow",
+  cnName: "张泓历",
   twitter: "@3rd_meepo",
   github: "https://github.com/alohadancemeow",
   githubRepo: "https://github.com/alohadancemeow/next-level-blog",
@@ -30,8 +31,10 @@ export const siteMetadata = {
   credits: {
     banner: {
       credit: {
-        text: "Silhouette At Twilight",
-        url: "https://moewalls.com/anime/silhouette-at-twilight-sparkle-live-wallpaper/",
+        text: "Where Winds Meet",
+        url: "https://www.wherewindsmeetgame.com/",
+        // text: "Silhouette At Twilight",
+        // url: "https://moewalls.com/anime/silhouette-at-twilight-sparkle-live-wallpaper/",
       },
     },
   },

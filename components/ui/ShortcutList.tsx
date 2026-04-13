@@ -5,10 +5,12 @@ import Kbd from "./Kbd";
 
 interface ShortcutItem {
   id: string;
-  keys: string[];
-  label: string;
+  keys?: string[];
+  label?: string;
+  icon?: React.ReactNode;
   href?: string;
   onClick?: () => void;
+  target?: string;
 }
 
 interface ShortcutListProps {
@@ -18,23 +20,32 @@ interface ShortcutListProps {
 
 const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
   return (
-    <div className={`flex items-center justify-center ${gap} py-2`}>
-      {items.map(({ id, keys, label, href, onClick }) => {
+    <div className={`flex items-center justify-center ${gap} py-2 bg-transparent`}>
+      {items.map(({ id, keys, label, icon, href, onClick, target }) => {
         const content = (
           <>
-            <div className="flex items-center gap-1">
-              {keys.map((k, i) => (
-                <span key={k} className="flex items-center gap-1">
-                  <Kbd>{k}</Kbd>
-                  {i < keys.length - 1 && (
-                    <span className="text-[10px] text-foreground/40">+</span>
-                  )}
-                </span>
-              ))}
-            </div>
-            <span className="text-[10px] uppercase tracking-widest">
-              {label}
-            </span>
+            {icon
+              ? icon
+              : keys &&
+                keys.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    {keys.map((k, i) => (
+                      <span key={k} className="flex items-center gap-1">
+                        <Kbd>{k}</Kbd>
+                        {i < keys.length - 1 && (
+                          <span className="text-[10px] text-foreground/50">
+                            +
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                )}
+            {label && (
+              <span className="text-[10px] uppercase tracking-widest">
+                {label}
+              </span>
+            )}
           </>
         );
 
@@ -43,7 +54,8 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
             <Link
               href={href}
               key={id}
-              className="flex items-center gap-1.5 text-foreground/60 hover:text-foreground/90 transition-colors"
+              target={target}
+              className="flex items-center gap-1.5  hover:text-foreground/90 transition-colors"
             >
               {content}
             </Link>
@@ -55,7 +67,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
             <button
               key={id}
               onClick={onClick}
-              className="flex items-center gap-1.5 text-foreground/60 hover:text-foreground/90 transition-colors"
+              className="flex items-center gap-1.5  hover:text-foreground/90 transition-colors"
             >
               {content}
             </button>
@@ -63,10 +75,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
         }
 
         return (
-          <div
-            key={id}
-            className="flex items-center gap-1.5 text-foreground/50"
-          >
+          <div key={id} className="flex items-center gap-1.5 ">
             {content}
           </div>
         );
@@ -76,3 +85,4 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
 };
 
 export default ShortcutList;
+export type { ShortcutItem };
