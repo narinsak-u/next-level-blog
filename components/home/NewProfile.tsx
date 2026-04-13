@@ -8,13 +8,13 @@ import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 
 const NewProfile = () => {
   return (
-    <MusicPlayerProvider>
+    <MusicPlayerProvider src="/assets/where-winds-meet-ost.mp3">
       <main className="h-dvh w-full">
         <div className="relative h-full w-full">
           <Credit />
           <Background
-            src="/silhouette-at-twilight.mp4"
-            placeholder="/alt-placeholder.jpg"
+            src="/assets/where-winds-meet-vdo.mp4"
+            placeholder="/assets/where-winds-meet-wallpapers.jpg"
           />
           <MainProfile />
           <MainFooter />

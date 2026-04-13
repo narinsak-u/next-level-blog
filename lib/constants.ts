@@ -19,7 +19,7 @@ export const ANIMATION = {
 
 export const MUSIC = {
   VOLUME: 0.3,
-  SRC: "/assets/lan-ting-xu.mp3",
+  SRC: "/assets/where-winds-meet-ost.mp3",
 } as const;
 
 export const POSTS = {
