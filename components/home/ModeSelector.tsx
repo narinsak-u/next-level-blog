@@ -17,8 +17,8 @@ const ModeSelector = () => {
         value={mode}
         onChange={(value) => setMode(value as Mode)}
         data={[
-          { label: "Focused", value: "focused" },
-          { label: "Jianghu", value: "jianghu" },
+          { label: "🎯 Focused", value: "focused" },
+          { label: "🍃 Jianghu", value: "jianghu" },
         ]}
         size="sm"
         styles={{

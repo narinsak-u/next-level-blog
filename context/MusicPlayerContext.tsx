@@ -64,10 +64,14 @@ const MusicPlayerProvider = ({
   const [volume, setVolumeState] = useState(defaultVolume);
 
   useEffect(() => {
+    setVolumeState(defaultVolume);
+  }, [defaultVolume]);
+
+  useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
 
-    el.volume = defaultVolume;
+    el.volume = volume;
 
     const handleEnded = () => setIsPlaying(false);
     el.addEventListener("ended", handleEnded);

@@ -16,21 +16,25 @@ export const Navigations = [
   {
     id: "1",
     href: "/about",
-    name: "📌 About Me",
+    name: "About Me",
+    emoji: "📌 ",
   },
   {
     id: "2",
     href: "/posts",
-    name: "📖 Posts",
+    name: "Posts",
+    emoji: "📖",
   },
   {
     id: "3",
     href: "/hobbies",
-    name: "🎨 Hobbies",
+    name: "Hobbies",
+    emoji: "🎨",
   },
   {
     id: "4",
     href: "/note",
-    name: "📝 Note",
+    name: "Note",
+    emoji: "📝",
   },
 ];

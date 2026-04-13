@@ -1,103 +1,82 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Container,
-  Text,
-  UnstyledButton,
-  Divider,
-  Grid,
-  Space,
-  Stack,
-  Title,
-  Box,
-  Center,
-  Kbd,
-  Image,
-} from "@mantine/core";
-import { useTheme } from "@/hooks/useTheme";
+import { Container, Divider, Space, Stack, Box, Image } from "@mantine/core";
+import { cn } from "@/lib/utils";
 
 import { Navigations } from "@/site/data";
 import FeedbackComponent from "./Feedback";
 
-const HomePage: React.FC = () => {
-  const { colorScheme, toggle: toggleColorScheme } = useTheme();
+const Kbd = ({ children }: { children: React.ReactNode }) => (
+  <kbd
+    className={cn(
+      "inline-flex items-center px-1.5 py-0.5",
+      "text-[10px] font-medium uppercase tracking-wide",
+      "bg-white/5 border border-white/15 text-foreground/50",
+    )}
+  >
+    {children}
+  </kbd>
+);
 
+const HomePage: React.FC = () => {
   return (
     <Container>
-      <Center
-        style={{
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
-      >
-        <Stack style={{ margin: "0 auto", paddingLeft: "10px" }}>
-          <Box>
+      <div className="w-full min-h-screen flex items-center">
+        <Stack style={{ margin: "0 auto", paddingLeft: "10px", gap: "4px" }}>
+          <Box className="mx-auto flex gap-4 items-center">
+            {/* image */}
             <Image
-              src="/image3.gif"
+              src="/profile.jpg"
               alt="profile-image"
-              className="rounded-full w-48 h-48"
+              w={180}
+              h={180}
+              // className="rounded-full!"
             />
+            {/* text */}
+            <div className="text-xs gap-2 leading-relaxed">
+              <p className="mb-0!">
+                Hi there! 👋
+                <br /> I&apos;m Hai — 海
+                <br /> ---
+                <br /> AKA: alohadancemeow
+                <br /> NAME: Zhang Hongli
+                <br /> CN: 张泓历
+                <br /> SERVER: TH
+                <br /> GEN: Z ✌️
+              </p>
+            </div>
           </Box>
-
-          <Box>
-            <Title order={1}>Personal Home</Title>
-            <Space h="xs" />
-            <Text>Hi there! 👋 I&apos;m Hai — 海 — aka: alohadancemeow ✌️</Text>
-          </Box>
-
-          <Divider my="xs" size="xs" variant="solid" />
-          <Space h="sm" />
-
-          <Box style={{ width: "70%" }}>
-            <Grid grow>
-              {Navigations.map(({ name, href, id }) => (
-                <Grid.Col span={6} key={id}>
-                  <Link href={href} passHref>
-                    <UnstyledButton >{name}</UnstyledButton>
-                  </Link>
-                </Grid.Col>
-              ))}
-            </Grid>
-          </Box>
-
-          <Space h="sm" />
-
+          <Space h="xs" />
           <Divider
-            my="lg"
+            my="sm"
             variant="solid"
-            labelPosition="left"
+            labelPosition="center"
             label={
-              <UnstyledButton
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onClick={() => toggleColorScheme()}
-              >
-                <span style={{ fontSize: "20px" }}>
-                  {colorScheme === "dark" ? "🌙" : "🌤️"}
-                </span>
-                <Box ml={5} mr={10}>
-                  Switch Mode
-                </Box>
-                <Kbd>⌘</Kbd>
-                <span style={{ margin: "0 5px" }}>+</span>
-                <Kbd>D</Kbd>
-                <span style={{ margin: "0 10px" }}>/</span>
-                <Kbd>Ctrl</Kbd>
-                <span style={{ margin: "0 5px" }}>+</span>
-                <Kbd>D</Kbd>
-              </UnstyledButton>
+              <Box ml={5} mr={10}>
+                <p className="mb-0!">Personal Home</p>
+              </Box>
             }
           />
+
+          <div className="flex items-center justify-center gap-4 py-2">
+            {Navigations.map(({ name, href, id, emoji }) => (
+              <Link
+                href={href}
+                key={id}
+                className="flex items-center gap-1.5 text-foreground/35 hover:text-foreground/60 transition-colors"
+              >
+                <Kbd>{emoji}</Kbd>
+                <span className="text-[10px] uppercase tracking-widest">
+                  {name}
+                </span>
+              </Link>
+            ))}
+          </div>
+
           <FeedbackComponent />
         </Stack>
-      </Center>
+      </div>
     </Container>
   );
 };
