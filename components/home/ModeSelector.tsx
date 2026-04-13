@@ -1,10 +1,15 @@
 "use client";
 
+import { useEffect } from "react";
 import { SegmentedControl } from "@mantine/core";
 import { useModeStore, type Mode } from "@/hooks/use-mode-store";
 
 const ModeSelector = () => {
   const { mode, setMode } = useModeStore();
+
+  useEffect(() => {
+    useModeStore.persist.rehydrate();
+  }, []);
 
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
