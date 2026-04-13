@@ -12,7 +12,14 @@ export const myMusic = {
 };
 
 // Menu
-export const Navigations = [
+export interface NavigationItem {
+  id: string;
+  href: string;
+  name: string;
+  emoji: string;
+}
+
+export const Navigations: NavigationItem[] = [
   {
     id: "1",
     href: "/about",

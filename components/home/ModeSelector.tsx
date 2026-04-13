@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { SegmentedControl } from "@mantine/core";
+import { SegmentedControl, useMantineColorScheme } from "@mantine/core";
 import { useModeStore, type Mode } from "@/hooks/use-mode-store";
 
 const ModeSelector = () => {
   const { mode, setMode } = useModeStore();
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
 
   useEffect(() => {
     useModeStore.persist.rehydrate();
@@ -23,14 +25,13 @@ const ModeSelector = () => {
         size="sm"
         styles={{
           root: {
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            backdropFilter: "blur(8px)",
+            backgroundColor: "transparent",
           },
           label: {
-            color: "rgba(255, 255, 255, 0.7)",
+            color: isDark ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
           },
           indicator: {
-            backgroundColor: "rgba(255, 255, 255, 0.15)",
+            backgroundColor: isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)",
           },
         }}
       />

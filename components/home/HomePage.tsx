@@ -1,23 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { Container, Divider, Space, Stack, Box, Image } from "@mantine/core";
-import { cn } from "@/lib/utils";
-
 import { Navigations } from "@/site/data";
+import ShortcutList from "@/components/ui/ShortcutList";
 import FeedbackComponent from "./Feedback";
-
-const Kbd = ({ children }: { children: React.ReactNode }) => (
-  <kbd
-    className={cn(
-      "inline-flex items-center px-1.5 py-0.5",
-      "text-[10px] font-medium uppercase tracking-wide",
-      "bg-white/5 border border-white/15 text-foreground/50",
-    )}
-  >
-    {children}
-  </kbd>
-);
 
 const HomePage: React.FC = () => {
   return (
@@ -59,20 +45,14 @@ const HomePage: React.FC = () => {
             }
           />
 
-          <div className="flex items-center justify-center gap-4 py-2">
-            {Navigations.map(({ name, href, id, emoji }) => (
-              <Link
-                href={href}
-                key={id}
-                className="flex items-center gap-1.5 text-foreground/35 hover:text-foreground/60 transition-colors"
-              >
-                <Kbd>{emoji}</Kbd>
-                <span className="text-[10px] uppercase tracking-widest">
-                  {name}
-                </span>
-              </Link>
-            ))}
-          </div>
+          <ShortcutList
+            items={Navigations.map((nav) => ({
+              id: nav.id,
+              keys: [nav.emoji],
+              label: nav.name,
+              href: nav.href,
+            }))}
+          />
 
           <FeedbackComponent />
         </Stack>
