@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, Space } from "@mantine/core";
+import { Box } from "@mantine/core";
 import Logo from "./Logo";
 import Footer from "./Footer";
 import KeyShortcuts from "@/app/posts/components/KeyShortcuts";

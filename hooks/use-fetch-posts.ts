@@ -35,7 +35,7 @@ const useFetchPosts = ({ categoryName }: Props) => {
       placeholderData: (previousData) => previousData,
     });
 
-  const posts = data?.pages.flatMap((page) => page || []).filter(Boolean) ?? [];
+  const posts = data?.pages.flatMap((page) => page || []) ?? [];
 
   return {
     posts,

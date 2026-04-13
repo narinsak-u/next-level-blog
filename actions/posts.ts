@@ -6,55 +6,69 @@ import unofficialClient from "@/lib/notion-api";
 import { PageDataSchema, PageDataSchemaType } from "@/types";
 import { defaultImage } from "@/site/data";
 import type { ExtendedRecordMap } from "notion-types";
-import type { QueryDataSourceResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints";
 
 // --- Types & Constants ---
-type NotionPage = QueryDataSourceResponse["results"][number];
 const DEFAULT_POST_LIMIT = 6;
 const DEFAULT_DATE = "2023-07-27T17:12:00.000Z";
 const DEFAULT_DESCRIPTION = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?";
 
-type PageWithTimestamps = {
+interface PageWithTimestamps {
   id: string;
   created_time?: string;
   last_edited_time?: string;
-  properties?: Record<string, unknown>;
-  cover?: { external?: { url: string }; file?: { url: string } };
+  properties?: PageProperty;
+  cover?: { external?: { url: string }; file?: { url: string } } | null;
   created_by?: { id: string };
   last_edited_by?: { id: string };
-  icon?: { emoji?: string };
-};
+  icon?: { emoji?: string } | null;
+}
+
+interface PageProperty {
+  Name?: { title?: Array<{ plain_text?: string }> };
+  Description?: { rich_text?: Array<{ plain_text?: string }> };
+  Tags?: { multi_select?: Array<{ id: string; name: string; color: string }> };
+  Category?: { select?: { name?: string } };
+  Status?: { status?: { name?: string } };
+}
 
 // --- Internal Mapping Logic ---
 /**
  * Maps Notion database results to our clean application Post type.
  * Private to this module.
  */
-const mapNotionResultsToPosts = (data: NotionPage[]): PageDataSchemaType[] => {
+const mapNotionResultsToPosts = (data: unknown[]): PageDataSchemaType[] => {
   try {
     if (!data.length) return [];
 
-    return data.map((page: NotionPage) => {
-      const pageWithTimestamps = page as unknown as PageWithTimestamps;
-      const properties = pageWithTimestamps.properties ?? {};
-      const titleProperty = properties.Name as { title?: Array<{ plain_text?: string }> } | undefined;
-      const descProperty = properties.Description as { rich_text?: Array<{ plain_text?: string }> } | undefined;
-      const tagsProperty = properties.Tags as { multi_select?: Array<{ id: string; name: string; color: string }> } | undefined;
-      const categoryProperty = properties.Category as { select?: { name?: string } } | undefined;
+    return data.map((page) => {
+      const pageWithTimestamps = page as PageWithTimestamps;
+      const properties = pageWithTimestamps.properties ?? {} as PageProperty;
+      const titleProperty = properties.Name;
+      const descProperty = properties.Description;
+      const tagsProperty = properties.Tags;
+      const categoryProperty = properties.Category;
+
+      const coverUrl = pageWithTimestamps.cover && typeof pageWithTimestamps.cover !== "string"
+        ? (pageWithTimestamps.cover as { external?: { url: string }; file?: { url: string } })?.external?.url
+          ?? (pageWithTimestamps.cover as { external?: { url: string }; file?: { url: string } })?.file?.url
+        : null;
+
+      const iconEmoji = pageWithTimestamps.icon && typeof pageWithTimestamps.icon !== "string"
+        ? (pageWithTimestamps.icon as { emoji?: string })?.emoji ?? ""
+        : "";
 
       const post = {
-        id: page.id,
+        id: pageWithTimestamps.id,
         title: titleProperty?.title?.[0]?.plain_text ?? "title",
         createdTime: pageWithTimestamps.created_time ?? DEFAULT_DATE,
         lastUpdated: pageWithTimestamps.last_edited_time ?? DEFAULT_DATE,
         tags: tagsProperty?.multi_select ?? [],
         description: descProperty?.rich_text?.[0]?.plain_text ?? DEFAULT_DESCRIPTION,
-        coverImage: pageWithTimestamps.cover?.external?.url 
-          ?? pageWithTimestamps.cover?.file?.url 
-          ?? defaultImage,
+        coverImage: coverUrl ?? defaultImage,
         authorId: pageWithTimestamps.created_by?.id ?? "",
         lastEditedBy: pageWithTimestamps.last_edited_by?.id ?? "",
-        icon: pageWithTimestamps.icon?.emoji ?? "",
+        icon: iconEmoji,
         category: categoryProperty?.select?.name ?? "",
       };
 
@@ -79,28 +93,27 @@ export const fetchPosts = cache(async (options: {
 } = {}): Promise<PageDataSchemaType[]> => {
   const { category, limit = DEFAULT_POST_LIMIT, page = 1, status = "Done" } = options;
 
-  const filters: any[] = [
-    {
-      property: "Status",
-      status: { equals: status },
-    }
-  ];
+  const statusFilter: QueryDataSourceParameters["filter"] = {
+    property: "Status",
+    status: { equals: status },
+  };
 
-  if (category) {
-    filters.push({
-      property: "Category",
-      select: { equals: category },
-    });
-  }
+  const categoryFilter: QueryDataSourceParameters["filter"] | null = category
+    ? { property: "Category", select: { equals: category } }
+    : null;
+
+  const filter: QueryDataSourceParameters["filter"] = categoryFilter
+    ? { and: [statusFilter, categoryFilter] }
+    : statusFilter;
 
   try {
     const response = await officialClient.dataSources.query({
       data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
-      filter: filters.length > 1 ? { and: filters } : filters[0],
+      filter,
       sorts: [
         { timestamp: "created_time", direction: "descending" },
       ],
-    } as any);
+    });
 
     const results = response.results;
     if (!results.length) return [];
@@ -128,16 +141,15 @@ export const fetchPostById = cache(async (postId: string): Promise<PageDataSchem
   try {
     const page = await officialClient.pages.retrieve({
       page_id: postId,
-    }) as any;
+    }) as unknown as PageWithTimestamps & { properties?: PageProperty };
 
     if (!page) return null;
 
-    // Only return the post if its Status is strictly "Done", to match the original function's intent
     if (page.properties?.Status?.status?.name !== "Done") {
       return null;
     }
 
-    const [post] = mapNotionResultsToPosts([page] as any);
+    const [post] = mapNotionResultsToPosts([page]);
     return post ?? null;
   } catch (error) {
     console.error(`Failed to fetch post by ID ${postId}:`, error);

@@ -45,3 +45,8 @@ export const Navigations: NavigationItem[] = [
     emoji: "📝",
   },
 ];
+
+export const MainKeys = [
+  { id: "theme", keys: ["Ctrl", "D"], label: "Theme" },
+  { id: "mode", keys: ["Ctrl", "Q"], label: "Mode" },
+];

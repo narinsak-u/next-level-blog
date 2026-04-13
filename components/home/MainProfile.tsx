@@ -2,11 +2,10 @@
 
 import { LazyMotion, AnimatePresence, m, domAnimation } from "framer-motion";
 import { ManifestoPanel, useManifesto } from "./ManifestoPanel";
-import Menu from "./Menu";
-import { Container, Divider, Space, Stack, Box, Image } from "@mantine/core";
+import { Space } from "@mantine/core";
 import { ANIMATION } from "@/lib/constants";
 import { siteMetadata } from "@/site/siteMetadata";
-import { Navigations } from "@/site/data";
+import { Navigations, MainKeys } from "@/site/data";
 import ShortcutList from "@/components/ui/ShortcutList";
 import KeyShortcuts from "@/app/posts/components/KeyShortcuts";
 
@@ -25,11 +24,6 @@ import KeyShortcuts from "@/app/posts/components/KeyShortcuts";
  * @see ANIMATION - Shared timing constants for all animations
  */
 
-const KEYS = [
-  { id: "theme", keys: ["Ctrl", "D"], label: "Theme" },
-  { id: "mode", keys: ["Ctrl", "Q"], label: "Mode" },
-];
-
 const MainProfile = () => {
   return (
     <div className="flex overflow-hidden relative flex-col gap-4 justify-center items-center pt-10 w-full h-full short:lg:pt-10 pb-footer-safe-area 2xl:pt-footer-safe-area px-sides short:lg:gap-4 lg:gap-8">
@@ -43,13 +37,9 @@ const MainProfile = () => {
             ease: ANIMATION.EASE_OUT,
           }}
         >
-          <KeyShortcuts items={KEYS} />
+          <KeyShortcuts items={MainKeys} />
           <Space h="lg" />
-          {/*<p className="font-serif uppercase tracking-[0.4em] leading-relaxed text-center text-xs short:lg:text-xs text-foreground">
-            {siteMetadata.homeTitle}
-          </p>*/}
           <h1 className="font-serif leading-tight tracking-widest text-4xl font-extrabold short:lg:text-8xl lg:text-8xl sm:text-6xl text-foreground">
-            {/*{siteMetadata.author}®*/}
             {siteMetadata.cnName}
           </h1>
         </m.div>
@@ -76,8 +66,6 @@ const MainProfile = () => {
               href: nav.href,
             }))}
           />
-
-          {/*<MenuPanel />*/}
         </ManifestoPanel>
       </div>
     </div>
@@ -123,39 +111,6 @@ const IntroPanel = () => {
         </m.div>
       )}
     </AnimatePresence>
-  );
-};
-
-const MenuPanel = () => {
-  const { isOpen } = useManifesto();
-
-  if (isOpen) return null;
-
-  return (
-    <m.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: ANIMATION.DELAY + 0.15,
-        duration: ANIMATION.DURATION,
-        ease: ANIMATION.EASE_OUT,
-      }}
-    >
-      <div className="flex flex-col gap-4 w-full max-w-xl md:gap-6 lg:gap-8">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: ANIMATION.DURATION,
-            ease: ANIMATION.EASE_OUT,
-            delay: ANIMATION.DELAY + 0.25,
-          }}
-          className="text-base short:lg:text-lg sm:text-lg lg:text-xl font-medium text-center text-foreground text-pretty"
-        >
-          <Menu />
-        </m.div>
-      </div>
-    </m.div>
   );
 };
 

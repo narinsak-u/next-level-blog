@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Center, Stack, Divider } from "@mantine/core";
+import { Container, Center, Stack } from "@mantine/core";
 
 const PageLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -13,10 +13,7 @@ const PageLayout = ({ children }: { children: React.ReactNode }) => {
           alignItems: "center",
         }}
       >
-        <Stack className="m-0 w-full md:mx-8">
-          {/* <Divider my="md" /> */}
-          {children}
-        </Stack>
+        <Stack className="m-0 w-full md:mx-8">{children}</Stack>
       </Center>
     </Container>
   );

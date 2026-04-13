@@ -2,8 +2,8 @@
 
 import { Background } from "./Background";
 import MainProfile from "./MainProfile";
-import MainFooter from "./MainFooter";
 import Credit from "./Credit";
+import SocialFloatingButton from "@/components/home/SocialFloatingButton";
 
 const NewProfile = () => {
   return (
@@ -16,7 +16,8 @@ const NewProfile = () => {
         />
         <div className="absolute inset-0 bg-black/25 backdrop-blur-[2px]" />
         <MainProfile />
-        <MainFooter />
+        {/*<MainFooter />*/}
+        <SocialFloatingButton />
       </div>
     </main>
   );

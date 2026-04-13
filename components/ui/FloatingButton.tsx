@@ -33,7 +33,7 @@ const FloatingButton = ({
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       aria-label={label}
-      className="!bg-orange-500 dark:!bg-amber-900"
+      className="bg-orange-500! dark:bg-amber-900!"
       style={style}
     >
       <Icon size={20} className="text-black dark:text-white" />
@@ -61,7 +61,7 @@ const FloatingButtonGroup = ({
     <div
       className={cn(
         "hidden md:flex fixed z-50 flex-col items-center",
-        className
+        className,
       )}
       style={{
         right: position.right,
@@ -74,7 +74,7 @@ const FloatingButtonGroup = ({
             <Box className="flex justify-center items-center mb-3">
               <div className="flex flex-col gap-3">{children}</div>
             </Box>
-            <div className="bg-orange-500 dark:bg-amber-900 my-3 p-0 h-10 w-[2px] mx-auto" />
+            <div className="bg-orange-500 dark:bg-amber-900 my-3 p-0 h-10 w-0.5 mx-auto" />
           </Box>
         )}
       </Transition>

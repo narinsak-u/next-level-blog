@@ -3,15 +3,32 @@
 import Link from "next/link";
 import Kbd from "./Kbd";
 
-interface ShortcutItem {
+type ShortcutItemBase = {
   id: string;
   keys?: string[];
   label?: string;
   icon?: React.ReactNode;
-  href?: string;
-  onClick?: () => void;
+};
+
+type LinkShortcutItem = ShortcutItemBase & {
+  href: string;
+  onClick?: never;
   target?: string;
-}
+};
+
+type ButtonShortcutItem = ShortcutItemBase & {
+  onClick: () => void;
+  href?: never;
+  target?: never;
+};
+
+type StaticShortcutItem = ShortcutItemBase & {
+  href?: never;
+  onClick?: never;
+  target?: never;
+};
+
+type ShortcutItem = LinkShortcutItem | ButtonShortcutItem | StaticShortcutItem;
 
 interface ShortcutListProps {
   items: ShortcutItem[];
@@ -20,8 +37,11 @@ interface ShortcutListProps {
 
 const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
   return (
-    <div className={`flex items-center justify-center ${gap} py-2 bg-transparent`}>
-      {items.map(({ id, keys, label, icon, href, onClick, target }) => {
+    <div
+      className={`flex items-center justify-center ${gap} py-2 bg-transparent`}
+    >
+      {items.map((item) => {
+        const { id, keys, label, icon } = item;
         const content = (
           <>
             {icon
@@ -49,7 +69,8 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
           </>
         );
 
-        if (href) {
+        if ("href" in item && item.href) {
+          const { href, target } = item;
           return (
             <Link
               href={href}
@@ -62,7 +83,8 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
           );
         }
 
-        if (onClick) {
+        if ("onClick" in item && item.onClick) {
+          const { onClick } = item;
           return (
             <button
               key={id}
@@ -85,4 +107,9 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
 };
 
 export default ShortcutList;
-export type { ShortcutItem };
+export type {
+  ShortcutItem,
+  LinkShortcutItem,
+  ButtonShortcutItem,
+  StaticShortcutItem,
+};
