@@ -15,6 +15,8 @@ This test plan outlines comprehensive testing strategy for the Notion-powered bl
 | Mocking | **msw** | API mocking for Notion |
 | Coverage | **c8** | Code coverage reports |
 
+**Note:** Some integration tests have pre-existing failures due to missing mocks for `@mantine/hooks` (`useHotkeys`) and outdated assertions. The MusicPlayerContext integration tests need `vi.mock("@mantine/hooks")` to be updated.
+
 ---
 
 ## Test File Structure
@@ -22,6 +24,10 @@ This test plan outlines comprehensive testing strategy for the Notion-powered bl
 ```
 tests/
 ├── unit/
+│   ├── helpers/
+│   │   └── post-mapping.test.ts
+│   ├── hooks/
+│   │   └── useTheme.test.ts
 │   ├── lib/
 │   │   ├── post-logic.test.ts
 │   │   ├── utils.test.ts
@@ -29,23 +35,21 @@ tests/
 │   └── context/
 │       └── music-player-context.test.tsx
 ├── integration/
-│   ├── actions/
-│   │   └── posts.test.ts
-│   └── components/
-│       ├── Credit.test.tsx
-│       ├── MusicPlayer.test.tsx
-│       ├── ContentTitle.test.tsx
-│       ├── FloatingButton.test.tsx
-│       ├── ShareButton.test.tsx
-│       ├── MediaBackground.test.tsx
-│       └── ManifestoPanel.test.tsx
+│   ├── components/
+│   │   ├── Credit.test.tsx
+│   │   ├── MusicPlayer.test.tsx
+│   │   ├── ContentTitle.test.tsx
+│   │   ├── FloatingButton.test.tsx
+│   │   ├── ShareButton.test.tsx
+│   │   ├── MediaBackground.test.tsx
+│   │   └── ManifestoPanel.test.tsx
 ├── e2e/
 │   ├── navigation.spec.ts
 │   ├── posts.spec.ts
 │   ├── music-player.spec.ts
 │   └── theme.spec.ts
 └── fixtures/
-    ├── notion-response.json
+    ├── notion-response.ts
     └── posts.ts
 ```
 

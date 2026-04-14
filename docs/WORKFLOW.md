@@ -12,18 +12,25 @@ User Request
     ▼
 Next.js Server Component (page.tsx)
     │
-    ├─→ Server Action (actions/posts.ts)
+    ├─→ Server Action (actions/posts.ts) ← React.cache() at action level, no duplicate wrappers
     │       └─→ Notion API (official + unofficial client)
     │
-    ├─→ QueryClient.prefetchQuery()   ← hydrates TanStack Query cache
+    ├─→ Promise.all()                     ← parallel independent fetches
+    │       ├─ fetchPostById(slug)
+    │       └─ queryClient.prefetchQuery()
+    │
+    ├─→ QueryClient.prefetchQuery()       ← hydrates TanStack Query cache
     │
     ▼
 HydrationBoundary (dehydrated state)
     │
     ▼
+<Suspense fallback={<Loader />}>          ← streaming SSR + meaningful loading states
+    │
+    ▼
 Client Component
     │
-    ├─→ useQuery / useInfiniteQuery   ← reads from hydrated cache (no re-fetch)
+    ├─→ useQuery / useInfiniteQuery       ← reads from hydrated cache (no re-fetch)
     │
     ▼
 UI Components (Mantine + Tailwind + Framer Motion)
@@ -51,7 +58,7 @@ GET /posts
                └─ <PostsPageClient />
                      ├─ useFetchAllPosts()  ← cache hit, no network request
                      ├─ getTags(posts)      ← aggregate tags + counts
-                     ├─ getCategory(posts) ← unique categories
+                     ├─ getCategory(posts)  ← unique categories
                      └─ <PostsPageLayout>
                            ├─ <TagSection>        (tag chips)
                            ├─ <SearchPost>        (Cmd+K spotlight trigger)
@@ -70,21 +77,27 @@ GET /posts
 
 ```
 GET /posts/[slug]
+  └─ layout.tsx (Server Component)
+       ├─ Promise.all([
+       │     fetchPostById(slug),          ← React.cache() deduplicates with generateMetadata
+       │     queryClient.prefetchQuery()   ← parallel with post fetch
+       │   ])
+       ├─ <HydrationBoundary>
+       └─ <ContentBody>
+              ├─ <ContentTitle>
+              ├─ <Share>                    (share buttons)
+              ├─ <RelatedPostsWrapper>
+              │     └─ <RelatedPosts>       (getRelatedPosts → same tags, max 3)
+              └─ <Suspense>
+                    └─ <Comments>           ← dynamic import, ssr: false (giscus)
+
   └─ page.tsx (Server Component)
-       ├─ generateMetadata({ slug })
-       │     └─ fetchPostById(slug)  ← React.cache() deduplication
-       │             └─ Notion pages.retrieve(slug)
-       │                     └─ Returns title, description, tags, cover image
        ├─ fetchPostContent(slug)
        │     └─ notion-client (unofficial) → ExtendedRecordMap
-       │             └─ Full Notion block tree for rendering
-       └─ <Content recordMap={...} />
-             ├─ NotionRenderer (react-notion-x)
-             ├─ Dynamic imports: Code, Equation, PDF, Modal, Tweet
-             ├─ <ContentWrapper>  (breadcrumbs, metadata)
-             ├─ <Share>           (share buttons)
-             ├─ <Comments>        (Giscus / GitHub Discussions)
-             └─ <RelatedPosts>    (getRelatedPosts → same tags, max 3)
+       └─ <Suspense fallback={<Loader />}>
+              └─ <Content recordMap={...} />
+                    ├─ NotionRenderer (react-notion-x)
+                    └─ Dynamic imports: Code, Equation, PDF, Modal, Tweet
 ```
 
 ### 3. Tag Filtering (`/tags/[slug]`)
@@ -108,7 +121,8 @@ GET /about | /note | /hobbies
        └─ fetchStaticPageContent(type)
              ├─ Maps type → NOTION_ABOUT_PAGE_ID / _NOTE_ / _PROJECT_PAGE_ID
              └─ notion-client (unofficial) → ExtendedRecordMap
-                     └─ <Content recordMap={...} /> via NotionRenderer
+                     └─ <Suspense fallback={<Loader />}>
+                           └─ <Content recordMap={...} /> via NotionRenderer
 ```
 
 ### 5. ISR Revalidation (`/api/revalidate`)
@@ -129,14 +143,14 @@ GET /api/revalidate?secret=<SECRET>&path=<PATH>
 |-------|------|-------|-------|
 | Server state / cache | TanStack Query v5 | App-wide | Posts data, prefetch + hydration |
 | Layout preference | Zustand (persisted) | App-wide | Grid vs list toggle (localStorage) |
-| Audio / music | React Context | App-wide | Play/pause, volume, audioRef |
+| Audio / music | React Context | App-wide | Play/pause, volume — stable refs via `isPlayingRef` |
 | Component state | React useState | Local | Loading, inputs, animations |
 
 ---
 
 ## Server Actions (`actions/posts.ts`)
 
-All functions are marked `"use server"` and run only on the server.
+All functions are marked `"use server"` and wrapped with `React.cache()` for per-request deduplication. No additional `cache()` wrappers needed at call sites.
 
 | Function | Description |
 |----------|-------------|
@@ -212,9 +226,32 @@ NEXT_PUBLIC_CATEGORY_ID     # Giscus discussion category
 | Strategy | Where | Effect |
 |----------|-------|--------|
 | Server-side prefetch | `page.tsx` (server) | Zero-latency first render |
-| `React.cache()` | `posts/[slug]/page.tsx` | Deduplicates metadata + content fetches |
+| `React.cache()` | `actions/posts.ts` (action level) | Deduplicates metadata + content fetches across request |
+| `Promise.all()` | `posts/[slug]/layout.tsx` | Parallel independent fetches |
 | `HydrationBoundary` | All data pages | Transfers server cache to client, no re-fetch |
+| `<Suspense>` boundaries | Content pages | Streaming SSR + meaningful loading states |
 | ISR (300s) | Static pages | Cached HTML regenerated every 5 minutes |
-| Dynamic imports | `Content` component | Code splits PDF, Equation, Modal, Code blocks |
+| Dynamic imports | `Content` component | Code splits PDF, Equation, Modal, Code blocks, Comments |
 | `optimizePackageImports` | `next.config.ts` | Tree-shakes Mantine to reduce bundle |
 | Infinite query pagination | `PostGrid` | Loads 6 posts at a time on demand |
+| Stable callback refs | `MusicPlayerContext` | Prevents re-renders on play/pause toggle |
+| Barrel type modules | `types/*.ts` | Tree-shakeable type imports, backward-compatible re-exports |
+
+---
+
+## Type Module Split
+
+Types are organized as individual modules for tree-shaking, with a barrel re-export for backward compatibility:
+
+```
+types/
+├── post-tag.ts       → PostTagSchema, PostTagSchemaType
+├── tag.ts            → TagSchema, TagSchemaType
+├── content-header.ts  → ContentHeaderSchema, ContentHeaderSchemaType
+├── page-data.ts      → PageDataSchema, PageDataSchemaType, PageDataArraySchema
+├── site-metadata.ts  → SiteMetadataSchema, SiteMetadataType
+└── index.ts          → Barrel re-exports (backward compatible)
+```
+
+Import directly for hot paths: `import { PageDataSchemaType } from "@/types/page-data"`
+Import from barrel for convenience: `import { PageDataSchemaType } from "@/types"`

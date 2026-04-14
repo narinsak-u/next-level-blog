@@ -113,7 +113,7 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
         </m.span>
 
         <AnimatePresence>
-          {isOpen && (
+          {isOpen ? (
             <m.div
               className={cn(
                 buttonVariants({ variant: "iconButton", size: "icon" }),
@@ -125,7 +125,7 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
             >
               <X className="size-5 text-primary-foreground" />
             </m.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </CNButton>
     </m.div>
@@ -147,7 +147,7 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen ? (
         <m.div
           initial={{ height: 0, opacity: 0 }}
           animate={{
@@ -185,7 +185,7 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
             {children}
           </m.div>
         </m.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 };

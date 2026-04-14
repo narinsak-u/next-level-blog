@@ -11,25 +11,6 @@ import {
 } from "react";
 import { useHotkeys } from "@mantine/hooks";
 
-/**
- * MusicPlayerContext - Global audio playback state management
- *
- * Provides a unified API for controlling background music across the app:
- * - Play/pause toggle with HTMLAudioElement ref
- * - Volume control with immediate DOM update
- * - Sync state between audio element and React state
- *
- * @example
- * ```tsx
- * // In root layout
- * <MusicPlayerProvider src="/song.mp3" defaultVolume={0.3}>
- *   {children}
- * </MusicPlayerProvider>
- *
- * // Anywhere in the app
- * const { togglePlay, volume, setVolume } = useMusicPlayer();
- * ```
- */
 interface MusicPlayerContextValue {
   isPlaying: boolean;
   togglePlay: () => void;
@@ -42,15 +23,9 @@ interface MusicPlayerContextValue {
 
 const MusicPlayerContext = createContext<MusicPlayerContextValue | null>(null);
 
-/**
- * Provider component for music playback
- * Creates an invisible audio element and manages its state
- */
 interface MusicPlayerProviderProps {
   children: ReactNode;
-  /** URL path to audio file (default: /assets/lan-ting-xu.mp3) */
   src?: string;
-  /** Initial volume 0-1 (default: 0.3) */
   defaultVolume?: number;
 }
 
@@ -60,6 +35,7 @@ const MusicPlayerProvider = ({
   defaultVolume = 0.3,
 }: MusicPlayerProviderProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isPlayingRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolumeState] = useState(defaultVolume);
 
@@ -73,7 +49,10 @@ const MusicPlayerProvider = ({
 
     el.volume = volume;
 
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+    };
     el.addEventListener("ended", handleEnded);
 
     return () => {
@@ -85,24 +64,32 @@ const MusicPlayerProvider = ({
     const el = audioRef.current;
     if (!el) return;
 
-    if (isPlaying) {
+    if (isPlayingRef.current) {
       el.pause();
+      isPlayingRef.current = false;
       setIsPlaying(false);
     } else {
-      el.play().then(() => setIsPlaying(true)).catch(() => {});
+      el.play().then(() => {
+        isPlayingRef.current = true;
+        setIsPlaying(true);
+      }).catch(() => {});
     }
-  }, [isPlaying]);
+  }, []);
 
   const play = useCallback(() => {
     const el = audioRef.current;
     if (!el) return;
-    el.play().then(() => setIsPlaying(true)).catch(() => {});
+    el.play().then(() => {
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+    }).catch(() => {});
   }, []);
 
   const pause = useCallback(() => {
     const el = audioRef.current;
     if (!el) return;
     el.pause();
+    isPlayingRef.current = false;
     setIsPlaying(false);
   }, []);
 

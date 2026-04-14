@@ -146,10 +146,16 @@
 | `components/home/ManifestoPanel.tsx` | Manifesto panel compound |
 | `context/MusicPlayerContext.tsx` | Music player context provider |
 | `hooks/useTheme.ts` | Consolidated theme hook |
+| `hooks/use-video-with-placeholder.ts` | Shared video loading state |
 | `lib/constants.ts` | Shared constants |
 | `lib/errors.ts` | Error handling utilities |
 | `lib/utils.ts` | Utility functions (expanded) |
+| `types/post-tag.ts` | Split type module — PostTagSchema |
+| `types/tag.ts` | Split type module — TagSchema |
+| `types/content-header.ts` | Split type module — ContentHeaderSchema |
+| `types/page-data.ts` | Split type module — PageDataSchema |
 | `types/site-metadata.ts` | Site metadata Zod schema |
+| `app/home/HomeContent.tsx` | Extracted from app/page.tsx |
 
 ---
 
@@ -167,6 +173,15 @@
 | Type: `any` in post-mapping | `helpers/post-mapping.ts` | Notion SDK types |
 | Type: `any` in actions | `actions/notion.ts`, `notion-x.ts` | Proper types |
 | Robustness: Array access | `TimelineContent.tsx` | Safe iteration |
+| Performance: Duplicate cache wrappers | `posts/[slug]/page.tsx`, `layout.tsx` | Removed redundant `cache()` — action already cached |
+| Correctness: `&&` JSX conditionals | PostCard, MainProfile, ManifestoPanel, pages | Replaced with ternaries |
+| Performance: Sequential fetches | `posts/[slug]/layout.tsx` | `Promise.all()` for parallel fetch |
+| UX: No loading fallback | Content pages | Added `<Suspense>` boundaries with `<Loader>` |
+| Bundle: Barrel imports | `types/index.ts` | Split into individual modules |
+| Rerender: Inline component | `app/page.tsx` | Extracted `HomeContent` to separate file |
+| Rerender: Unstable callbacks | `MusicPlayerContext.tsx` | `isPlayingRef` for stable `togglePlay` refs |
+| Bundle: Heavy giscus import | `ContentBody.tsx` | Dynamic import with `ssr: false` |
+| DRY: Duplicated video logic | `MediaBackground.tsx`, `VideoWithPlaceholder.tsx` | Extracted `useVideoWithPlaceholder` hook |
 | Performance: Unmemoized | `PostsPageLayout.tsx` | useMemo |
 | Pattern: Redundant effect | `ThemeMode.tsx` | Removed effect |
 | Architecture: Hydration | `use-layout-store.ts` | skipHydrationWarning |

@@ -1,13 +1,11 @@
 import { Metadata, ResolvingMetadata } from "next";
-import { cache } from "react";
-import { fetchPostById as _fetchPostById, fetchPostContent } from "@/actions/posts";
+import { Suspense } from "react";
+import { fetchPostById, fetchPostContent } from "@/actions/posts";
 import { PostTagSchemaType } from "@/types";
 
 import { siteMetadata } from "@/site/siteMetadata";
 import Content from "@/components/contents/Content";
-
-// React.cache() deduplicates fetchPostById across generateMetadata and layout
-const fetchPostById = cache(_fetchPostById);
+import Loader from "@/components/common/Loader";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -43,7 +41,11 @@ const Post = async ({ params }: Props) => {
   const { slug } = await params;
   const recordMap = await fetchPostContent(slug);
 
-  return recordMap && <Content recordMap={recordMap} />;
+  return (
+    <Suspense fallback={<Loader />}>
+      {recordMap ? <Content recordMap={recordMap} /> : null}
+    </Suspense>
+  );
 };
 
 export default Post;

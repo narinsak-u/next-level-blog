@@ -253,14 +253,24 @@ ShareGroup.Button = ShareButton;
 components/ui/
 ├── FloatingButton.tsx          ✅
 ├── ShareButton.tsx             ✅
-├── MediaBackground.tsx          ✅
+├── MediaBackground.tsx         ✅
 └── PostCard.tsx                ✅
 
 context/
 └── MusicPlayerContext.tsx      ✅
 
 hooks/
-└── useTheme.ts                 ✅
+├── useTheme.ts                 ✅
+└── use-video-with-placeholder.ts ✅ (shared video loading logic)
+
+app/home/
+└── HomeContent.tsx             ✅ (extracted from app/page.tsx)
+
+types/
+├── post-tag.ts                 ✅ (split from index.ts)
+├── tag.ts                      ✅
+├── content-header.ts            ✅
+└── page-data.ts                ✅
 ```
 
 ### Modified Files ✅
@@ -271,10 +281,19 @@ components/home/Credit.tsx          ✅ → Uses MusicPlayerContext
 components/contents/Share.tsx         ✅ → Uses ShareGroup
 components/common/ThemeMode.tsx       ✅ → Uses useTheme
 components/home/Background.tsx        ✅ → Uses MediaBackground
-components/home/MainProfile.tsx      ✅ → Uses ManifestoPanel
+components/home/MainProfile.tsx       ✅ → Uses ManifestoPanel, ternary conditional
 components/home/NewProfile.tsx        ✅ → Wrapped with MusicPlayerProvider
+components/contents/ContentBody.tsx   ✅ → Dynamic import for Comments
+components/ui/MediaBackground.tsx     ✅ → Uses useVideoWithPlaceholder hook
+components/ui/VideoWithPlaceholder.tsx ✅ → Uses useVideoWithPlaceholder hook
+app/posts/[slug]/page.tsx            ✅ → Removed duplicate cache(), Suspense boundary
+app/posts/[slug]/layout.tsx           ✅ → Removed duplicate cache(), Promise.all
+app/about/page.tsx                   ✅ → Suspense boundary
+app/hobbies/page.tsx                 ✅ → Suspense boundary
+app/note/page.tsx                    ✅ → Suspense boundary
 app/posts/components/PostCard.tsx     ✅ → Refactored to use base
 app/posts/components/PostCardFlex.tsx ✅ → Refactored to use base
+context/MusicPlayerContext.tsx         ✅ → Stable refs (isPlayingRef)
 ```
 
 ### Deleted Files
@@ -303,8 +322,15 @@ context/
 
 hooks/
 ├── useTheme.ts                # Theme hook (consolidated)
-└── use-layout-store.ts        # Layout state (Zustand)
-    └── useMusicPlayer.ts      # Now from context (deleted old)
+├── use-layout-store.ts        # Layout state (Zustand)
+├── use-mode-store.ts          # Mode state (Zustand)
+├── use-video-with-placeholder.ts # Shared video loading state
+├── use-fetch-all-posts.ts     # TanStack Query — all posts
+├── use-fetch-posts.ts         # TanStack Query — infinite
+├── use-fetch-posts-by-tag.ts  # Filters from cached data
+├── use-get-related-posts.ts   # useMemo from post-logic
+├── use-get-posts-by-tag.ts    # useMemo from post-logic
+└── use-get-tweet-id.ts        # Tweet ID extraction
 
 components/
 ├── ui/

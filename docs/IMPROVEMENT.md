@@ -430,3 +430,52 @@ Score: **96 → 99 / 100**. 1 intentional warning remaining.
 
 - ⚠️ **`useState` initialized from prop `defaultVolume`** — `context/MusicPlayerContext.tsx:63`
   - Intentional: `defaultVolume` is initial-only state; user volume changes independently. Not a bug.
+
+---
+
+## Vercel React Best Practices Audit #2 (2026-04-14)
+
+Based on Vercel React Best Practices guide (62 rules, 8 categories). Found 24 issues, implemented 9.
+
+**Status: ✅ 9 Implemented, 11 Remaining**
+
+### Implemented
+
+| Rule | Category | Change | Files |
+|------|----------|--------|-------|
+| `server-cache-react` | HIGH | Removed duplicate `cache()` wrappers — `fetchPostById` already cached at action level | `app/posts/[slug]/page.tsx`, `app/posts/[slug]/layout.tsx` |
+| `rendering-conditional-render` | MEDIUM | Replaced `&&` with ternary `? : null` in 9 JSX locations to prevent rendering falsy values | `PostCard.tsx`, `page.tsx` (about, hobbies, note, slug), `layout.tsx`, `MainProfile.tsx`, `ManifestoPanel.tsx` |
+| `server-parallel-fetching` | HIGH | Used `Promise.all` for parallel data fetch in slug layout | `app/posts/[slug]/layout.tsx` |
+| `async-suspense-boundaries` | CRITICAL | Added `<Suspense fallback={<Loader />}>` around `<Content>` in 4 pages | `app/posts/[slug]/page.tsx`, `app/about/page.tsx`, `app/hobbies/page.tsx`, `app/note/page.tsx` |
+| `bundle-barrel-imports` | CRITICAL | Split `types/index.ts` into individual module files with re-export barrel | `types/post-tag.ts`, `types/tag.ts`, `types/content-header.ts`, `types/page-data.ts` |
+| `rerender-no-inline-components` | MEDIUM | Extracted `HomeContent` to separate file — prevents remounting on parent state changes | `app/home/HomeContent.tsx` |
+| `rerender-functional-setstate` | MEDIUM | Stabilized MusicPlayer callbacks using `isPlayingRef` — `togglePlay`/`play`/`pause` now have stable references | `context/MusicPlayerContext.tsx` |
+| `bundle-dynamic-imports` | CRITICAL | Dynamic import for Comments (giscus) — deferred SSR, non-blocking | `components/contents/ContentBody.tsx` |
+| `rendering-animation-svg-wrapper` | MEDIUM | Extracted shared `useVideoWithPlaceholder` hook — eliminates 70 lines of duplicated video state logic | `hooks/use-video-with-placeholder.ts`, `MediaBackground.tsx`, `VideoWithPlaceholder.tsx` |
+
+### Remaining
+
+| Rule | Category | Issue | Priority |
+|------|----------|-------|----------|
+| `async-defer-await` | CRITICAL | Defer awaits in API routes | LOW |
+| `bundle-defer-third-party` | CRITICAL | Verify analytics deferral | LOW |
+| `bundle-conditional` | CRITICAL | Lazy-load ThemeCheck hotkey handler | LOW |
+| `server-serialization` | HIGH | Pass IDs instead of full objects to client components | MEDIUM |
+| `server-hoist-static-io` | HIGH | Scope MantineProviders lower in component tree | HIGH (hard) |
+| `client-swr-dedup` | MEDIUM-HIGH | Lift `useFetchAllPosts` to common ancestor | MEDIUM |
+| `client-swr-dedup` | MEDIUM-HIGH | Server-side tag filtering instead of client | MEDIUM |
+| `rerender-no-inline-components` | MEDIUM | Extract IntroPanel to separate file | LOW |
+| `rendering-hydration-no-flicker` | MEDIUM | Fix mount-flash in ThemeCheck/ClientComponent | MEDIUM |
+| `js-set-map-lookups` | LOW-MEDIUM | Use Set for related post tag matching | LOW |
+| `advanced-init-once` | LOW | QueryClient factory for SSR (current pattern OK) | N/A |
+
+### New Files
+
+| File | Purpose |
+|------|---------|
+| `app/home/HomeContent.tsx` | Extracted client component from `app/page.tsx` |
+| `hooks/use-video-with-placeholder.ts` | Shared video loading state hook |
+| `types/post-tag.ts` | Split type module — PostTagSchema |
+| `types/tag.ts` | Split type module — TagSchema |
+| `types/content-header.ts` | Split type module — ContentHeaderSchema |
+| `types/page-data.ts` | Split type module — PageDataSchema |

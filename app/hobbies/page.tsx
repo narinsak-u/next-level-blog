@@ -9,8 +9,10 @@ import { Metadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
 // import { ogNoteImage } from "@/site/data";
 
+import { Suspense } from "react";
 import ProjectPage from "./components/ProjectPage";
 import Content from "@/components/contents/Content";
+import Loader from "@/components/common/Loader";
 import { fetchStaticPageContent } from "@/actions/posts";
 
 export const metadata: Metadata = {
@@ -25,7 +27,11 @@ const Projects = async () => {
   const recordMap = await fetchStaticPageContent("project");
 
   return (
-    <ProjectPage>{recordMap && <Content recordMap={recordMap} />}</ProjectPage>
+    <ProjectPage>
+      <Suspense fallback={<Loader />}>
+        {recordMap ? <Content recordMap={recordMap} /> : null}
+      </Suspense>
+    </ProjectPage>
   );
 };
 

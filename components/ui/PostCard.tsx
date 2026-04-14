@@ -72,7 +72,7 @@ const PostCardGrid = ({
         </div>
       </time>
 
-      {showImage && post.coverImage && (
+      {showImage && post.coverImage ? (
         <Card.Section>
           <Image
             src={post.coverImage}
@@ -81,9 +81,9 @@ const PostCardGrid = ({
             alt={`Cover image for ${post.title}`}
           />
         </Card.Section>
-      )}
+      ) : null}
 
-      {showTags && <TagItemInline tags={post.tags} />}
+      {showTags ? <TagItemInline tags={post.tags} /> : null}
       <Text style={{ fontWeight: 500 }} size="md" mt="sm" className="text-foreground">
         {post.title}
       </Text>

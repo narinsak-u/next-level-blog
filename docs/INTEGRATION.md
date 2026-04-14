@@ -5,12 +5,12 @@
 The application integrates with Notion through a unified, "deep" access layer that encapsulates both the official and unofficial SDKs.
 
 ### 1. Unified Posts Module (`actions/posts.ts`)
-This module provides a single entry point for all blog post data and hides the implementation details of the Notion APIs.
+This module provides a single entry point for all blog post data and hides the implementation details of the Notion APIs. All functions are wrapped with `React.cache()` at the action level — no additional `cache()` wrappers needed at call sites.
 - **Data Source:** Notion Database (configured via `NOTION_DATA_SOURCE_ID`) and individual Page content.
 - **Key Methods:**
   - `fetchPosts(options)`: A flexible, cached function to fetch posts with support for categories, status filtering, and pagination.
   - `fetchAllPosts()`: A convenience wrapper for fetching the entire post database.
-  - `fetchPostById(id)`: Fetches metadata for a single post.
+  - `fetchPostById(id)`: Fetches metadata for a single post. Deduplicated across `generateMetadata` and page/layout.
   - `fetchPostContent(pageId)`: Uses `notion-client` to fetch the deep record map for high-fidelity rendering.
   - `fetchStaticPageContent(type)`: Fetches content for fixed pages like About, Note, or Projects.
 
@@ -41,11 +41,14 @@ Pure business logic for managing post data is decoupled from both the data sourc
   - Volume control
   - Looping audio
   - Accessible controls
+  - Stable callback refs (`isPlayingRef`) prevent context re-renders on play/pause toggle
 
 ### 2. TanStack React Query
 - **Purpose:** Handles client-side state for infinite scrolling and related posts.
 - **Provider:** `components/providers/query-provider.tsx`
 - **Usage:** See `hooks/use-fetch-posts.ts` for implementation of `useInfiniteQuery`.
+- **SSR Prefetch:** Server components use `prefetchQuery` + `HydrationBoundary` for instant client-side data.
+- **Parallel Fetching:** Independent prefetches use `Promise.all()` (e.g., post data + all posts prefetch in `[slug]` layout).
 
 ### 3. Theme System
 - **Hook:** `hooks/useTheme.ts`
@@ -88,6 +91,7 @@ Pure business logic for managing post data is decoupled from both the data sourc
   <MediaBackground.Video src="/video.mp4" placeholder="/poster.jpg" />
 </MediaBackground>
 ```
+Both `MediaBackground.Video` and `VideoWithPlaceholder` use the shared `useVideoWithPlaceholder` hook for consistent video loading state management.
 
 ### Manifesto Panel
 ```tsx

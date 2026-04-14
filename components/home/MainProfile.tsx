@@ -77,7 +77,7 @@ const IntroPanel = () => {
 
   return (
     <AnimatePresence>
-      {!isOpen && (
+      {!isOpen ? (
         <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ const IntroPanel = () => {
             </m.p>
           </div>
         </m.div>
-      )}
+) : null}
     </AnimatePresence>
   );
 };

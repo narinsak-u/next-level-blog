@@ -8,13 +8,9 @@ import ContentTitle from "@/components/contents/ContentTitle";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import SpotlightClient from "@/components/common/SpotlightClient";
 
-import { cache } from "react";
-import { fetchPostById as _fetchPostById } from "@/actions/posts";
+import { fetchPostById, fetchAllPosts } from "@/actions/posts";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
-import { fetchAllPosts } from "@/actions/posts";
-
-const fetchPostById = cache(_fetchPostById);
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/components/layout/PageLayout";
@@ -31,19 +27,18 @@ type Props = {
 
 const layout = async ({ children, params }: Props) => {
   const { slug } = await params;
-  const postData = await fetchPostById(slug);
-
-  if (!postData) return <Loader />;
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: useFetchAllPosts.getQueryKey(),
-    queryFn: async () => {
-      const posts = await fetchAllPosts();
-      return posts;
-    },
-  });
+  const [postData] = await Promise.all([
+    fetchPostById(slug),
+    queryClient.prefetchQuery({
+      queryKey: useFetchAllPosts.getQueryKey(),
+      queryFn: () => fetchAllPosts(),
+    }),
+  ]);
+
+  if (!postData) return <Loader />;
 
   return (
     <>
@@ -63,11 +58,11 @@ const layout = async ({ children, params }: Props) => {
             />
             <ContentTitle postData={postData} />
             <div className="sticky top-5 z-10 left-0">
-              {postData && (
+              {postData ? (
                 <Share
                   postLink={`${siteMetadata.siteAddress}/posts/${postData.id}`}
                 />
-              )}
+              ) : null}
             </div>
             <HydrationBoundary state={dehydrate(queryClient)}>
               <ContentBody postData={postData}>
