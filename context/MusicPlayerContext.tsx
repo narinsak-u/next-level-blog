@@ -89,16 +89,14 @@ const MusicPlayerProvider = ({
       el.pause();
       setIsPlaying(false);
     } else {
-      el.play();
-      setIsPlaying(true);
+      el.play().then(() => setIsPlaying(true)).catch(() => {});
     }
   }, [isPlaying]);
 
   const play = useCallback(() => {
     const el = audioRef.current;
     if (!el) return;
-    el.play();
-    setIsPlaying(true);
+    el.play().then(() => setIsPlaying(true)).catch(() => {});
   }, []);
 
   const pause = useCallback(() => {
