@@ -149,18 +149,41 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
     <AnimatePresence>
       {isOpen && (
         <m.div
-          initial={{ opacity: 0, y: 16, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 160, damping: 18, mass: 0.6 } }}
-          exit={{ opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.2, ease: [0.4, 0, 0.6, 1] } }}
-          className={cn(
-            "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center text-balance max-w-3xl text-foreground",
-            "bg-white/10 dark:bg-white/8 backdrop-blur-2xl",
-            "border border-white/15 ring-1 ring-orange-500/10",
-            "shadow-2xl shadow-black/30",
-            className
-          )}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{
+            height: "auto",
+            opacity: 1,
+            transition: {
+              height: { type: "spring", stiffness: 200, damping: 28, mass: 0.8 },
+              opacity: { duration: 0.2 },
+            },
+          }}
+          exit={{
+            height: 0,
+            opacity: 0,
+            transition: {
+              height: { duration: 0.25, ease: [0.4, 0, 0.6, 1] },
+              opacity: { duration: 0.12, ease: [0.4, 0, 1, 1] },
+            },
+          }}
+          className="overflow-hidden"
         >
-          {children}
+          <m.div
+            initial={{ y: 12 }}
+            animate={{
+              y: 0,
+              transition: { type: "spring", stiffness: 180, damping: 24, mass: 0.8 },
+            }}
+            className={cn(
+              "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center text-balance max-w-3xl text-foreground",
+              "bg-white/10 dark:bg-white/8 backdrop-blur-2xl",
+              "border border-white/15 ring-1 ring-orange-500/10",
+              "shadow-2xl shadow-black/30",
+              className
+            )}
+          >
+            {children}
+          </m.div>
         </m.div>
       )}
     </AnimatePresence>

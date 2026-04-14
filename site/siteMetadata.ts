@@ -41,8 +41,9 @@ export const siteMetadata = {
 
   home: {
     intro: {
-      en: "Hi there! I'm Hai — 海 — aka: alohadancemeow",
-      zh: "大家好，我叫海，很高兴认识你们。",
+      zh: "我的梦想很大，我愿意一个人走。",
+      en: "Great are my aspirations, and I care not if I walk the earth in solitude.",
+      // zh: "大家好，我叫海，很高兴认识你们。",
     },
     manifesto: {
       trigger: "Manifesto",

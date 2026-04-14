@@ -16,7 +16,6 @@ const NewProfile = () => {
         />
         <div className="absolute inset-0 bg-black/25 backdrop-blur-[2px]" />
         <MainProfile />
-        {/*<MainFooter />*/}
         <SocialFloatingButton />
       </div>
     </main>

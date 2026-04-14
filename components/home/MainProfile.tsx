@@ -103,9 +103,9 @@ const IntroPanel = () => {
               }}
               className="text-base short:lg:text-lg sm:text-lg font-medium text-center text-foreground text-pretty"
             >
-              {siteMetadata.home.intro.en}
-              <br />
               {siteMetadata.home.intro.zh}
+              <br />
+              <span className="text-sm">{siteMetadata.home.intro.en}</span>
             </m.p>
           </div>
         </m.div>
