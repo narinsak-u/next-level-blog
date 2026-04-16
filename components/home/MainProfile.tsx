@@ -48,14 +48,14 @@ const MainProfile = () => {
       <div className="flex flex-col mb-12 items-center min-h-0 shrink w-full">
         <ManifestoPanel>
           <IntroPanel />
-          <ManifestoPanel.Trigger />
+          {/*<ManifestoPanel.Trigger />
           <ManifestoPanel.Content>
             <article className="relative text-white overflow-y-auto pretty-scrollbar italic p-6 h-full [&_p]:my-4">
               {siteMetadata.home.manifesto.paragraphs.map((text) => (
                 <p key={text}>{text}</p>
               ))}
             </article>
-          </ManifestoPanel.Content>
+          </ManifestoPanel.Content>*/}
 
           <Space h="xl" />
           <ShortcutList
@@ -109,7 +109,7 @@ const IntroPanel = () => {
             </m.p>
           </div>
         </m.div>
-) : null}
+      ) : null}
     </AnimatePresence>
   );
 };

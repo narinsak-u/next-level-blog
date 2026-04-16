@@ -15,6 +15,11 @@ import { X } from "lucide-react";
 import { ANIMATION } from "@/lib/constants";
 import { siteMetadata } from "@/site/siteMetadata";
 
+const DURATION = 0.3;
+const DELAY = DURATION;
+const EASE_OUT = "easeOut";
+const EASE_OUT_OPACITY = [0.25, 0.46, 0.45, 0.94] as const;
+
 /**
  * Context value for ManifestoPanel state management
  * @internal
@@ -117,11 +122,21 @@ const ManifestoTrigger = ({ children, className }: ManifestoTriggerProps) => {
             <m.div
               className={cn(
                 buttonVariants({ variant: "iconButton", size: "icon" }),
-                "absolute -top-px -right-px aspect-square cursor-pointer"
+                "absolute -top-px -right-px aspect-square cursor-pointer",
               )}
               initial={{ opacity: 0, scale: 0.4, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0, transition: { type: "spring", stiffness: 420, damping: 22 } }}
-              exit={{ opacity: 0, scale: 0.4, rotate: 90, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                rotate: 0,
+                transition: { type: "spring", stiffness: 420, damping: 22 },
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.4,
+                rotate: 90,
+                transition: { duration: 0.15, ease: [0.4, 0, 1, 1] },
+              }}
             >
               <X className="size-5 text-primary-foreground" />
             </m.div>
@@ -147,23 +162,31 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
 
   return (
     <AnimatePresence>
-      {isOpen ? (
+      {isOpen && (
         <m.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{
-            height: "auto",
-            opacity: 1,
-            transition: {
-              height: { type: "spring", stiffness: 200, damping: 28, mass: 0.8 },
-              opacity: { duration: 0.2 },
+          key="manifesto"
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={{
+            visible: {
+              opacity: 1,
+              scale: 1,
+              transition: {
+                delay: DELAY,
+                duration: DURATION,
+                ease: EASE_OUT,
+              },
             },
-          }}
-          exit={{
-            height: 0,
-            opacity: 0,
-            transition: {
-              height: { duration: 0.25, ease: [0.4, 0, 0.6, 1] },
-              opacity: { duration: 0.12, ease: [0.4, 0, 1, 1] },
+            hidden: {
+              opacity: 0,
+              scale: 0.9,
+              transition: { duration: DURATION, ease: EASE_OUT },
+            },
+            exit: {
+              opacity: 0,
+              scale: 0.9,
+              transition: { duration: DURATION, ease: EASE_OUT_OPACITY },
             },
           }}
           className="overflow-hidden"
@@ -172,20 +195,25 @@ const ManifestoContent = ({ children, className }: ManifestoContentProps) => {
             initial={{ y: 12 }}
             animate={{
               y: 0,
-              transition: { type: "spring", stiffness: 180, damping: 24, mass: 0.8 },
+              transition: {
+                type: "spring",
+                stiffness: 180,
+                damping: 24,
+                mass: 0.8,
+              },
             }}
             className={cn(
               "relative font-semibold flex min-h-0 shrink overflow-hidden text-md md:text-lg max-h-[calc(70dvh-var(--footer-safe-area))] flex-col gap-8 text-center text-balance max-w-3xl text-foreground",
               "bg-white/10 dark:bg-white/8 backdrop-blur-2xl",
               "border border-white/15 ring-1 ring-orange-500/10",
               "shadow-2xl shadow-black/30",
-              className
+              className,
             )}
           >
             {children}
           </m.div>
         </m.div>
-      ) : null}
+      )}
     </AnimatePresence>
   );
 };
@@ -207,7 +235,7 @@ const ManifestoCloseButton = ({ className }: ManifestoCloseButtonProps) => {
       onClick={close}
       className={cn(
         "absolute top-4 right-4 p-2 hover:bg-white/10 transition-colors",
-        className
+        className,
       )}
       aria-label="Close manifesto"
     >
