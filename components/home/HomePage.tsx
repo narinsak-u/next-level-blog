@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
                 <br /> CN: 张泓历
                 <br /> SERVER: TH
                 <br /> INTEREST: Coding, History
-                <br /> GEN: Z ✌️
+                <br /> STATUS: Souls Player ✌️
               </p>
             </div>
           </Box>

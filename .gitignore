@@ -42,3 +42,9 @@ yarn-error.log*
 .vercel
 
 certificates
+
+# AI Agents
+.claude
+.opencode
+GEMINI.md
+AGENTS.md
