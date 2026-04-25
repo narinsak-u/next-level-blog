@@ -20,20 +20,36 @@ const PostHeatmap = ({ data }: PostHeatmapProps) => {
       calRef.current.destroy();
     }
 
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const startDate = new Date(`${currentYear}-01-01`);
+    const endDate = now;
+
+    const filteredData = Object.entries(data).reduce((acc, [date, count]) => {
+      const postDate = new Date(date);
+      if (postDate.getFullYear() === currentYear) {
+        acc[date] = count;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    if (Object.keys(filteredData).length === 0) return;
+
     calRef.current = new CalHeatmap();
 
     calRef.current.paint(
       {
         itemSelector: "#cal-heatmap",
-        date: { start: new Date("2020-01-01") },
+        date: { start: startDate, end: endDate },
+        range: 1,
         domain: { type: "year", label: { text: null } },
         subDomain: { type: "day", label: null },
-        data: { source: data, type: "json", x: "date", y: "value" },
+        data: { source: filteredData, type: "json", x: "date", y: "value" },
         scale: {
           color: {
             scheme: "Oranges",
             type: "linear",
-            domain: [0, Math.max(1, ...Object.values(data))],
+            domain: [0, Math.max(1, ...Object.values(filteredData))],
           },
         },
       },
@@ -58,10 +74,20 @@ const PostHeatmap = ({ data }: PostHeatmapProps) => {
     );
   }
 
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const yearlyPosts = Object.entries(data).reduce((sum, [date, count]) => {
+    const postDate = new Date(date);
+    if (postDate.getFullYear() === currentYear) {
+      return sum + count;
+    }
+    return sum;
+  }, 0);
+
   return (
     <div>
       <p className="text-center mb-4 font-semibold text-orange-600">
-        Total Posts: {totalPosts}
+        Total Posts: {totalPosts} ({currentYear}: {yearlyPosts})
       </p>
       <div ref={containerRef} id="cal-heatmap" className="flex justify-center" />
     </div>
