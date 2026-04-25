@@ -43,12 +43,12 @@ const PostHeatmap = () => {
     const filteredData = Object.entries(data.dates).reduce((acc, [date, count]) => {
       const postDate = new Date(date);
       if (postDate.getFullYear() === year) {
-        acc[date] = count;
+        acc.push({ date, value: count });
       }
       return acc;
-    }, {} as Record<string, number>);
+    }, [] as { date: string; value: number }[]);
 
-    if (Object.keys(filteredData).length === 0) return;
+    if (filteredData.length === 0) return;
 
     if (calRef.current) {
       calRef.current.destroy();
@@ -68,7 +68,7 @@ const PostHeatmap = () => {
           color: {
             scheme: "Oranges",
             type: "linear",
-            domain: [0, Math.max(1, ...Object.values(filteredData))],
+            domain: [0, Math.max(...filteredData.map(d => d.value))],
           },
         },
       },
