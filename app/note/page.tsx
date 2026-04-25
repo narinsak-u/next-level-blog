@@ -7,7 +7,6 @@ import "katex/dist/katex.min.css";
 
 import { Metadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
-// import { ogNoteImage } from "@/site/data";
 
 import { Suspense } from "react";
 import Content from "@/components/contents/Content";

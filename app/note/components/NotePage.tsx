@@ -1,12 +1,11 @@
-"use client";
-
 import { Container, Divider, Space } from "@mantine/core";
 import CustomBlockquote from "./CustomBlockquote";
 import FirstContent from "../contents/content-1.mdx";
+import PostHeatmap from "./PostHeatmap";
 
 type Props = {
   children: React.ReactNode;
-  postDates?: Record<string, number>;
+  postDates: Record<string, number>;
 };
 
 const NotePage = ({ children, postDates }: Props) => {
@@ -32,8 +31,8 @@ const NotePage = ({ children, postDates }: Props) => {
           <Space h={"lg"} />
           <Space h={"lg"} />
           <Divider label="Stats" labelPosition="center" />
-
-          {/* TODO: Post stats */}
+          <Space h={"lg"} />
+          <PostHeatmap data={postDates} />
         </div>
 
         <Space h={"lg"} />
