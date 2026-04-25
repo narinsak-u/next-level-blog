@@ -6,9 +6,10 @@ import FirstContent from "../contents/content-1.mdx";
 
 type Props = {
   children: React.ReactNode;
+  postDates?: Record<string, number>;
 };
 
-const NotePage = ({ children }: Props) => {
+const NotePage = ({ children, postDates }: Props) => {
   return (
     <>
       <Container className="my-0 mx-2 md:m-auto w-full">
@@ -28,6 +29,11 @@ const NotePage = ({ children }: Props) => {
           <div className="prose w-full max-w-none">
             <FirstContent />
           </div>
+          <Space h={"lg"} />
+          <Space h={"lg"} />
+          <Divider label="Stats" labelPosition="center" />
+
+          {/* TODO: Post stats */}
         </div>
 
         <Space h={"lg"} />
