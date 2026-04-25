@@ -1,7 +1,11 @@
+"use client";
+
 import { Container, Divider, Space } from "@mantine/core";
 import CustomBlockquote from "./CustomBlockquote";
 import FirstContent from "../contents/content-1.mdx";
-import PostHeatmap from "./PostHeatmap";
+import dynamic from "next/dynamic";
+
+const PostHeatmap = dynamic(() => import("./PostHeatmap"), { ssr: false });
 
 type Props = {
   children: React.ReactNode;
