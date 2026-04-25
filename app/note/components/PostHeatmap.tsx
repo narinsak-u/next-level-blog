@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import CalHeatmap from "cal-heatmap";
 import Tooltip from "cal-heatmap/plugins/Tooltip";
 import "cal-heatmap/cal-heatmap.css";
-import Loader from "@/components/common/Loader";
 
 interface PostHeatmapProps {
   data: Record<string, number>;
