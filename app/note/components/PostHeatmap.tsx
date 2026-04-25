@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Select } from "@mantine/core";
 import CalHeatmap from "cal-heatmap";
 import Tooltip from "cal-heatmap/plugins/Tooltip";
+import Legend from "cal-heatmap/plugins/Legend";
 import "cal-heatmap/cal-heatmap.css";
 import Loader from "@/components/common/Loader";
 
@@ -72,7 +73,7 @@ const PostHeatmap = () => {
           },
         },
       },
-      [[Tooltip]]
+      [[Tooltip], [Legend]]
     );
 
     return () => {
