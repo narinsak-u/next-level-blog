@@ -127,6 +127,46 @@ export const fetchPosts = cache(async (options: {
   }
 });
 
+export const fetchPostDates = cache(async (): Promise<{
+  dates: Record<string, number>;
+  years: number[];
+}> => {
+  try {
+    const response = await officialClient.dataSources.query({
+      data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
+      filter: {
+        property: "Status",
+        status: { equals: "Done" },
+      },
+      sorts: [
+        { timestamp: "created_time", direction: "ascending" },
+      ],
+    });
+
+    const results = response.results;
+    if (!results.length) return { dates: {}, years: [] };
+
+    const dates: Record<string, number> = {};
+    const yearsSet = new Set<number>();
+
+    for (const page of results) {
+      const pageWithTimestamps = page as PageWithTimestamps;
+      const createdTime = pageWithTimestamps.created_time;
+      if (createdTime) {
+        const date = createdTime.split("T")[0];
+        dates[date] = (dates[date] || 0) + 1;
+        yearsSet.add(new Date(date).getFullYear());
+      }
+    }
+
+    const years = Array.from(yearsSet).sort((a, b) => a - b);
+    return { dates, years };
+  } catch (error) {
+    console.error("Failed to fetch post dates from Notion:", error);
+    return { dates: {}, years: [] };
+  }
+});
+
 /**
  * Convenience wrapper to fetch all posts.
  */
