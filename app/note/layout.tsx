@@ -1,5 +1,4 @@
 import Layout from "@/components/layout/Layout";
-import Menu from "@/components/layout/Menu";
 import PageLayout from "@/components/layout/PageLayout";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { Box, Divider, Space } from "@mantine/core";
