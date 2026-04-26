@@ -7,7 +7,7 @@ import CalHeatmap from "cal-heatmap";
 import Tooltip from "cal-heatmap/plugins/Tooltip";
 import LegendLite from "cal-heatmap/plugins/LegendLite";
 import CalendarLabel from "cal-heatmap/plugins/CalendarLabel";
-import { type Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 import "cal-heatmap/cal-heatmap.css";
 import Loader from "@/components/common/Loader";
 
@@ -83,6 +83,8 @@ const PostHeatmap = ({ initialData }: PostHeatmapProps) => {
       },
       [] as { date: string; value: number }[],
     );
+
+    if (filteredData.length === 0) return;
 
     if (calRef.current) {
       try {
@@ -235,11 +237,6 @@ const PostHeatmap = ({ initialData }: PostHeatmapProps) => {
           data={yearOptions}
           value={selectedYear ? String(selectedYear) : String(currentYear)}
           onChange={(value) => setSelectedYear(value ? Number(value) : null)}
-          styles={{
-            input: {
-              borderColor: "#fd746c",
-            },
-          }}
         />
       </div>
       <div className="overflow-x-auto w-full p-4">

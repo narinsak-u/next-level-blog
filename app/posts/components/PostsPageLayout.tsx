@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Box, Divider, Space, Text } from "@mantine/core";
+import { ActionIcon, Box, Divider, Space } from "@mantine/core";
 import { LayoutGrid, LayoutList } from "tabler-icons-react";
 import { useMemo } from "react";
 
@@ -11,6 +11,7 @@ import Spotlight from "@/components/common/Spotlight";
 import TagSection from "./contents/tag-section";
 import TimelineContent from "./contents/TimelineContent";
 import Loader from "@/components/common/Loader";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 import { PageDataSchemaType } from "@/types";
 import { getTags } from "@/helpers/get-all-tags";
@@ -82,6 +83,8 @@ const PostsPageLayout = ({ posts }: Props) => {
           />
           <TimelineContent posts={posts} />
           <Space h="lg" />
+          
+           <ScrollToTop />
         </PageLayout>
       </Layout>
     </>
