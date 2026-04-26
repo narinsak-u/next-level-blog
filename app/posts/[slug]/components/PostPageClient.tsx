@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { extractTextFromRecordMap } from "@/helpers/extract-text-from-record-map";
 import { AISummaryPopup } from "@/components/ai/AISummaryPopup";
 import Content from "@/components/contents/Content";
@@ -9,10 +9,56 @@ import { ExtendedRecordMap } from "notion-types";
 
 interface PostPageClientProps {
   recordMap: ExtendedRecordMap;
+  slug: string;
 }
 
-export default function PostPageClient({ recordMap }: PostPageClientProps) {
+const CACHE_TTL_DAYS = 15;
+
+function getCacheKey(slug: string) {
+  return `ai-summary:${slug}`;
+}
+
+function getCachedSummary(slug: string): string | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem(getCacheKey(slug));
+    if (!raw) return null;
+
+    const { text, timestamp } = JSON.parse(raw);
+    const age = Date.now() - timestamp;
+    const maxAge = CACHE_TTL_DAYS * 24 * 60 * 60 * 1000;
+
+    if (age > maxAge) {
+      localStorage.removeItem(getCacheKey(slug));
+      return null;
+    }
+
+    return text;
+  } catch {
+    return null;
+  }
+}
+
+function saveSummaryToCache(slug: string, text: string): void {
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(
+      getCacheKey(slug),
+      JSON.stringify({ text, timestamp: Date.now() }),
+    );
+  } catch {
+    // Storage full or unavailable
+  }
+}
+
+export default function PostPageClient({
+  recordMap,
+  slug,
+}: PostPageClientProps) {
   const abortControllerRef = useRef<AbortController | null>(null);
+  const currentSummaryRef = useRef<string>("");
   const [summaryState, setSummaryState] = useState<{
     isOpen: boolean;
     summary: string;
@@ -25,12 +71,32 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
     error: null,
   });
 
+  useEffect(() => {
+    const cached = getCachedSummary(slug);
+    if (cached) {
+      currentSummaryRef.current = cached;
+      setSummaryState((prev) => ({ ...prev, summary: cached }));
+    }
+  }, [slug]);
+
   const handleOpenAI = async () => {
     if (summaryState.isLoading) return;
 
+    const cached = getCachedSummary(slug);
+    if (cached) {
+      currentSummaryRef.current = cached;
+      setSummaryState((prev) => ({
+        ...prev,
+        summary: cached,
+        isOpen: true,
+        isLoading: false,
+        error: null,
+      }));
+      return;
+    }
+
     abortControllerRef.current = new AbortController();
     const textContent = extractTextFromRecordMap(recordMap);
-    console.log("Extracted text length:", textContent.length);
 
     if (!textContent.trim()) {
       setSummaryState((prev) => ({
@@ -42,6 +108,7 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
       return;
     }
 
+    currentSummaryRef.current = "";
     setSummaryState((prev) => ({
       ...prev,
       isOpen: true,
@@ -51,7 +118,6 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
     }));
 
     try {
-      console.log("Fetching /api/ai-summary...");
       const response = await fetch("/api/ai-summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,8 +126,6 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
         }),
         signal: abortControllerRef.current.signal,
       });
-
-      console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errText = await response.text();
@@ -86,9 +150,10 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
             if (data === "[DONE]") continue;
             try {
               const parsed = JSON.parse(data);
+              currentSummaryRef.current += parsed.text;
               setSummaryState((prev) => ({
                 ...prev,
-                summary: prev.summary + parsed.text,
+                summary: currentSummaryRef.current,
               }));
             } catch {
               // Skip invalid JSON
@@ -99,13 +164,16 @@ export default function PostPageClient({ recordMap }: PostPageClientProps) {
     } catch (error) {
       const err = error as Error;
       if (err.name === "AbortError") return;
-      console.error("Streaming error:", err);
       setSummaryState((prev) => ({
         ...prev,
         error: err.message || "Failed to generate summary",
       }));
     } finally {
       setSummaryState((prev) => ({ ...prev, isLoading: false }));
+
+      if (currentSummaryRef.current) {
+        saveSummaryToCache(slug, currentSummaryRef.current);
+      }
     }
   };
 
