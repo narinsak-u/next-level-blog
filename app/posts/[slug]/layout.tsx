@@ -5,11 +5,14 @@ import "katex/dist/katex.min.css";
 
 import Layout from "@/components/layout/Layout";
 import ContentTitle from "@/components/contents/ContentTitle";
-import ScrollToTop from "@/components/common/ScrollToTop";
 import SpotlightClient from "@/components/common/SpotlightClient";
 
 import { fetchPostById, fetchAllPosts } from "@/actions/posts";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
 import ContentBody from "@/components/contents/ContentBody";
 import Loader from "@/components/common/Loader";
@@ -69,8 +72,6 @@ const layout = async ({ children, params }: Props) => {
                 <div>{children}</div>
               </ContentBody>
             </HydrationBoundary>
-
-            <ScrollToTop />
           </div>
         </PageLayout>
       </Layout>

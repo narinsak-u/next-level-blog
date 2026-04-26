@@ -1,21 +1,34 @@
 "use client";
 
 import { ArrowUpCircle, Feather, Books } from "tabler-icons-react";
-import { IconHome } from "@tabler/icons-react";
+import { IconHome, IconSparkles } from "@tabler/icons-react";
 import { siteMetadata } from "@/site/siteMetadata";
 import { FloatingButtonGroup } from "@/components/ui/FloatingButton";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
-const ScrollToTop = () => {
+interface ScrollToTopProps {
+  onAISummaryClick?: () => void;
+}
+
+const ScrollToTop = ({ onAISummaryClick }: ScrollToTopProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
 
   return (
-    <FloatingButtonGroup className="md:!right-6 lg:!right-14 md:!bottom-4">
+    <FloatingButtonGroup className="md:right-6! lg:right-14! md:bottom-4!">
       <FloatingButtonGroup.Button
         icon={ArrowUpCircle}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         label="Scroll to top"
       />
+      {isPostPage && onAISummaryClick && (
+        <FloatingButtonGroup.Button
+          icon={IconSparkles}
+          onClick={onAISummaryClick}
+          label="AI Summary"
+        />
+      )}
       <FloatingButtonGroup.Button
         icon={Books}
         onClick={() => router.push("/posts")}

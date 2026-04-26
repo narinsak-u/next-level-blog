@@ -8,10 +8,10 @@ import { PageDataSchemaType } from "@/types";
 import Loader from "../common/Loader";
 import RelatedPostsWrapper from "./RelatedPostsWrapper";
 
-const Comments = dynamic(() => import("./Comments"), {
-  ssr: false,
-  loading: () => <div className="h-32" />,
-});
+// const Comments = dynamic(() => import("./Comments"), {
+//   ssr: false,
+//   loading: () => <div className="h-32" />,
+// });
 
 type Props = {
   postData: PageDataSchemaType;
@@ -37,7 +37,7 @@ const ContentBody = ({ children, postData }: Props) => {
 
         <RelatedPostsWrapper postData={postData} />
         <Divider className="my-14" />
-        <Comments />
+        {/*<Comments />*/}
       </div>
     </Suspense>
   );
