@@ -8,9 +8,13 @@ export function cn(...inputs: ClassValue[]) {
 const VIDEO_EXTENSIONS = ["mp4", "webm", "ogg", "mov", "avi", "m4v"] as const;
 
 export const getFileExtension = (url: string): string => {
-  return url.split(".").pop()?.toLowerCase() || "";
+  const cleanUrl = url.split("?")[0]!;
+  const lastDot = cleanUrl.lastIndexOf(".");
+  if (lastDot === -1 || lastDot === cleanUrl.length - 1) return "";
+  return cleanUrl.slice(lastDot + 1).toLowerCase();
 };
 
 export const isVideo = (extension: string): boolean => {
-  return VIDEO_EXTENSIONS.includes(extension as (typeof VIDEO_EXTENSIONS)[number]);
+  if (!extension) return false;
+  return VIDEO_EXTENSIONS.includes(extension.toLowerCase() as (typeof VIDEO_EXTENSIONS)[number]);
 };
