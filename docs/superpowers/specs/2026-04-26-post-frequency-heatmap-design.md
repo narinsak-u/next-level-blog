@@ -100,3 +100,6 @@ const postDates = posts.reduce((acc, post) => {
 1. **Create**: `app/note/components/PostHeatmap.tsx`
 2. **Modify**: `app/note/page.tsx` - fetch and transform post dates
 3. **Modify**: `app/note/components/NotePage.tsx` - import and render PostHeatmap
+
+## Ideal image
+- URL: https://i.postimg.cc/SKWG8g8s/Screenshot-2026-04-26-013049.png

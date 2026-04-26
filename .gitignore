@@ -44,7 +44,7 @@ yarn-error.log*
 certificates
 
 # AI Agents
-.claude
-.opencode
-GEMINI.md
-AGENTS.md
+# .claude
+# .opencode
+# GEMINI.md
+# AGENTS.md

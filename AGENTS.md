@@ -1,12 +1,10 @@
 # AGENTS.md - Agent Coding Guidelines for next-level-blog
 
 ## Project Overview
-- **Project**: Personal blog with Next.js 15 (App Router), Notion as headless CMS
-- **Stack**: Next.js 16.2, React 19, TypeScript, Tailwind CSS v4, Mantine UI, Framer Motion
+- **Project**: Personal blog with Next.js 16.2 (App Router), Notion as headless CMS
+- **Stack**: React 19, TypeScript (strict mode), Tailwind CSS v4, Mantine UI, Framer Motion
 - **Key Libraries**: @notionhq/client, react-notion-x, Zod, Zustand, TanStack Query, Vitest, Playwright
 - **Runtime**: Bun
-
----
 
 ## Build / Lint / Test Commands
 
@@ -18,20 +16,24 @@ bun run start            # Start production server
 
 # Linting & Formatting
 bun run lint             # Run ESLint
-bun run format           # Run Prettier (if available)
+bun run format           # Run Prettier (check package.json)
 
 # Unit Testing (Vitest)
 bun test                 # Run all unit tests in watch mode
-bun test run             # Run all unit tests once
-bun test run --coverage # Run tests with coverage
+bun test:run            # Run all unit tests once
+bun test:coverage       # Run tests with coverage
 
 # Run a single test file
+bun test:run path/to/test.file.ts
 bun vitest run path/to/test.file.ts
-bun vitest run --testNamePattern="test name"
+
+# Run tests matching a pattern
+bun test:run --testNamePattern="test name"
 
 # E2E Testing (Playwright)
-bun run test:e2e         # Run Playwright tests
-bun run test:e2e:ui      # Run Playwright with UI mode
+bun test:e2e            # Run E2E tests
+bun test:e2e:ui         # Run Playwright with UI mode
+bun test:e2e:debug      # Run Playwright in debug mode
 ```
 
 ---
@@ -44,14 +46,15 @@ bun run test:e2e:ui      # Run Playwright with UI mode
 - Run `bun run lint` before committing
 
 ### Imports & Path Aliases
-- Use `@/` alias for absolute imports (maps to project root)
+- Use `@/` alias for absolute imports (maps to project root via tsconfig.json)
 - Order: external libs → internal components/hooks → utilities/types
 - Example: `import { useState } from "react"` → `import Button from "@/components/ui/Button"` → `import { cn } from "@/lib/utils"`
 
 ### TypeScript
-- **Strict mode enabled** - avoid `any` types
+- **Strict mode enabled** (`strict: true` in tsconfig.json) - avoid `any` types
 - Use Zod for runtime validation (schemas in `@/types`)
 - Use `interface` for public APIs, `type` for unions/intersections
+- No `@ts-ignore` or `// @ts-expect-error` without justification
 
 ### Naming Conventions
 - **Components**: PascalCase (`PostCard.tsx`, `Button.tsx`)
@@ -61,9 +64,10 @@ bun run test:e2e:ui      # Run Playwright with UI mode
 - **Constants**: SCREAMING_SNAKE_CASE
 
 ### Error Handling
-- Use try-catch in Server Actions
+- Use try-catch in Server Actions with proper error logging
 - Log errors with `console.error` for debugging
 - Return empty arrays or graceful fallbacks rather than crashing
+- Validate all inputs using Zod (see Zod patterns below)
 
 ### Component Patterns
 
@@ -102,9 +106,10 @@ Avoid boolean props (`isOpen`, `isDisabled`) that multiply component states. Use
 - Validate all inputs using Zod
 
 ### Testing
-- Write unit tests in `tests/**/*.test.{ts,tsx}`
+- Write unit tests in `tests/**/*.test.{ts,tsx}` (configured in vitest.config.ts)
 - Write E2E tests in `e2e/**/*.test.ts`
 - Follow AAA pattern: Arrange, Act, Assert
+- Vitest uses jsdom environment with setup files in `tests/setup.ts`
 
 ---
 
@@ -119,7 +124,7 @@ Avoid boolean props (`isOpen`, `isDisabled`) that multiply component states. Use
 @/helpers    → Data transformation utilities
 @/lib        → Utilities (utils.ts, notion-client.ts)
 @/types      → TypeScript definitions with Zod schemas
-@/tests      → Unit tests
+@/tests      → Unit tests (test setup in tests/setup.ts)
 @/e2e        → Playwright E2E tests
 ```
 
@@ -132,9 +137,10 @@ Avoid boolean props (`isOpen`, `isDisabled`) that multiply component states. Use
 
 ### Zod Validation
 - Use `.parse()` for throwing validation, `.safeParse()` for graceful handling
+- Define schemas in `@/types` with clear naming (`PageDataSchema`, `PostSchema`)
 
 ### Revalidation
-- On-demand via `app/api/revalidate/route.ts`
+- On-demand revalidation via `app/api/revalidate/route.ts`
 - Use `revalidatePath` in Server Actions after content updates
 
 ---
