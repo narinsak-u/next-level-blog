@@ -9,8 +9,8 @@ export const siteMetadata = {
   author: "alohadancemeow",
   cnName: "张泓历",
   twitter: "@3rd_meepo",
-  github: "https://github.com/alohadancemeow",
-  githubRepo: "https://github.com/alohadancemeow/next-level-blog",
+  github: "https://github.com/narinsak-u",
+  githubRepo: "https://github.com/narinsak-u/next-level-blog",
   keywords: [
     "alohadancemeow",
     "blog",
@@ -21,7 +21,7 @@ export const siteMetadata = {
     "Book",
   ],
   feedbackUrl: "https://alohadancemeow.featurebase.app",
-  version: "v0.1.6",
+  version: "v1.0.0",
 
   socials: {
     x: "https://x.com/3rd_meepo",
