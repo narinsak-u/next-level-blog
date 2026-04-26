@@ -9,9 +9,13 @@ const PostHeatmap = dynamic(() => import("./PostHeatmap"), { ssr: false });
 
 type Props = {
   children: React.ReactNode;
+  data: {
+    dates: Record<string, number>;
+    years: number[];
+  };
 };
 
-const NotePage = ({ children }: Props) => {
+const NotePage = ({ children, data }: Props) => {
   return (
     <>
       <Container className="my-0 mx-2 md:m-auto w-full">
@@ -35,7 +39,7 @@ const NotePage = ({ children }: Props) => {
           <Space h={"lg"} />
           <Divider label="Stats" labelPosition="center" />
           <Space h={"lg"} />
-          <PostHeatmap />
+          <PostHeatmap initialData={data} />
         </div>
 
         <Space h={"lg"} />

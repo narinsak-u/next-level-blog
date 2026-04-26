@@ -11,7 +11,7 @@ import { siteMetadata } from "@/site/siteMetadata";
 import { Suspense } from "react";
 import Content from "@/components/contents/Content";
 import Loader from "@/components/common/Loader";
-import { fetchStaticPageContent } from "@/actions/posts";
+import { fetchStaticPageContent, fetchPostDates } from "@/actions/posts";
 import NotePage from "./components/NotePage";
 
 export const metadata: Metadata = {
@@ -24,9 +24,10 @@ export const metadata: Metadata = {
 
 const Note = async () => {
   const recordMap = await fetchStaticPageContent("note");
+  const postDates = await fetchPostDates();
 
   return (
-    <NotePage>
+    <NotePage data={postDates}>
       <Suspense fallback={<Loader />}>
         {recordMap ? <Content recordMap={recordMap} /> : null}
       </Suspense>
