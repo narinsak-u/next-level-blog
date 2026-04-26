@@ -1,12 +1,18 @@
-export const dynamic = 'force-dynamic'
+export const revalidate = 300;
+
+// Notion content styles
+import "react-notion-x/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import "katex/dist/katex.min.css";
 
 import { Metadata } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
-// import { ogNoteImage } from "@/site/data";
+import { siteMetadata } from "@/site/siteMetadata";
 
-import NotePage from "./components/NotePage";
+import { Suspense } from "react";
 import Content from "@/components/contents/Content";
-import { getNotePageContent } from "@/actions/notion-x";
+import Loader from "@/components/common/Loader";
+import { fetchStaticPageContent, fetchPostDates } from "@/actions/posts";
+import NotePage from "./components/NotePage";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Notes`,
@@ -17,9 +23,16 @@ export const metadata: Metadata = {
 };
 
 const Note = async () => {
-  const recordMap = await getNotePageContent();
+  const recordMap = await fetchStaticPageContent("note");
+  const postDates = await fetchPostDates();
 
-  return <NotePage>{recordMap && <Content recordMap={recordMap} />}</NotePage>;
+  return (
+    <NotePage data={postDates}>
+      <Suspense fallback={<Loader />}>
+        {recordMap ? <Content recordMap={recordMap} /> : null}
+      </Suspense>
+    </NotePage>
+  );
 };
 
 export default Note;

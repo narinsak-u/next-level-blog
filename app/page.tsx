@@ -1,10 +1,14 @@
-// import HomePage from "@/components/home/HomePage";
-import NewProfile from "@/components/home/NewProfile";
+"use client";
 
-const Home = async () => {
-  // return <HomePage />;
+import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
+import HomeContent from "@/app/home/HomeContent";
 
-  return <NewProfile />;
+const Home = () => {
+  return (
+    <MusicPlayerProvider src="/assets/where-winds-meet-ost.mp3">
+      <HomeContent />
+    </MusicPlayerProvider>
+  );
 };
 
 export default Home;

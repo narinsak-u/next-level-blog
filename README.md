@@ -9,8 +9,8 @@
 ```bash
 git clone https://github.com/alohadancemeow/next-level-blog.git
 cd next-level-blog
-npm install --save
-npm run dev
+bun install
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

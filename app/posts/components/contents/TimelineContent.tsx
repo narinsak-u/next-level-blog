@@ -12,49 +12,48 @@ type Props = {
   posts: PageDataSchemaType[];
 };
 
+const CATEGORY_CONFIGS = [
+  {
+    key: "today-i-learned",
+    description: "Sharing tidbits of wisdom I picked up today, maybe something you'll find useful too.",
+  },
+  {
+    key: "i-read-a-lot",
+    description: "Diving into the books I've devoured lately, sharing the highlights and insights.",
+  },
+  {
+    key: "no-work-today",
+    description: "Recommending random entertainment gems – movies, anime, manga, and all things fun for a day off.",
+  },
+] as const;
+
 const TimelineContent = ({ posts }: Props) => {
   const categories = getCategory(posts);
 
   return (
     <>
       <Timeline bulletSize={24} lineWidth={2} style={{ padding: "0" }}>
-        {/* --- TODOY-I-LEARNED --- */}
-        <Timeline.Item
-          bullet={<Books size={16} />}
-          title={categories[0].toUpperCase()}
-        >
-          <PostGrid
-            categoryName={categories[0]}
-            description="Sharing tidbits of wisdom I picked up today, maybe something you'll find useful too."
-          />
-        </Timeline.Item>
+        {CATEGORY_CONFIGS.map((config, index) => {
+          const categoryName = categories[index];
+          if (!categoryName) return null;
 
-        {/* --- I-READ-A-LOT --- */}
-        <Timeline.Item
-          bullet={<Books size={16} />}
-          title={categories[1].toUpperCase()}
-        >
-          <PostGrid
-            categoryName={categories[1]}
-            description="Diving into the books I've devoured lately, sharing the highlights and insights."
-          />
-        </Timeline.Item>
-
-        {/* --- NO-WORK-TODAY --- */}
-        <Timeline.Item
-          bullet={<Books size={16} />}
-          title={categories[2].toUpperCase()}
-        >
-          <PostGrid
-            categoryName={categories[2]}
-            description="Recommending random entertainment gems – movies, anime, manga, and all things fun for a day off."
-          />
-        </Timeline.Item>
+          return (
+            <Timeline.Item
+              key={config.key}
+              bullet={<Books size={16} />}
+              title={categoryName.toUpperCase()}
+            >
+              <PostGrid
+                categoryName={categoryName}
+                description={config.description}
+              />
+            </Timeline.Item>
+          );
+        })}
 
         <Timeline.Item
           title="END OF CONTENT"
           bullet={<SignRight size={16} />}
-          //   lineVariant="dashed"
         >
           <EndSection posts={posts} />
         </Timeline.Item>

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(ls /d/Github/next-level-blog/app/posts/[slug])",
+      "Bash(npx -y react-doctor@latest . --verbose --diff)",
+      "Bash(npx -y react-doctor@latest . --diff)"
+    ]
+  }
+}

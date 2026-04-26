@@ -1,16 +1,14 @@
 "use client";
 
-import { Box, Text } from "@mantine/core";
+import Link from "next/link";
+import { Box } from "@mantine/core";
 import { PostTagSchemaType } from "@/types";
-import { useRouter } from "next/navigation";
 
 type Props = {
   tags: PostTagSchemaType[];
 };
 
 const TagItem = ({ tags }: Props) => {
-  const router = useRouter();
-  
   return (
     <Box
       style={{
@@ -23,19 +21,14 @@ const TagItem = ({ tags }: Props) => {
       }}
     >
       {tags &&
-        tags.map((tag, idx) => (
-          <div key={idx}>
-            <Text
-              onClick={() => router.push(`/tags/${tag.name}`)}
-              style={{
-                textDecoration: "none",
-                color: "grey",
-                cursor: "pointer",
-              }}
-            >
-              {`#${tag.name}`}
-            </Text>
-          </div>
+        tags.map((tag) => (
+          <Link
+            key={tag.id}
+            href={`/tags/${tag.name}`}
+            style={{ textDecoration: "none", color: "grey", cursor: "pointer" }}
+          >
+            {`#${tag.name}`}
+          </Link>
         ))}
     </Box>
   );

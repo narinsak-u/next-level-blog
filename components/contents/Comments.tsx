@@ -1,17 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import Giscus from "@giscus/react";
 import { useMantineColorScheme } from "@mantine/core";
 
 const Comments = () => {
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
-
-  useEffect(() => {
-    if (colorScheme) {
-      setColorScheme(colorScheme);
-    }
-  }, [colorScheme, setColorScheme]);
+  const { colorScheme } = useMantineColorScheme();
 
   return (
     <Giscus

@@ -1,9 +1,10 @@
-import { getAllPosts } from "@/actions/notion";
 import { Metadata, ResolvingMetadata } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { siteMetadata } from "@/site/siteMetadata";
 
-import TagPage from "@/app/tags/components/TagPage";
-// import { ogTagImage } from "@/site/data";
+import TagPageClient from "@/app/tags/components/TagPageClient";
+import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/actions/posts";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -11,25 +12,35 @@ type Props = {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // const previousImages = (await parent)?.openGraph?.images || [];
   const { slug } = await params;
 
   return {
     title: `${siteMetadata.title} — ${slug}`,
     description: `Posts about ${slug}`,
-    // openGraph: {
-    //   images: [ogTagImage, ...previousImages],
-    // },
   };
 }
 
 const Tag = async ({ params }: Props) => {
   const { slug } = await params;
-  const posts = await getAllPosts();
 
-  return <TagPage posts={posts} tagname={slug} />;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: useFetchAllPosts.getQueryKey(),
+    queryFn: async () => {
+      const posts = await fetchAllPosts();
+      return posts;
+    },
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <TagPageClient tagname={slug} />
+    </HydrationBoundary>
+  );
 };
 
 export default Tag;

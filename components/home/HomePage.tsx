@@ -1,103 +1,58 @@
 "use client";
 
-import Link from "next/link";
-import {
-  Container,
-  Text,
-  UnstyledButton,
-  Divider,
-  Grid,
-  Space,
-  Stack,
-  Title,
-  Box,
-  Center,
-  Kbd,
-  useMantineColorScheme,
-  Image,
-} from "@mantine/core";
-
-import { Navigations } from "@/site/data";
-import FeedbackComponent from "./Feedback";
+import { Container, Divider, Space, Box, Image } from "@mantine/core";
+import { Navigations, MainKeys } from "@/site/data";
+import ShortcutList from "@/components/ui/ShortcutList";
+import KeyShortcuts from "@/app/posts/components/KeyShortcuts";
 
 const HomePage: React.FC = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-
   return (
     <Container>
-      <Center
-        style={{
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
-      >
-        <Stack style={{ margin: "0 auto", paddingLeft: "10px" }}>
-          <Box>
-            <Image
-              src="/image3.gif"
-              alt="profile-image"
-              className="rounded-full w-48 h-48"
-            />
+      <div className="w-full min-h-screen flex flex-col items-center justify-center">
+        <div className="mx-auto pl-2.5 gap-1 flex flex-col">
+          <div className="self-start">
+            <KeyShortcuts items={MainKeys} />
+          </div>
+          <Space h="lg" />
+          <Box className="flex gap-4 items-center">
+            <Image src="/profile.jpg" alt="profile-image" w={190} h={190} />
+            <div className="text-xs gap-2 leading-relaxed">
+              <p className="mb-0!">
+                Hi there! 👋
+                <br /> I&apos;m Hai — 海
+                <br /> ---
+                <br /> AKA: alohadancemeow
+                <br /> NAME: Zhang Hongli
+                <br /> CN: 张泓历
+                <br /> SERVER: TH
+                <br /> INTEREST: Coding, History
+                <br /> STATUS: Souls Player ✌️
+              </p>
+            </div>
           </Box>
-
-          <Box>
-            <Title order={1}>Personal Home</Title>
-            <Space h="xs" />
-            <Text>Hi there! 👋 I&apos;m Hai — 海 — aka: alohadancemeow ✌️</Text>
-          </Box>
-
-          <Divider my="xs" size="xs" variant="solid" />
-          <Space h="sm" />
-
-          <Box style={{ width: "70%" }}>
-            <Grid grow>
-              {Navigations.map(({ name, href, id }) => (
-                <Grid.Col span={6} key={id}>
-                  <Link href={href} passHref>
-                    <UnstyledButton >{name}</UnstyledButton>
-                  </Link>
-                </Grid.Col>
-              ))}
-            </Grid>
-          </Box>
-
-          <Space h="sm" />
-
+          <Space h="xs" />
           <Divider
-            my="lg"
+            my="sm"
             variant="solid"
-            labelPosition="left"
+            labelPosition="center"
             label={
-              <UnstyledButton
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onClick={() => toggleColorScheme()}
-              >
-                <span style={{ fontSize: "20px" }}>
-                  {colorScheme === "dark" ? "🌙" : "🌤️"}
-                </span>
-                <Box ml={5} mr={10}>
-                  Switch Mode
-                </Box>
-                <Kbd>⌘</Kbd>
-                <span style={{ margin: "0 5px" }}>+</span>
-                <Kbd>D</Kbd>
-                <span style={{ margin: "0 10px" }}>/</span>
-                <Kbd>Ctrl</Kbd>
-                <span style={{ margin: "0 5px" }}>+</span>
-                <Kbd>D</Kbd>
-              </UnstyledButton>
+              <Box ml={5} mr={10}>
+                <p className="mb-0!">Personal Home</p>
+              </Box>
             }
           />
-          <FeedbackComponent />
-        </Stack>
-      </Center>
+          <div className="self-start">
+            <ShortcutList
+              items={Navigations.map((nav) => ({
+                id: nav.id,
+                keys: [nav.emoji],
+                label: nav.name,
+                href: nav.href,
+              }))}
+            />
+          </div>
+        </div>
+      </div>
     </Container>
   );
 };

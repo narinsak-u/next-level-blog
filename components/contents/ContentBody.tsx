@@ -1,20 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { Space, Box, Divider } from "@mantine/core";
 import { PageDataSchemaType } from "@/types";
 import Loader from "../common/Loader";
-import RelatedPosts from "./RelatedPosts";
-import Comments from "./Comments";
+import RelatedPostsWrapper from "./RelatedPostsWrapper";
+
+const Comments = dynamic(() => import("./Comments"), {
+  ssr: false,
+  loading: () => <div className="h-32" />,
+});
 
 type Props = {
-  posts: PageDataSchemaType[];
   postData: PageDataSchemaType;
   children: React.ReactNode;
 };
 
-const ContentBody = ({ posts, children, postData }: Props) => {
+const ContentBody = ({ children, postData }: Props) => {
   return (
     <Suspense fallback={<Loader />}>
       <div className="w-full m-auto max-w-3xl">
@@ -23,15 +27,15 @@ const ContentBody = ({ posts, children, postData }: Props) => {
         <Space h={"xl"} />
 
         <Box className="flex justify-center items-center gap-2">
-          <p> More in : </p>
-          {postData.tags.map((tag, i) => (
-            <Link key={i} href={`/tags/${tag.name}`}>
+          <p className="mb-0!"> More in : </p>
+          {postData.tags.map((tag) => (
+            <Link key={tag.id} href={`/tags/${tag.name}`}>
               <span className="decoration-none cursor-pointer">{`#${tag.name}`}</span>
             </Link>
           ))}
         </Box>
 
-        <RelatedPosts posts={posts} postData={postData} />
+        <RelatedPostsWrapper postData={postData} />
         <Divider className="my-14" />
         <Comments />
       </div>

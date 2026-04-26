@@ -4,19 +4,13 @@ import dynamic from "next/dynamic";
 import { NotionRenderer } from "react-notion-x";
 import { ExtendedRecordMap } from "notion-types";
 import { notFound } from "next/navigation";
+import { useCallback } from "react";
 import useGetTweetId from "@/hooks/use-get-tweet-id";
-// import { jetBrains_mono } from "@/app/fonts";
+import ContentErrorBoundary from "./ContentErrorBoundary";
 
-// # Expensive components
 const Code = dynamic(() =>
   import("react-notion-x/build/third-party/code").then((m) => m.Code)
 );
-
-// const Collection = dynamic(() =>
-//   import("react-notion-x/build/third-party/collection").then(
-//     (m) => m.Collection
-//   )
-// );
 
 const Equation = dynamic(() =>
   import("react-notion-x/build/third-party/equation").then((m) => m.Equation)
@@ -37,7 +31,6 @@ const Modal = dynamic(
 );
 
 const Tweet = dynamic(() => import("./TweetBox"));
-// const CodeBox = dynamic(() => import("./Code"));
 
 type Props = {
   recordMap: ExtendedRecordMap;
@@ -47,51 +40,28 @@ type Props = {
 const Content = ({ recordMap }: Props) => {
   const { tweetId } = useGetTweetId({ recordMap });
 
-  const myTweet = () => tweetId && <Tweet id={tweetId} />;
+  const myTweet = useCallback(() => {
+    if (!tweetId) return null;
+    return <Tweet id={tweetId} />;
+  }, [tweetId]);
 
   if (!recordMap) return notFound();
 
   return (
-    <NotionRenderer
-      recordMap={recordMap}
-      // fullPage={true}
-      // darkMode={true}
-      // footer={<button onClick={() => router.push("/")}>back</button>}
-      // header={<>header</>}
-      disableHeader
-      // pageAside={<>aside</>}
-      // showTableOfContents
-      // pageCover={<></>}
-      // pageTitle
-      components={{
-        Code,
-        // Collection,
-        Equation,
-        Modal,
-        Pdf,
-        Tweet: myTweet,
-      }}
-      // className={`
-      //   ${jetBrains_mono.className}
-      //   w-full
-      //   prose-ol:m-0
-      //   prose-ul:m-0
-      //   prose-li:m-0
-      //   prose-li:p-0
-      //   prose
-      //   prose-ul:list-square
-      //   dark:prose-invert
-      //   prose-a:no-underline
-      //   prose-img:m-0
-      //   prose-blockquote:border-amber-500
-      //   dark:prose-blockquote:border-amber-700
-      //   dark:[&>div>a>div>*]:text-white
-      //   dark:[&>div>a>div>div>*]:text-gray-500
-      //   dark:prose-a:border-amber-700
-      //   `}
-
-      className="prose dark:prose-a:!border-amber-700 prose-blockquote:!border-amber-500 dark:prose-blockquote:!border-amber-700"
-    />
+    <ContentErrorBoundary>
+      <NotionRenderer
+        recordMap={recordMap}
+        disableHeader
+        components={{
+          Code,
+          Equation,
+          Modal,
+          Pdf,
+          Tweet: myTweet,
+        }}
+        className="prose dark:prose-a:border-amber-700! prose-blockquote:border-amber-500! dark:prose-blockquote:border-amber-700!"
+      />
+    </ContentErrorBoundary>
   );
 };
 

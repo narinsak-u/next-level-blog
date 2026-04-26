@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next";
-import { siteMetadata } from "@/site/siteMatedata";
-import { getAllPosts } from "@/actions/notion";
+import { siteMetadata } from "@/site/siteMetadata";
+import { fetchAllPosts } from "@/actions/posts";
 
 export async function generateSitemaps() {
   // Fetch the total number of products and calculate the number of sitemaps needed
-  const totalPosts = (await getAllPosts()).length;
+  const totalPosts = (await fetchAllPosts()).length;
 
   const postPerSitemap = 50000;
   const numberOfSitemap = Math.ceil(totalPosts / postPerSitemap);
@@ -24,7 +24,7 @@ export default async function sitemap({
   // Google's limit is 50,000 URLs per sitemap
   //   const start = id * 1000;
   //   const end = start + 1000;
-  const posts = await getAllPosts();
+  const posts = await fetchAllPosts();
 
   return posts.map((post) => ({
     url: `${siteMetadata.metadataBase}/posts/${post.id}`,

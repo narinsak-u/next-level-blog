@@ -1,10 +1,19 @@
+import { cn } from "@/lib/utils";
+
 type Props = {
   title: string;
 };
 
 const Header = ({ title }: Props) => {
   return (
-    <div className="text-xs sm:text-3xl text-white bg-orange-400 py-2 px-2 rounded-sm dark:bg-amber-900 dark:text-orange-200">
+    <div
+      className={cn(
+        "py-3 px-4",
+        "bg-white/5 backdrop-blur-sm",
+        "border border-white/10 border-l-2 border-l-orange-500",
+        "text-xs sm:text-sm uppercase tracking-widest font-medium text-foreground/70"
+      )}
+    >
       {title}
     </div>
   );

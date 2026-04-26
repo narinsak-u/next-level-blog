@@ -1,35 +1,32 @@
-export const dynamic = "force-dynamic";
-
 import { Metadata } from "next";
-import { getAllPosts } from "@/actions/notion";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
-import { siteMetadata } from "@/site/siteMatedata";
-// import { ogPoststImage } from "@/site/data";
+import { siteMetadata } from "@/site/siteMetadata";
 
-import PostsPageLayout from "@/app/posts/components/PostsPageLayout";
-import TimelineContent from "@/app/posts/components/contents/TimelineContent";
-import { Suspense } from "react";
-import Loader from "@/components/common/Loader";
+import PostsPageClient from "@/app/posts/components/PostsPageClient";
+import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/actions/posts";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Posts`,
   description: `All posts from ${siteMetadata.title}`,
-  // openGraph: {
-  //   images: [ogPoststImage],
-  // },
 };
 
 const Posts = async () => {
-  const posts = await getAllPosts();
+  const queryClient = new QueryClient();
 
-  // console.log(posts, "posts");
+  await queryClient.prefetchQuery({
+    queryKey: useFetchAllPosts.getQueryKey(),
+    queryFn: async () => {
+      const posts = await fetchAllPosts();
+      return posts;
+    },
+  });
 
   return (
-    <PostsPageLayout posts={posts}>
-      <Suspense fallback={<Loader />}>
-        <TimelineContent posts={posts} />
-      </Suspense>
-    </PostsPageLayout>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PostsPageClient />
+    </HydrationBoundary>
   );
 };
 
