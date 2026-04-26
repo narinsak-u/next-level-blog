@@ -7,7 +7,7 @@ import CalHeatmap from "cal-heatmap";
 import Tooltip from "cal-heatmap/plugins/Tooltip";
 import LegendLite from "cal-heatmap/plugins/LegendLite";
 import CalendarLabel from "cal-heatmap/plugins/CalendarLabel";
-import dayjs from "dayjs";
+import { type Dayjs } from "dayjs";
 import "cal-heatmap/cal-heatmap.css";
 import Loader from "@/components/common/Loader";
 
@@ -131,7 +131,7 @@ const PostHeatmap = ({ initialData }: PostHeatmapProps) => {
           [
             Tooltip,
             {
-              text: (date: number, value: number, dayjsDate: any) => {
+              text: (date: number, value: number, dayjsDate: Dayjs) => {
                 return `${dayjsDate.format("MMM DD, YYYY")}: ${value || 0} post${value !== 1 ? "s" : ""}`;
               },
             },
