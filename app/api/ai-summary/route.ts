@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       console.error("AI stream error caught during peek:", error);
       
       // Determine if it's a quota/rate limit error
-      const errorStr = JSON.stringify(error).toLowerCase();
+            error: "ขออภัยครับ ตอนนี้โควต้า AI ของเราหมดชั่วคราว กรุณาลองใหม่ในภายหลัง หรืออ่านบทความตัวเต็มก่อนได้เลยครับ 🙏",
       const isQuotaError = 
         error?.error?.code === "insufficient_quota" || 
         error?.error?.type === "insufficient_quota" ||
