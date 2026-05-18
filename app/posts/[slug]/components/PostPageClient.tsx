@@ -128,8 +128,16 @@ export default function PostPageClient({
       });
 
       if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Failed: ${response.status} - ${errText}`);
+        let errorMessage = `Error: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // Fallback to text if not JSON
+          const text = await response.text();
+          if (text) errorMessage = text;
+        }
+        throw new Error(errorMessage);
       }
 
       const reader = response.body?.getReader();
@@ -169,7 +177,15 @@ export default function PostPageClient({
         error: err.message || "Failed to generate summary",
       }));
     } finally {
-      setSummaryState((prev) => ({ ...prev, isLoading: false }));
+      setSummaryState((prev) => {
+        // If loading finished but we have no summary and no error, 
+        // it means the stream ended prematurely without content.
+        const error = !prev.summary && !prev.error 
+          ? "ไม่สามารถสร้างสรุปได้ในขณะนี้ กรุณาลองใหม่อีกครั้งครับ" 
+          : prev.error;
+        
+        return { ...prev, isLoading: false, error };
+      });
 
       if (currentSummaryRef.current) {
         saveSummaryToCache(slug, currentSummaryRef.current);

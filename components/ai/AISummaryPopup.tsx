@@ -88,16 +88,25 @@ const AISummaryPopup = ({
         )}
 
         {error && (
-          <Center className="py-4 flex-col gap-3">
-            <Text c="red" size="sm" ta="center">
-              {error}
-            </Text>
-            <button
-              onClick={onRetry}
-              className="px-4 py-2 text-sm font-medium rounded-md bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-            >
-              Retry
-            </button>
+          <Center className="py-8 flex-col gap-4">
+            <div className={cn(
+              "p-4 rounded-xl text-center w-full",
+              error.includes("โควต้า") 
+                ? "bg-orange-50 dark:bg-orange-950/30 text-orange-800 dark:text-orange-200 border border-orange-100 dark:border-orange-900/50"
+                : "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50"
+            )}>
+              <Text size="sm" className="font-medium leading-relaxed">
+                {error}
+              </Text>
+            </div>
+            {!error.includes("โควต้า") && (
+              <button
+                onClick={onRetry}
+                className="px-6 py-2 text-sm font-semibold rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-all shadow-md hover:shadow-lg active:scale-95"
+              >
+                ลองใหม่อีกครั้ง (Retry)
+              </button>
+            )}
           </Center>
         )}
 
