@@ -93,7 +93,7 @@ const AISummaryPopup = ({
               "p-4 rounded-xl text-center w-full",
               error.includes("โควต้า") 
                 ? "bg-orange-50 dark:bg-orange-950/30 text-orange-800 dark:text-orange-200 border border-orange-100 dark:border-orange-900/50"
-                : "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50"
+                ? "bg-orange-50 dark:bg-orange-950/30 text-orange-800 dark:text-orange-200 border border-orange-100 dark:border-orange-900/50"
             )}>
               <Text size="sm" className="font-medium leading-relaxed">
                 {error}
