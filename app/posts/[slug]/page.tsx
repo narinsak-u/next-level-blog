@@ -4,7 +4,7 @@ import { fetchPostById, fetchPostContent } from "@/actions/posts";
 import { PostTagSchemaType } from "@/types";
 
 import { siteMetadata } from "@/site/siteMetadata";
-import Content from "@/components/contents/Content";
+import PostPageClient from "./components/PostPageClient";
 import Loader from "@/components/common/Loader";
 
 type Props = {
@@ -13,16 +13,13 @@ type Props = {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { slug } = await params;
   const postData = await fetchPostById(slug);
   if (!postData) return {};
 
-  // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
-
-  // get tag for keywords
   const tags = (postData.tags || []) as PostTagSchemaType[];
 
   return {
@@ -43,7 +40,7 @@ const Post = async ({ params }: Props) => {
 
   return (
     <Suspense fallback={<Loader />}>
-      {recordMap ? <Content recordMap={recordMap} /> : null}
+      {recordMap && <PostPageClient recordMap={recordMap} slug={slug} />}
     </Suspense>
   );
 };
