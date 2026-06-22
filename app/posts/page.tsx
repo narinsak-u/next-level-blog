@@ -4,8 +4,8 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import { siteMetadata } from "@/site/siteMetadata";
 
 import PostsPageClient from "@/app/posts/components/PostsPageClient";
-import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
-import { fetchAllPosts } from "@/actions/posts";
+import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/app/posts/actions/posts";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — Posts`,

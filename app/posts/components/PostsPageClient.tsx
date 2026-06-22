@@ -1,7 +1,7 @@
 "use client";
 
 import { PageDataSchemaType } from "@/types";
-import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
+import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
 import PostsPageLayout from "@/app/posts/components/PostsPageLayout";
 import Loader from "@/components/common/Loader";
 

@@ -1,7 +1,7 @@
 import { streamText } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { llm, getDefaultModel } from "@/lib/llm-provider";
 
-const model = openai("gpt-4o-mini");
+const model = llm(getDefaultModel());
 
 export async function streamPrompt(
   prompt: string,

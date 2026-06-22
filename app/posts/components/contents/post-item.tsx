@@ -1,8 +1,8 @@
 "use client";
 
 import { PageDataSchemaType } from "@/types";
-import { PostCardGrid, PostCardList } from "@/components/ui/PostCard";
-import useLayoutStore from "@/hooks/use-layout-store";
+import { PostCardGrid, PostCardList } from "@/app/posts/components/PostCard";
+import useLayoutStore from "@/app/posts/hooks/use-layout-store";
 
 type Props = {
   posts: PageDataSchemaType[];

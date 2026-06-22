@@ -3,22 +3,21 @@ import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
 import "katex/dist/katex.min.css";
 
-import Layout from "@/components/layout/Layout";
-import ContentTitle from "@/components/contents/ContentTitle";
+import Layout from "@/app/_layout/components/Layout";
 import SpotlightClient from "@/components/common/SpotlightClient";
 
-import { fetchPostById, fetchAllPosts } from "@/actions/posts";
+import { fetchPostById, fetchAllPosts } from "@/app/posts/actions/posts";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
-import ContentBody from "@/components/contents/ContentBody";
+import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
+import ContentBody from "@/app/posts/components/ContentBody";
 import Loader from "@/components/common/Loader";
-import PageLayout from "@/components/layout/PageLayout";
+import PageLayout from "@/app/_layout/components/PageLayout";
 import { siteMetadata } from "@/site/siteMetadata";
-import Share from "@/components/contents/Share";
+import { ShareGroup } from "@/app/posts/components/ShareButton";
 import { Box, Divider } from "@mantine/core";
 
 type Params = Promise<{ slug: string }>;
@@ -59,10 +58,9 @@ const layout = async ({ children, params }: Props) => {
                 </Box>
               }
             />
-            <ContentTitle postData={postData} />
             <div className="sticky top-5 z-10 left-0">
               {postData ? (
-                <Share
+                <ShareGroup
                   postLink={`${siteMetadata.siteAddress}/posts/${postData.id}`}
                 />
               ) : null}

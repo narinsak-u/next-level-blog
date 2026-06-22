@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react';
 import {
   MusicPlayerProvider,
   useMusicPlayer,
-} from '@/context/MusicPlayerContext';
+} from '@/app/(home)/context/MusicPlayerContext';
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <MusicPlayerProvider>{children}</MusicPlayerProvider>

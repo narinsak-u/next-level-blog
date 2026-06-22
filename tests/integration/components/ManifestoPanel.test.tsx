@@ -6,7 +6,7 @@ import {
   ManifestoContent,
   ManifestoCloseButton,
   useManifesto,
-} from '@/components/home/ManifestoPanel';
+} from '@/app/(home)/components/ManifestoPanel';
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <ManifestoPanel>{children}</ManifestoPanel>

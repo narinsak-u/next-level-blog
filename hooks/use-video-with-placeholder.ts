@@ -39,8 +39,9 @@ const useVideoWithPlaceholder = ({
   }, [src]);
 
   useEffect(() => {
-    if (videoRef.current && videoLoaded) {
-      videoRef.current.play();
+    const video = videoRef.current;
+    if (video && videoLoaded) {
+      video.play();
     }
   }, [videoLoaded]);
 

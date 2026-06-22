@@ -1,7 +1,5 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-
 type Props = {
   children: React.ReactNode;
 };

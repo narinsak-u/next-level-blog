@@ -26,8 +26,16 @@ export const POSTS = {
   DEFAULT_LIMIT: 6,
 } as const;
 
-export const VIDEO_EXTENSIONS = ["mp4", "webm", "ogg", "mov", "avi", "m4v"] as const;
+export const VIDEO_EXTENSIONS = [
+  "mp4",
+  "webm",
+  "ogg",
+  "mov",
+  "avi",
+  "m4v",
+] as const;
 
 export const DEFAULT_DATE = "2023-07-27T17:12:00.000Z";
 
-export const DEFAULT_DESCRIPTION = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?";
+export const DEFAULT_DESCRIPTION =
+  "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?";

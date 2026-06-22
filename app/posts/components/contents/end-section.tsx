@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { Text } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import { PageDataSchemaType } from "@/types";
+import { DEFAULT_DATE } from "@/lib/constants";
 
 type Props = {
   posts: PageDataSchemaType[];
@@ -31,7 +32,7 @@ const EndSection = ({ posts }: Props) => {
       <Text size="xs" mt={4}>
         Last updated on{" "}
         {`${format(
-          parseISO(posts[0]?.lastUpdated ?? "2023-07-27T17:12:00.000Z"),
+          parseISO(posts[0]?.lastUpdated ?? DEFAULT_DATE),
           "LLLL d, yyyy"
         )}`}
       </Text>

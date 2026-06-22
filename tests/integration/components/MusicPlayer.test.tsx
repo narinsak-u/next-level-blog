@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MusicPlayer } from '@/components/home/MusicPlayer';
-import { MusicPlayerProvider } from '@/context/MusicPlayerContext';
+import { MusicPlayer } from '@/app/(home)/components/MusicPlayer';
+import { MusicPlayerProvider } from '@/app/(home)/context/MusicPlayerContext';
 import { MUSIC } from '@/lib/constants';
 
 vi.mock('@/hooks/useMusicPlayer', () => ({
@@ -27,7 +27,7 @@ describe('MusicPlayer', () => {
   describe('MP-002: Click toggles to pause icon', () => {
     it('calls togglePlay when clicked', async () => {
       const togglePlay = vi.fn();
-      vi.doMock('@/context/MusicPlayerContext', () => ({
+      vi.doMock('@/app/(home)/context/MusicPlayerContext', () => ({
         useMusicPlayer: () => ({
           audioRef: { current: null },
           isPlaying: false,
@@ -45,7 +45,7 @@ describe('MusicPlayer', () => {
 
   describe('MP-003: aria-label updates correctly', () => {
     it('shows pause label when playing', () => {
-      vi.doMock('@/context/MusicPlayerContext', () => ({
+      vi.doMock('@/app/(home)/context/MusicPlayerContext', () => ({
         useMusicPlayer: () => ({
           audioRef: { current: null },
           isPlaying: true,

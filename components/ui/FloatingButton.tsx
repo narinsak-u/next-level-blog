@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Box, Transition } from "@mantine/core";
+import { ActionIcon, Box, Transition, Tooltip } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ interface FloatingButtonProps {
   href?: string;
   external?: boolean;
   label: string;
+  tooltip?: boolean;
   style?: React.CSSProperties;
 }
 
@@ -19,9 +20,10 @@ const FloatingButton = ({
   href,
   external,
   label,
+  tooltip,
   style,
 }: FloatingButtonProps) => {
-  return (
+  const button = (
     <ActionIcon
       component={href ? (external ? "a" : "button") : "button"}
       color="orange"
@@ -39,6 +41,16 @@ const FloatingButton = ({
       <Icon size={20} className="text-black dark:text-white" />
     </ActionIcon>
   );
+
+  if (tooltip) {
+    return (
+      <Tooltip label={label} position="left" withArrow arrowPosition="center">
+        {button}
+      </Tooltip>
+    );
+  }
+
+  return button;
 };
 
 interface FloatingButtonGroupProps {
@@ -69,7 +81,7 @@ const FloatingButtonGroup = ({
       }}
     >
       <Transition transition="slide-up" mounted={scroll.y > 0}>
-        {(transitionStyles) => (
+        {() => (
           <Box className="flex flex-col mt-2">
             <Box className="flex justify-center items-center mb-3">
               <div className="flex flex-col gap-3">{children}</div>

@@ -1,11 +1,10 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { VIDEO_EXTENSIONS } from "@/lib/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
-const VIDEO_EXTENSIONS = ["mp4", "webm", "ogg", "mov", "avi", "m4v"] as const;
 
 export const getFileExtension = (url: string): string => {
   const cleanUrl = url.split("?")[0]!;
@@ -16,5 +15,5 @@ export const getFileExtension = (url: string): string => {
 
 export const isVideo = (extension: string): boolean => {
   if (!extension) return false;
-  return VIDEO_EXTENSIONS.includes(extension.toLowerCase() as (typeof VIDEO_EXTENSIONS)[number]);
+  return (VIDEO_EXTENSIONS as readonly string[]).includes(extension.toLowerCase());
 };

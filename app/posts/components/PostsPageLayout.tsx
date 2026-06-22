@@ -4,9 +4,9 @@ import { ActionIcon, Box, Divider, Space } from "@mantine/core";
 import { LayoutGrid, LayoutList } from "tabler-icons-react";
 import { useMemo } from "react";
 
-// import Menu from "@/components/layout/Menu";
-import Layout from "@/components/layout/Layout";
-import PageLayout from "@/components/layout/PageLayout";
+// import Menu from "@/app/_layout/components/Menu";
+import Layout from "@/app/_layout/components/Layout";
+import PageLayout from "@/app/_layout/components/PageLayout";
 import Spotlight from "@/components/common/Spotlight";
 import TagSection from "./contents/tag-section";
 import TimelineContent from "./contents/TimelineContent";
@@ -14,9 +14,9 @@ import Loader from "@/components/common/Loader";
 import ScrollToTop from "@/components/common/ScrollToTop";
 
 import { PageDataSchemaType } from "@/types";
-import { getTags } from "@/helpers/get-all-tags";
-import { getCategory } from "@/helpers/get-unique-category";
-import useLayoutStore from "@/hooks/use-layout-store";
+import { getTags } from "@/app/posts/helpers/get-all-tags";
+import { getCategory } from "@/app/posts/helpers/get-unique-category";
+import useLayoutStore from "@/app/posts/hooks/use-layout-store";
 
 type Props = {
   posts: PageDataSchemaType[];
@@ -26,7 +26,7 @@ const PostsPageLayout = ({ posts }: Props) => {
   const { isGrid, toggle } = useLayoutStore();
 
   const tags = useMemo(() => getTags(posts), [posts]);
-  const categoryCount = getCategory(posts).length;
+  const categoryCount = useMemo(() => getCategory(posts).length, [posts]);
 
   if (!posts) return <Loader />;
 

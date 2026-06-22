@@ -1,12 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
 import { Timeline } from "@mantine/core";
 import { Books, SignRight } from "tabler-icons-react";
 import EndSection from "./end-section";
 import PostGrid from "./post-grid";
 
 import { PageDataSchemaType } from "@/types";
-import { getCategory } from "@/helpers/get-unique-category";
+import { getCategory } from "@/app/posts/helpers/get-unique-category";
 
 type Props = {
   posts: PageDataSchemaType[];
@@ -28,7 +29,7 @@ const CATEGORY_CONFIGS = [
 ] as const;
 
 const TimelineContent = ({ posts }: Props) => {
-  const categories = getCategory(posts);
+  const categories = useMemo(() => getCategory(posts), [posts]);
 
   return (
     <>

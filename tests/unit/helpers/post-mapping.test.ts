@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { postMapping } from '@/helpers/post-mapping';
+import { postMapping } from '@/app/posts/helpers/post-mapping';
 import {
   validNotionPage,
   notionPageWithMissingFields,

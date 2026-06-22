@@ -1,7 +1,7 @@
 import ScrollToTop from "@/components/common/ScrollToTop";
-import Layout from "@/components/layout/Layout";
-import Menu from "@/components/layout/Menu";
-import PageLayout from "@/components/layout/PageLayout";
+import Layout from "@/app/_layout/components/Layout";
+// import Menu from "@/app/_layout/components/Menu";
+import PageLayout from "@/app/_layout/components/PageLayout";
 import { Box, Divider, Space } from "@mantine/core";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
