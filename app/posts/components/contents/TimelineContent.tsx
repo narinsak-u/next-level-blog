@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Timeline } from "@mantine/core";
 import { Books, SignRight } from "tabler-icons-react";
 import EndSection from "./end-section";
@@ -28,7 +29,7 @@ const CATEGORY_CONFIGS = [
 ] as const;
 
 const TimelineContent = ({ posts }: Props) => {
-  const categories = getCategory(posts);
+  const categories = useMemo(() => getCategory(posts), [posts]);
 
   return (
     <>

@@ -39,6 +39,9 @@ const useVideoWithPlaceholder = ({
     return () => {
       video.removeEventListener("loadeddata", handleVideoReady);
       video.removeEventListener("canplay", handleVideoReady);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
     };
   }, [src]);
 

@@ -4,6 +4,8 @@ import { fetchPosts } from "@/app/posts/actions/posts";
 import { postKeys } from "@/app/posts/query-keys";
 
 const POSTS_PER_PAGE = 6;
+const STALE_TIME = 5 * 60 * 1000;
+const MAX_PAGES = 5;
 
 interface Props {
   categoryName: string;
@@ -14,6 +16,8 @@ const useFetchPosts = ({ categoryName }: Props) => {
     useInfiniteQuery({
       queryKey: postKeys.byCategory(categoryName),
       initialPageParam: 1,
+      staleTime: STALE_TIME,
+      maxPages: MAX_PAGES,
 
       queryFn: async ({ pageParam }) => {
         return (await fetchPosts({

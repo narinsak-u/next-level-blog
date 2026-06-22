@@ -1,32 +1,13 @@
-import {
-  PageDataSchemaType,
-  TagSchemaType,
-  PageDataArraySchema,
-  TagSchema,
-} from "@/types";
+import { PageDataSchemaType, TagSchemaType } from "@/types";
 
-// Get all tags from posts
 export const getTags = (posts: PageDataSchemaType[]): TagSchemaType => {
-  try {
-    // Validate posts array using Zod
-    const validPosts = PageDataArraySchema.parse(posts);
+  const allTags: TagSchemaType = {};
 
-    const allTags: TagSchemaType = {};
-
-    validPosts.forEach((post) => {
-      post.tags.forEach((tag) => {
-        if (!allTags[tag.name]) {
-          allTags[tag.name] = 1;
-        } else {
-          allTags[tag.name] += 1;
-        }
-      });
-    });
-
-    // Validate the resulting tags using Zod
-    return TagSchema.parse(allTags);
-  } catch (error) {
-    console.error("Validation error:", error);
-    return {};
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      allTags[tag.name] = (allTags[tag.name] ?? 0) + 1;
+    }
   }
+
+  return allTags;
 };
