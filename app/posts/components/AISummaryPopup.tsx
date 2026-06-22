@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Box, Center, Loader, Text } from "@mantine/core";
+import { useEffect, useRef, useState } from "react";
+import { Box, Center, Text } from "@mantine/core";
 import { IconSparkles, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
+
+const LOADING_STEPS = [
+  { emoji: "📖", text: "กำลังอ่านเนื้อหา..." },
+  { emoji: "🤔", text: "วิเคราะห์เนื้อหา..." },
+  { emoji: "✍️", text: "กำลังสรุป..." },
+  { emoji: "✨", text: "เกือบเสร็จแล้ว..." },
+];
 
 interface AISummaryPopupProps {
   isOpen: boolean;
@@ -24,6 +31,19 @@ const AISummaryPopup = ({
 }: AISummaryPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const [stepIndex, setStepIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isLoading || summary) return;
+    const interval = setInterval(() => {
+      setStepIndex((prev) => (prev + 1) % LOADING_STEPS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [isLoading, summary]);
+
+  useEffect(() => {
+    if (!isLoading) setStepIndex(0);
+  }, [isLoading]);
 
   // Auto-scroll to bottom when text is streaming
   useEffect(() => {
@@ -82,8 +102,31 @@ const AISummaryPopup = ({
 
       <Box className="p-4 min-h-25 overflow-y-auto">
         {isLoading && !summary && (
-          <Center className="py-6">
-            <Loader size="sm" color="orange" />
+          <Center className="py-8 flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl animate-bounce">
+                {LOADING_STEPS[stepIndex].emoji}
+              </span>
+              <Text
+                size="sm"
+                className="dark:text-gray-300 font-medium"
+              >
+                {LOADING_STEPS[stepIndex].text}
+              </Text>
+            </div>
+            <div className="flex gap-1.5">
+              {LOADING_STEPS.map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    i === stepIndex
+                      ? "bg-orange-500 scale-125"
+                      : "bg-gray-300 dark:bg-gray-600",
+                  )}
+                />
+              ))}
+            </div>
           </Center>
         )}
 

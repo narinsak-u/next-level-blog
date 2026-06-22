@@ -21,29 +21,34 @@ const ScrollToTop = ({ onAISummaryClick }: ScrollToTopProps) => {
         icon={ArrowUpCircle}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         label="Scroll to top"
+        tooltip
       />
       {isPostPage && onAISummaryClick && (
         <FloatingButtonGroup.Button
           icon={IconSparkles}
           onClick={onAISummaryClick}
           label="AI Summary"
+          tooltip
         />
       )}
       <FloatingButtonGroup.Button
         icon={Books}
         onClick={() => router.push("/posts")}
         label="Go to posts"
+        tooltip
       />
       <FloatingButtonGroup.Button
         icon={Feather}
         href={siteMetadata.feedbackUrl}
         external
         label="Give feedback"
+        tooltip
       />
       <FloatingButtonGroup.Button
         icon={IconHome}
         onClick={() => router.push("/")}
         label="Go to home"
+        tooltip
       />
     </FloatingButtonGroup>
   );
