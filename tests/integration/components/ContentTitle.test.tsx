@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ContentTitle from '@/components/contents/ContentTitle';
+import ContentTitle from '@/app/posts/components/ContentTitle';
 import { mockPost } from '../../fixtures/posts';
 
 vi.mock('next/navigation', () => ({

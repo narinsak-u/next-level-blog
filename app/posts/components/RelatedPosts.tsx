@@ -1,11 +1,11 @@
 "use client";
 
-import useGetRelatedPosts from "@/hooks/use-get-related-posts";
+import useGetRelatedPosts from "@/app/posts/hooks/use-get-related-posts";
 import { PageDataSchemaType } from "@/types";
 import { Center, Text } from "@mantine/core";
-import { PostCardList } from "@/components/ui/PostCard";
+import { PostCardList } from "@/app/posts/components/PostCard";
 import MorePost from "./MorePost";
-import useLayoutStore from "@/hooks/use-layout-store";
+import useLayoutStore from "@/app/posts/hooks/use-layout-store";
 
 type Props = {
   posts: PageDataSchemaType[];

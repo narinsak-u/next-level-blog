@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
-import HomePage from "@/components/home/HomePage";
-import NewProfile from "@/components/home/NewProfile";
-import { useModeStore } from "@/hooks/use-mode-store";
-import { useMusicPlayer } from "@/context/MusicPlayerContext";
+import HomePage from "@/app/(home)/components/HomePage";
+import NewProfile from "@/app/(home)/components/NewProfile";
+import { useModeStore } from "@/app/(home)/hooks/use-mode-store";
+import { useMusicPlayer } from "@/app/(home)/context/MusicPlayerContext";
 
 const HomeContent = () => {
   const mode = useModeStore((state) => state.mode);

@@ -2,7 +2,7 @@
 
 import { format, parseISO } from "date-fns";
 import { Box, Center, Divider, Space } from "@mantine/core";
-import Header from "@/components/layout/Header";
+import Header from "@/app/_layout/components/Header";
 import TagItem from "@/app/posts/components/TagItem";
 import { PageDataSchemaType } from "@/types";
 import { notFound } from "next/navigation";

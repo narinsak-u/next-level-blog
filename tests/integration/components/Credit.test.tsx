@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Credit from '@/components/home/Credit';
+import Credit from '@/app/(home)/components/Credit';
 
-vi.mock('@/components/home/MusicPlayer', () => ({
+vi.mock('@/app/(home)/components/MusicPlayer', () => ({
   default: () => <button data-testid="music-player">Music</button>,
 }));
 

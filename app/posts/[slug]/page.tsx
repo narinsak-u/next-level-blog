@@ -1,6 +1,6 @@
 import { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
-import { fetchPostById, fetchPostContent } from "@/actions/posts";
+import { fetchPostById, fetchPostContent } from "@/app/posts/actions/posts";
 import { PostTagSchemaType } from "@/types";
 
 import { siteMetadata } from "@/site/siteMetadata";

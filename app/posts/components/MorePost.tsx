@@ -11,7 +11,7 @@ import {
 
 import { useViewportSize } from "@mantine/hooks";
 import { PageDataSchemaType } from "@/types";
-import Loader from "../common/Loader";
+import Loader from "@/components/common/Loader";
 
 type Props = {
   post: PageDataSchemaType;

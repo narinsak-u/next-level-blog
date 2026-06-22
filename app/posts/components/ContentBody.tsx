@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { Space, Box, Divider } from "@mantine/core";
 import { PageDataSchemaType } from "@/types";
-import Loader from "../common/Loader";
+import Loader from "@/components/common/Loader";
 import RelatedPostsWrapper from "./RelatedPostsWrapper";
 
 // const Comments = dynamic(() => import("./Comments"), {

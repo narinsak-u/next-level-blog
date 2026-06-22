@@ -9,9 +9,9 @@ import { Metadata } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
 
 import { Suspense } from "react";
-import Content from "@/components/contents/Content";
+import Content from "@/app/posts/components/Content";
 import Loader from "@/components/common/Loader";
-import { fetchStaticPageContent, fetchPostDates } from "@/actions/posts";
+import { fetchStaticPageContent, fetchPostDates } from "@/app/posts/actions/posts";
 import NotePage from "./components/NotePage";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchPostDates } from "@/actions/posts";
+import { fetchPostDates } from "@/app/posts/actions/posts";
 
 export async function GET() {
   const result = await fetchPostDates();

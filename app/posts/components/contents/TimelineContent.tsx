@@ -6,7 +6,7 @@ import EndSection from "./end-section";
 import PostGrid from "./post-grid";
 
 import { PageDataSchemaType } from "@/types";
-import { getCategory } from "@/helpers/get-unique-category";
+import { getCategory } from "@/app/posts/helpers/get-unique-category";
 
 type Props = {
   posts: PageDataSchemaType[];

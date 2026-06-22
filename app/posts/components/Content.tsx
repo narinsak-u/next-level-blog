@@ -5,7 +5,7 @@ import { NotionRenderer } from "react-notion-x";
 import { ExtendedRecordMap } from "notion-types";
 import { notFound } from "next/navigation";
 import { useCallback } from "react";
-import useGetTweetId from "@/hooks/use-get-tweet-id";
+import useGetTweetId from "@/app/posts/hooks/use-get-tweet-id";
 import ContentErrorBoundary from "./ContentErrorBoundary";
 
 const Code = dynamic(() =>

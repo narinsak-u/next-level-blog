@@ -1,6 +1,6 @@
 "use client";
 
-import { ShareGroup } from "@/components/ui/ShareButton";
+import { ShareGroup } from "@/app/posts/components/ShareButton";
 
 type Props = {
   postLink: string;

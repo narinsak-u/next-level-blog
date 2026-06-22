@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { siteMetadata } from "@/site/siteMetadata";
-import { RocketIcon } from "../icons/Icons";
+import { RocketIcon } from "@/components/icons/Icons";
 import { cn } from "@/lib/utils";
 
 const Logo = () => {

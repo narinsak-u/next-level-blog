@@ -3,8 +3,8 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import { siteMetadata } from "@/site/siteMetadata";
 
 import TagPageClient from "@/app/tags/components/TagPageClient";
-import useFetchAllPosts from "@/hooks/use-fetch-all-posts";
-import { fetchAllPosts } from "@/actions/posts";
+import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
+import { fetchAllPosts } from "@/app/posts/actions/posts";
 
 type Props = {
   params: Promise<{ slug: string }>;

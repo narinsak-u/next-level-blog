@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { extractTextFromRecordMap } from "@/helpers/extract-text-from-record-map";
-import { AISummaryPopup } from "@/components/ai/AISummaryPopup";
-import Content from "@/components/contents/Content";
+import { extractTextFromRecordMap } from "@/app/posts/helpers/extract-text-from-record-map";
+import { AISummaryPopup } from "@/app/posts/components/AISummaryPopup";
+import Content from "@/app/posts/components/Content";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { ExtendedRecordMap } from "notion-types";
 

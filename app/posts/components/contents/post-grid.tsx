@@ -1,6 +1,6 @@
 "use client";
 
-import useFetchPosts from "@/hooks/use-fetch-posts";
+import useFetchPosts from "@/app/posts/hooks/use-fetch-posts";
 import PostItem from "./post-item";
 import LoadButton from "@/components/common/LoadButton";
 import { Suspense } from "react";

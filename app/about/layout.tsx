@@ -1,6 +1,6 @@
-import Layout from "@/components/layout/Layout";
-import PageLayout from "@/components/layout/PageLayout";
-import { Box, Divider, Space } from "@mantine/core";
+import Layout from "@/app/_layout/components/Layout";
+import PageLayout from "@/app/_layout/components/PageLayout";
+import { Box, Divider } from "@mantine/core";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
-import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
-import HomeContent from "@/app/home/HomeContent";
+import { MusicPlayerProvider } from "@/app/(home)/context/MusicPlayerContext";
+import HomeContent from "@/app/(home)/components/HomeContent";
 
 const Home = () => {
   return (

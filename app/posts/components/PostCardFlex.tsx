@@ -1,7 +1,7 @@
 "use client";
 
 import { PageDataSchemaType } from "@/types";
-import { PostCardList } from "@/components/ui/PostCard";
+import { PostCardList } from "@/app/posts/components/PostCard";
 
 interface PostCardFlexProps {
   post: PageDataSchemaType;

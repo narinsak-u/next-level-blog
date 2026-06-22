@@ -11,9 +11,9 @@ import { siteMetadata } from "@/site/siteMetadata";
 
 import { Suspense } from "react";
 import AboutPage from "@/app/about/components/AboutPage";
-import Content from "@/components/contents/Content";
+import Content from "@/app/posts/components/Content";
 import Loader from "@/components/common/Loader";
-import { fetchStaticPageContent } from "@/actions/posts";
+import { fetchStaticPageContent } from "@/app/posts/actions/posts";
 
 export const metadata: Metadata = {
   title: `${siteMetadata.title} — About me`,

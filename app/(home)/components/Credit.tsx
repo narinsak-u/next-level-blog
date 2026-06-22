@@ -25,7 +25,7 @@ const Credit = () => {
                 aria-label="Visit image source"
                 className={cn(
                   `group onload-animation transition-all flex justify-center items-center rounded-full px-3 bg-black/60 hover:bg-black/70 h-9`,
-                  { "hover:pr-9 active:bg-black/80": hasBannerLink }
+                  { "hover:pr-9 active:bg-black/80": hasBannerLink },
                 )}
               >
                 <Copyright className="text-white/75 mr-1 size-4" />
@@ -40,7 +40,6 @@ const Credit = () => {
             <MusicPlayer />
           </div>
         </div>
-
       </div>
     </div>
   );

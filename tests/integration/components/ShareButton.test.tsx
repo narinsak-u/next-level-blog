@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ShareGroup, ShareButton } from '@/components/ui/ShareButton';
+import { ShareGroup, ShareButton } from '@/app/posts/components/ShareButton';
 
 describe('ShareButton', () => {
   describe('SB-001: Facebook button renders', () => {

@@ -3,7 +3,7 @@
 import { Background } from "./Background";
 import MainProfile from "./MainProfile";
 import Credit from "./Credit";
-import SocialFloatingButton from "@/components/home/SocialFloatingButton";
+import SocialFloatingButton from "./SocialFloatingButton";
 
 const NewProfile = () => {
   return (
@@ -11,8 +11,10 @@ const NewProfile = () => {
       <div className="relative h-full w-full">
         <Credit />
         <Background
-          src="/assets/where-winds-meet-vdo.mp4"
-          placeholder="/assets/where-winds-meet-wallpapers.jpg"
+          src="/assets/revenge-rainy-night.mp4"
+          placeholder="/assets/revenge-rainy-night-wallpaper.jpg"
+          // src="/assets/where-winds-meet-vdo.mp4"
+          // placeholder="/assets/where-winds-meet-wallpapers.jpg"
         />
         <div className="absolute inset-0 bg-black/25 backdrop-blur-[2px]" />
         <MainProfile />

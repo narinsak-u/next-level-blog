@@ -1,7 +1,7 @@
 "use client";
 
 import { Play, Pause } from "lucide-react";
-import { useMusicPlayer } from "@/context/MusicPlayerContext";
+import { useMusicPlayer } from "@/app/(home)/context/MusicPlayerContext";
 import { MUSIC } from "@/lib/constants";
 
 const MusicPlayer = () => {

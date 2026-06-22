@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import { siteMetadata } from "@/site/siteMetadata";
-import { fetchAllPosts } from "@/actions/posts";
+import { fetchAllPosts } from "@/app/posts/actions/posts";
 
 export async function generateSitemaps() {
   // Fetch the total number of products and calculate the number of sitemaps needed
