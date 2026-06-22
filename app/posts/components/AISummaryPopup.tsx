@@ -31,6 +31,8 @@ const AISummaryPopup = ({
 }: AISummaryPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [stepIndex, setStepIndex] = useState(0);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const AISummaryPopup = ({
         popupRef.current &&
         !popupRef.current.contains(event.target as Node)
       ) {
-        onClose();
+        onCloseRef.current();
       }
     };
 
@@ -69,7 +71,7 @@ const AISummaryPopup = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

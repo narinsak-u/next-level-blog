@@ -1,8 +1,7 @@
 import { PageDataSchemaType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllPosts } from "@/app/posts/actions/posts";
-
-const POSTS_QUERY_KEY = ["posts", "all"];
+import { postKeys } from "@/app/posts/query-keys";
 
 interface UseFetchAllPostsOptions {
   enabled?: boolean;
@@ -12,7 +11,7 @@ const useFetchAllPosts = (options: UseFetchAllPostsOptions = {}) => {
   const { enabled = true } = options;
 
   return useQuery({
-    queryKey: POSTS_QUERY_KEY,
+    queryKey: postKeys.allPosts(),
     queryFn: async () => {
       const posts = await fetchAllPosts();
       return posts as PageDataSchemaType[];
@@ -22,6 +21,6 @@ const useFetchAllPosts = (options: UseFetchAllPostsOptions = {}) => {
   });
 };
 
-useFetchAllPosts.getQueryKey = () => POSTS_QUERY_KEY;
+useFetchAllPosts.getQueryKey = () => postKeys.allPosts();
 
 export default useFetchAllPosts;

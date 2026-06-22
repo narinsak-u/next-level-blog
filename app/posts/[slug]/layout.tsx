@@ -4,7 +4,6 @@ import "prismjs/themes/prism-tomorrow.css";
 import "katex/dist/katex.min.css";
 
 import Layout from "@/app/_layout/components/Layout";
-import ContentTitle from "@/app/posts/components/ContentTitle";
 import SpotlightClient from "@/components/common/SpotlightClient";
 
 import { fetchPostById, fetchAllPosts } from "@/app/posts/actions/posts";
@@ -59,7 +58,6 @@ const layout = async ({ children, params }: Props) => {
                 </Box>
               }
             />
-            <ContentTitle postData={postData} />
             <div className="sticky top-5 z-10 left-0">
               {postData ? (
                 <ShareGroup

@@ -22,7 +22,10 @@ const useVideoWithPlaceholder = ({
     const video = videoRef.current;
     if (!video) return;
 
-    const handleVideoReady = () => setVideoLoaded(true);
+    const handleVideoReady = () => {
+      setVideoLoaded(true);
+      video.play();
+    };
 
     video.addEventListener("loadeddata", handleVideoReady);
     video.addEventListener("canplay", handleVideoReady);
@@ -30,6 +33,7 @@ const useVideoWithPlaceholder = ({
 
     if (video.readyState >= 2) {
       setVideoLoaded(true);
+      video.play();
     }
 
     return () => {
@@ -37,12 +41,6 @@ const useVideoWithPlaceholder = ({
       video.removeEventListener("canplay", handleVideoReady);
     };
   }, [src]);
-
-  useEffect(() => {
-    if (videoRef.current && videoLoaded) {
-      videoRef.current.play();
-    }
-  }, [videoLoaded]);
 
   return { videoRef, videoLoaded };
 };

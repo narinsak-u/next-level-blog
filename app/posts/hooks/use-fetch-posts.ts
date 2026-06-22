@@ -1,6 +1,7 @@
 import { PageDataSchemaType } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchPosts } from "@/app/posts/actions/posts";
+import { postKeys } from "@/app/posts/query-keys";
 
 const POSTS_PER_PAGE = 6;
 
@@ -11,7 +12,7 @@ interface Props {
 const useFetchPosts = ({ categoryName }: Props) => {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: ["posts", categoryName],
+      queryKey: postKeys.byCategory(categoryName),
       initialPageParam: 1,
 
       queryFn: async ({ pageParam }) => {
