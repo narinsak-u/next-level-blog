@@ -13,8 +13,14 @@ const HomeContent = () => {
   const { play, pause } = useMusicPlayer();
 
   useEffect(() => {
-    useModeStore.persist.rehydrate();
-  }, []);
+    const init = async () => {
+      await useModeStore.persist.rehydrate();
+      if (useModeStore.getState().mode === "jianghu") {
+        requestAnimationFrame(() => play());
+      }
+    };
+    init();
+  }, [play]);
 
   useEffect(() => {
     if (mode === "jianghu") {
