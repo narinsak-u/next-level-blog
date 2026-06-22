@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import useVideoWithPlaceholder from "@/hooks/use-video-with-placeholder";
@@ -9,15 +10,12 @@ interface MediaBackgroundProps {
   className?: string;
 }
 
-const MediaBackground = ({
-  children,
-  className,
-}: MediaBackgroundProps) => {
+const MediaBackground = ({ children, className }: MediaBackgroundProps) => {
   return (
     <div
       className={cn(
         "absolute bg-background left-0 top-0 w-full h-full object-cover",
-        className
+        className,
       )}
     >
       {children}
@@ -36,37 +34,36 @@ const VideoBackground = ({
   placeholder,
   className,
 }: VideoBackgroundProps) => {
-  const { videoRef, videoLoaded } = useVideoWithPlaceholder({ src, placeholder });
+  const { videoRef } = useVideoWithPlaceholder({ src, placeholder });
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "video";
+    link.href = src;
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, [src]);
+
+  useEffect(() => {
+    videoRef.current?.setAttribute("fetchpriority", "high");
+  }, []);
 
   return (
-    <>
-      {placeholder ? (
-        <Image
-          src={placeholder}
-          loading="eager"
-          priority
-          sizes="100vw"
-          alt="Background"
-          className={cn("absolute inset-0 w-full h-full object-cover", className, {
-            invisible: videoLoaded,
-          })}
-          quality={100}
-          fill
-        />
-      ) : null}
-      <video
-        ref={videoRef}
-        src={src}
-        muted
-        playsInline
-        loop
-        controls={false}
-        preload="auto"
-        className={cn("absolute inset-0 w-full h-full object-cover", className, {
-          invisible: !videoLoaded,
-        })}
-      />
-    </>
+    <video
+      ref={videoRef}
+      src={src}
+      poster={placeholder}
+      muted
+      playsInline
+      loop
+      autoPlay
+      controls={false}
+      preload="auto"
+      className={cn("absolute inset-0 w-full h-full object-cover", className)}
+    />
   );
 };
 
@@ -103,4 +100,8 @@ VideoBackground.displayName = "VideoBackground";
 ImageBackground.displayName = "ImageBackground";
 
 export { MediaBackground, VideoBackground, ImageBackground };
-export type { MediaBackgroundProps, VideoBackgroundProps, ImageBackgroundProps };
+export type {
+  MediaBackgroundProps,
+  VideoBackgroundProps,
+  ImageBackgroundProps,
+};
