@@ -49,3 +49,6 @@ certificates
 .chief
 # GEMINI.md
 # AGENTS.md
+
+# Windows reserved names (can be created by bash/cygwin)
+nul
