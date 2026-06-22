@@ -14,50 +14,38 @@ The project serves as a personal portfolio and knowledge-sharing hub. It is desi
 
 ```
 @/                  → Project root
-├── app/            → Next.js App Router pages
-│   ├── home/       → HomeContent client component
-│   ├── posts/      → Blog post listing and dynamic [slug] pages
+├── app/            → Next.js App Router pages (domain-based)
+│   ├── (home)/     → Landing page (NewProfile, music player, manifesto)
+│   ├── _layout/    → Global layout (Header, Footer, Layout, PageLayout)
+│   ├── posts/      → Blog posts listing, [slug] pages, components, hooks, actions
 │   ├── about/      → Static content pages (about, hobbies, note)
 │   ├── hobbies/
 │   ├── note/
 │   ├── tags/       → Tag filtering pages
-│   └── api/        → API routes (revalidate endpoint)
-├── components/     → React components organized by domain
-│   ├── home/       → Landing page components (NewProfile, MainProfile, ManifestoPanel)
-│   ├── contents/   → Content rendering components (Content, ContentBody, Comments)
-│   ├── common/     → Reusable utilities (ScrollToTop, ThemeMode, Spotlight)
-│   ├── layout/     → Layout components (Header, Footer, Layout)
-│   └── ui/         → Design primitives and compound components
-├── context/        → React Context providers
-│   └── MusicPlayerContext.tsx  → Stable callback refs for play/pause/toggle
-├── hooks/           → Custom React hooks
-│   ├── useTheme.ts
-│   ├── use-layout-store.ts
-│   ├── use-mode-store.ts
-│   ├── use-fetch-all-posts.ts
-│   ├── use-fetch-posts.ts
-│   ├── use-fetch-posts-by-tag.ts
-│   ├── use-get-related-posts.ts
-│   ├── use-get-posts-by-tag.ts
-│   ├── use-get-tweet-id.ts
-│   └── use-video-with-placeholder.ts  → Shared video loading state
-├── actions/         → Unified Server Actions for Notion CMS
-│   └── posts.ts    → All fetch functions with React.cache()
-├── lib/             → Utilities, constants, and domain logic
+│   └── api/        → API routes (revalidate, ai-summary)
+├── components/     → Shared React components
+│   ├── ui/         → Design primitives (Button, FloatingButton, MediaBackground)
+│   ├── common/     → Reusable utilities (Loader, ThemeMode, Player, Spotlight)
+│   ├── icons/      → Shared icon components
+│   └── providers/  → MantineProviders, query-provider
+├── hooks/          → Shared hooks (useTheme, useVideoWithPlaceholder)
+├── lib/            → Utilities, constants, and domain logic
 │   ├── post-logic.ts   → Pure domain logic for posts
 │   ├── notion-client.ts → Official Notion SDK client
 │   ├── notion-api.ts   → Unofficial Notion SDK (notion-client)
 │   ├── utils.ts
 │   ├── constants.ts
 │   └── errors.ts
-├── types/           → TypeScript definitions with Zod schemas (split modules)
+├── types/          → TypeScript definitions with Zod schemas (split modules)
 │   ├── post-tag.ts     → PostTagSchema
 │   ├── tag.ts          → TagSchema
 │   ├── content-header.ts → ContentHeaderSchema
 │   ├── page-data.ts    → PageDataSchema
 │   ├── site-metadata.ts → SiteMetadataSchema
 │   └── index.ts        → Barrel re-exports
-└── site/            → Site configuration
+├── site/           → Site configuration and metadata
+├── styles/         → Global CSS, theme, notion overrides
+└── tests/          → Unit, integration, and E2E tests
 ```
 
 ## Key Architecture Patterns

@@ -85,7 +85,7 @@ GET /posts/[slug]
        ├─ <HydrationBoundary>
        └─ <ContentBody>
               ├─ <ContentTitle>
-              ├─ <Share>                    (share buttons)
+                               ├─ <ShareGroup>               (share buttons)
               ├─ <RelatedPostsWrapper>
               │     └─ <RelatedPosts>       (getRelatedPosts → same tags, max 3)
               └─ <Suspense>
