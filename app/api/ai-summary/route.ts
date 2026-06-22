@@ -4,9 +4,9 @@ import { llm, getDefaultModel } from "@/lib/llm-provider";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
-const TIMEOUT_MS = 270_000;
+const TIMEOUT_MS = 55_000;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
