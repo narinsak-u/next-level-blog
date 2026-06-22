@@ -4,6 +4,9 @@ import { llm, getDefaultModel } from "@/lib/llm-provider";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
+
+const TIMEOUT_MS = 270_000;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -26,9 +29,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), TIMEOUT_MS);
+
     const result = streamText({
       model: llm(getDefaultModel()),
       prompt,
+      abortSignal: abortController.signal,
     });
 
     const stream = new ReadableStream({
@@ -45,6 +52,8 @@ export async function POST(request: NextRequest) {
           controller.close();
         } catch (error) {
           controller.error(error);
+        } finally {
+          clearTimeout(timeoutId);
         }
       },
     });
@@ -61,18 +70,21 @@ export async function POST(request: NextRequest) {
     console.error("AI summary error:", error);
     const message =
       error instanceof Error ? error.message : "Unknown error";
+    const isTimeout = message.includes("abor");
     const isQuota =
       message.toLowerCase().includes("insufficient_quota") ||
       message.toLowerCase().includes("quota");
 
     return Response.json(
       {
-        error: isQuota
-          ? "ขออภัยครับ ตอนนี้โควต้า AI ของเราหมดชั่วคราว กรุณาลองใหม่ในภายหลัง หรืออ่านบทความตัวเต็มได้ครับ"
-          : "เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI กรุณาลองใหม่อีกครั้งครับ",
+        error: isTimeout
+          ? "AI ใช้เวลาตอบสนองนานเกินไป กรุณาลองใหม่อีกครั้งครับ"
+          : isQuota
+            ? "ขออภัยครับ ตอนนี้โควต้า AI ของเราหมดชั่วคราว กรุณาลองใหม่ในภายหลัง หรืออ่านบทความตัวเต็มได้ครับ"
+            : "เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI กรุณาลองใหม่อีกครั้งครับ",
         ...(isQuota ? { code: "quota_exceeded" } : {}),
       },
-      { status: isQuota ? 429 : 500, headers: cors },
+      { status: isTimeout ? 504 : isQuota ? 429 : 500, headers: cors },
     );
   }
 }
