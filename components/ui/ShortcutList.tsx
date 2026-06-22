@@ -53,7 +53,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
                       <span key={k} className="flex items-center gap-1">
                         <Kbd>{k}</Kbd>
                         {i < keys.length - 1 && (
-                          <span className="text-[10px] text-foreground/50">
+                          <span className="text-[10px] text-white/50">
                             +
                           </span>
                         )}
@@ -76,7 +76,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
               href={href}
               key={id}
               target={target}
-              className="flex items-center gap-1.5  hover:text-foreground/90 transition-colors"
+              className="flex items-center gap-1.5  text-white hover:text-white/70 transition-colors"
             >
               {content}
             </Link>
@@ -89,7 +89,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
             <button
               key={id}
               onClick={onClick}
-              className="flex items-center gap-1.5  hover:text-foreground/90 transition-colors"
+              className="flex items-center gap-1.5  text-white hover:text-white/70 transition-colors"
             >
               {content}
             </button>
@@ -97,7 +97,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
         }
 
         return (
-          <div key={id} className="flex items-center gap-1.5 ">
+          <div key={id} className="flex items-center gap-1.5 text-white">
             {content}
           </div>
         );

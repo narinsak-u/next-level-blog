@@ -39,7 +39,7 @@ const MainProfile = () => {
         >
           <KeyShortcuts items={MainKeys} />
           <Space h="lg" />
-          <h1 className="font-serif leading-tight tracking-widest text-4xl font-extrabold short:lg:text-8xl lg:text-8xl sm:text-6xl text-foreground">
+          <h1 className="font-serif leading-tight tracking-widest text-4xl font-extrabold short:lg:text-8xl lg:text-8xl sm:text-6xl text-white">
             {siteMetadata.cnName}
           </h1>
         </m.div>
@@ -101,7 +101,7 @@ const IntroPanel = () => {
                 ease: ANIMATION.EASE_OUT,
                 delay: ANIMATION.DELAY + 0.1,
               }}
-              className="text-base short:lg:text-lg sm:text-lg font-medium text-center text-foreground text-pretty"
+              className="text-base short:lg:text-lg sm:text-lg font-medium text-center text-white text-pretty"
             >
               {siteMetadata.home.intro.zh}
               <br />
