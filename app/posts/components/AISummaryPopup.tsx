@@ -1,9 +1,63 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Box, Center, Text } from "@mantine/core";
 import { IconSparkles, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
+
+function renderMarkdown(text: string): ReactNode {
+  const lines = text.split("\n");
+  const elements: ReactNode[] = [];
+  let listItems: ReactNode[] = [];
+
+  const flushList = (key: string) => {
+    if (listItems.length === 0) return;
+    elements.push(
+      <ul key={key} className="list-disc list-inside space-y-1 my-2 text-sm!">
+        {listItems}
+      </ul>,
+    );
+    listItems = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    const stripped = trimmed.replace(/^- /, "");
+
+    if (trimmed.startsWith("- ") && stripped) {
+      const rendered = renderInline(stripped);
+      listItems.push(<li key={`li-${i}`} className="text-sm!">{rendered}</li>);
+      continue;
+    }
+
+    flushList(`list-${i}`);
+
+    if (!trimmed) {
+      elements.push(<br key={`br-${i}`} />);
+    } else {
+      elements.push(
+        <p key={`p-${i}`} className="my-1.5 leading-relaxed text-sm">
+          {renderInline(trimmed)}
+        </p>,
+      );
+    }
+  }
+
+  flushList("list-end");
+
+  return elements;
+}
+
+function renderInline(text: string): ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
 
 const LOADING_STEPS = [
   { emoji: "📖", text: "กำลังอ่านเนื้อหา..." },
@@ -79,7 +133,7 @@ const AISummaryPopup = ({
     <div
       ref={popupRef}
       className={cn(
-        "fixed z-50 max-w-100 w-[90vw] bottom-30 right-30",
+        "fixed z-50 max-w-120 w-[90vw] bottom-20 right-30",
         "bg-white/95 dark:bg-black/75 backdrop-blur-xl",
         "border border-gray-200 dark:border-gray-700",
         "rounded-xl shadow-xl",
@@ -109,10 +163,7 @@ const AISummaryPopup = ({
               <span className="text-2xl animate-bounce">
                 {LOADING_STEPS[stepIndex].emoji}
               </span>
-              <Text
-                size="sm"
-                className="dark:text-gray-300 font-medium"
-              >
+              <Text size="sm" className="dark:text-gray-300 font-medium">
                 {LOADING_STEPS[stepIndex].text}
               </Text>
             </div>
@@ -134,12 +185,14 @@ const AISummaryPopup = ({
 
         {error && (
           <Center className="py-8 flex-col gap-4">
-            <div className={cn(
-              "p-4 rounded-xl text-center w-full",
-              error.includes("โควต้า") 
-                ? "bg-orange-50 dark:bg-orange-950/30 text-orange-800 dark:text-orange-200 border border-orange-100 dark:border-orange-900/50"
-                : "bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-200 border border-red-100 dark:border-red-900/50"
-            )}>
+            <div
+              className={cn(
+                "p-4 rounded-xl text-center w-full",
+                error.includes("โควต้า")
+                  ? "bg-orange-50 dark:bg-orange-950/30 text-orange-800 dark:text-orange-200 border border-orange-100 dark:border-orange-900/50"
+                  : "bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-200 border border-red-100 dark:border-red-900/50",
+              )}
+            >
               <Text size="sm" className="font-medium leading-relaxed">
                 {error}
               </Text>
@@ -157,13 +210,11 @@ const AISummaryPopup = ({
 
         {/* Show summary even while loading (for streaming) */}
         {(summary || (!isLoading && !error)) && (
-          <div ref={textRef}>
-            <Text
-              size="sm"
-              className="leading-relaxed whitespace-pre-wrap dark:text-gray-200"
-            >
-              {summary}
-            </Text>
+          <div
+            ref={textRef}
+            className="text-sm leading-relaxed dark:text-gray-200 scrollbar-minimal max-h-135.5 overflow-y-auto pr-2"
+          >
+            {renderMarkdown(summary)}
             {isLoading && (
               <span className="inline-block w-2 h-4 bg-orange-500 animate-pulse ml-1" />
             )}

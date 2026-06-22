@@ -18,6 +18,30 @@ function getCacheKey(slug: string) {
   return `ai-summary:${slug}`;
 }
 
+const SUMMARY_SYSTEM_PROMPT = `คุณคือนักวิเคราะห์เนื้อหาที่เชี่ยวชาญ อ่านบทความต่อไปนี้แล้วสรุปเป็นภาษาไทยในรูปแบบที่ช่วยให้ผู้อ่านเข้าใจภาพรวมและได้ข้อคิดเชิงลึก
+
+โครงสร้างที่ต้องการ:
+1) **แก่นสาระสำคัญ** — ประเด็นหลักของบทความคืออะไร เขียนแบบกระชับ 1-2 ประโยค
+2) **ประเด็นสำคัญที่ควรรู้** — bullet points 2-3 ข้อ ครอบคลุมแนวคิด ข้อเท็จจริง ตัวอย่าง หรือบทเรียนที่ผู้เขียนถ่ายทอด
+3) **ข้อคิดเชิงลึก** — สิ่งที่ผู้อ่านควรนำไปใช้หรือคิดต่อ 1-2 ประโยค
+
+กฎ:
+- เขียนเป็นภาษาไทยที่อ่านง่าย เป็นธรรมชาติ ไม่แปลตรงๆ
+- ไม่ต้องเกริ่นนำ ไม่ต้องสรุปท้าย เข้าเนื้อหาเลย
+- ข้ามส่วนที่ไม่เกี่ยวข้อง (เช่น ลิงก์ โฆษณา ส่วนนำทาง)
+- หากเนื้อหาไม่เพียงพอ ให้ตอบสั้นๆ ว่าไม่สามารถสรุปได้
+
+สำคัญ: สรุปไม่ควรเกิน 200 คำ
+
+เนื้อหาบทความ:
+"""
+CONTENT_PLACEHOLDER
+"""`;
+
+function buildSummaryPrompt(textContent: string) {
+  return SUMMARY_SYSTEM_PROMPT.replace("CONTENT_PLACEHOLDER", textContent);
+}
+
 function getCachedSummary(slug: string): string | null {
   if (typeof window === "undefined") return null;
 
@@ -122,7 +146,7 @@ export default function PostPageClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: `Summarize the following article in 1-3 paragraphs in Thai:\n\n${textContent}`,
+          prompt: buildSummaryPrompt(textContent),
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -178,12 +202,13 @@ export default function PostPageClient({
       }));
     } finally {
       setSummaryState((prev) => {
-        // If loading finished but we have no summary and no error, 
+        // If loading finished but we have no summary and no error,
         // it means the stream ended prematurely without content.
-        const error = !prev.summary && !prev.error 
-          ? "ไม่สามารถสร้างสรุปได้ในขณะนี้ กรุณาลองใหม่อีกครั้งครับ" 
-          : prev.error;
-        
+        const error =
+          !prev.summary && !prev.error
+            ? "ไม่สามารถสร้างสรุปได้ในขณะนี้ กรุณาลองใหม่อีกครั้งครับ"
+            : prev.error;
+
         return { ...prev, isLoading: false, error };
       });
 

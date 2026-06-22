@@ -25,10 +25,10 @@ I break things, write about them, and occasionally fix them — all in one place
 ## ✨ Core Features
 
 - **📝 Notion-Powered CMS** — Write in Notion, it magically appears on the blog. No deploy, no drama, no yelling at CI pipelines.
-- **🎵 Music Player** — Ambient beats while you scroll. Comes with a visualizer that looks cool even if you have no idea what's happening.
+<!--- **🎵 Music Player** — Ambient beats while you scroll. Comes with a visualizer that looks cool even if you have no idea what's happening.-->
 - **🔍 Spotlight Search** — Hit **Cmd+K** (or **/**) and find anything faster than you can find your car keys.
 - **🎨 Beautiful Design** — Glassmorphism, dark/light mode, smooth animations. Your eyes will thank you (probably).
-- **💬 Community Comments** — Powered by GitHub Discussions. Yes, you can argue with strangers in the comments.
+<!--- **💬 Community Comments** — Powered by GitHub Discussions. Yes, you can argue with strangers in the comments.-->
 - **🏷️ Smart Tag Filtering** — Click a tag, see related posts. It's like therapy but for information overload.
 
 ---

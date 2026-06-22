@@ -230,3 +230,30 @@ body[data-mantine-color-scheme="dark"] {
 [data-mantine-color-scheme="dark"] .social-floating-btn {
   border-color: rgb(255 255 255);
 }
+
+/* Minimal scrollbar */
+.scrollbar-minimal {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(249 115 22 / 0.4) transparent;
+}
+
+.scrollbar-minimal::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollbar-minimal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-minimal::-webkit-scrollbar-thumb {
+  background: rgb(249 115 22 / 0.4);
+  border-radius: 10px;
+}
+
+.scrollbar-minimal::-webkit-scrollbar-thumb:hover {
+  background: rgb(249 115 22 / 0.6);
+}
+
+[data-mantine-color-scheme="dark"] .scrollbar-minimal {
+  scrollbar-color: rgb(249 115 22 / 0.5) transparent;
+}
