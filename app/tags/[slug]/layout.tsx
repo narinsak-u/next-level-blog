@@ -1,5 +1,4 @@
 import Layout from "@/app/_layout/components/Layout";
-import Menu from "@/app/_layout/components/Menu";
 import PageLayout from "@/app/_layout/components/PageLayout";
 import SpotlightClient from "@/components/common/SpotlightClient";
 import BackToPosts from "@/app/tags/components/BackToPosts";

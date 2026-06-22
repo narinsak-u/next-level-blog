@@ -25,13 +25,11 @@ const MusicPlayerContext = createContext<MusicPlayerContextValue | null>(null);
 
 interface MusicPlayerProviderProps {
   children: ReactNode;
-  src?: string;
   defaultVolume?: number;
 }
 
 const MusicPlayerProvider = ({
   children,
-  src = "/assets/lan-ting-xu.mp3",
   defaultVolume = 0.3,
 }: MusicPlayerProviderProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -40,14 +38,8 @@ const MusicPlayerProvider = ({
   const [volume, setVolumeState] = useState(defaultVolume);
 
   useEffect(() => {
-    setVolumeState(defaultVolume);
-  }, [defaultVolume]);
-
-  useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
-
-    el.volume = volume;
 
     const handleEnded = () => {
       isPlayingRef.current = false;

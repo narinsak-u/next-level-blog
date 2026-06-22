@@ -10,10 +10,9 @@ import { myMusic } from "@/site/data";
 
 type Props = {
   opened: boolean;
-  setOpened: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const Player: React.FC<Props> = ({ opened, setOpened }) => {
+export const Player: React.FC<Props> = ({ opened }) => {
   const musicTracks = [
     {
       name: myMusic.name,

@@ -5,14 +5,12 @@ import { notion as officialClient } from "@/lib/notion-client";
 import unofficialClient from "@/lib/notion-api";
 import { PageDataSchema, PageDataSchemaType } from "@/types";
 import { defaultImage } from "@/site/data";
+import { DEFAULT_DATE, DEFAULT_DESCRIPTION } from "@/lib/constants";
 import type { ExtendedRecordMap } from "notion-types";
 import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints";
 
 // --- Types & Constants ---
 const DEFAULT_POST_LIMIT = 6;
-const DEFAULT_DATE = "2023-07-27T17:12:00.000Z";
-const DEFAULT_DESCRIPTION =
-  "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, voluptatum nesciunt assumenda accusamus eius rem?";
 
 interface PageWithTimestamps {
   id: string;

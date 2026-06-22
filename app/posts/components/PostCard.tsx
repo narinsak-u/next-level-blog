@@ -84,7 +84,7 @@ const PostCardGrid = ({
       ) : null}
 
       {showTags ? <TagItemInline tags={post.tags} /> : null}
-      <Text style={{ fontWeight: 500 }} size="md" mt="sm" className="text-foreground">
+      <Text size="md" mt="sm" className="font-medium text-foreground">
         {post.title}
       </Text>
       {showDescription && (

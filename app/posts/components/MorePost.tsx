@@ -1,4 +1,4 @@
-"use cleint";
+"use client";
 
 import Link from "next/link";
 import {
@@ -50,14 +50,11 @@ const MorePost = ({ post }: Props) => {
             className="rounded-sm mt-4 cursor-pointer hover:translate-y-[-8px] transition-transform ease-in-out duration-300"
           >
             <Card.Section>
-              <Card.Section>
-                <Image
-                  src={post.coverImage}
-                  alt="post image"
-                  className="object-cover"
-                  // className="h-[120px] md:h-[180px] object-cover"
-                />
-              </Card.Section>
+              <Image
+                src={post.coverImage}
+                alt="post image"
+                className="object-cover"
+              />
             </Card.Section>
           </Card>
         </Link>

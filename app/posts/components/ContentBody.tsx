@@ -1,17 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { Space, Box, Divider } from "@mantine/core";
 import { PageDataSchemaType } from "@/types";
 import Loader from "@/components/common/Loader";
 import RelatedPostsWrapper from "./RelatedPostsWrapper";
-
-// const Comments = dynamic(() => import("./Comments"), {
-//   ssr: false,
-//   loading: () => <div className="h-32" />,
-// });
 
 type Props = {
   postData: PageDataSchemaType;
@@ -37,7 +31,6 @@ const ContentBody = ({ children, postData }: Props) => {
 
         <RelatedPostsWrapper postData={postData} />
         <Divider className="my-14" />
-        {/*<Comments />*/}
       </div>
     </Suspense>
   );

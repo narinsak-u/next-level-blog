@@ -14,7 +14,6 @@ const HomeContent = () => {
 
   useEffect(() => {
     useModeStore.persist.rehydrate();
-    setMode("focused");
   }, []);
 
   useEffect(() => {

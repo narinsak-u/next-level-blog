@@ -18,7 +18,7 @@ import ContentBody from "@/app/posts/components/ContentBody";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/app/_layout/components/PageLayout";
 import { siteMetadata } from "@/site/siteMetadata";
-import Share from "@/app/posts/components/Share";
+import { ShareGroup } from "@/app/posts/components/ShareButton";
 import { Box, Divider } from "@mantine/core";
 
 type Params = Promise<{ slug: string }>;
@@ -62,7 +62,7 @@ const layout = async ({ children, params }: Props) => {
             <ContentTitle postData={postData} />
             <div className="sticky top-5 z-10 left-0">
               {postData ? (
-                <Share
+                <ShareGroup
                   postLink={`${siteMetadata.siteAddress}/posts/${postData.id}`}
                 />
               ) : null}

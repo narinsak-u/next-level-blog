@@ -5,7 +5,7 @@ import HomeContent from "@/app/(home)/components/HomeContent";
 
 const Home = () => {
   return (
-    <MusicPlayerProvider src="/assets/where-winds-meet-ost.mp3">
+    <MusicPlayerProvider>
       <HomeContent />
     </MusicPlayerProvider>
   );

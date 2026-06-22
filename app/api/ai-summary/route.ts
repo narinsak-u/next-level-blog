@@ -57,13 +57,13 @@ export async function POST(request: NextRequest) {
         ...cors,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("AI summary error:", error);
-    const message = error?.message ?? "";
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
     const isQuota =
       message.toLowerCase().includes("insufficient_quota") ||
-      message.toLowerCase().includes("quota") ||
-      error?.status === 429;
+      message.toLowerCase().includes("quota");
 
     return Response.json(
       {

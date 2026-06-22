@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, Space, Text, UnstyledButton } from "@mantine/core";
+import { Box, Divider, Space } from "@mantine/core";
 import { ArrowBigLeftLine } from "tabler-icons-react";
 import { useRouter } from "next/navigation";
 
