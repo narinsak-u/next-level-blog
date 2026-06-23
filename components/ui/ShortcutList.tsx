@@ -29,13 +29,28 @@ type StaticShortcutItem = ShortcutItemBase & {
 };
 
 type ShortcutItem = LinkShortcutItem | ButtonShortcutItem | StaticShortcutItem;
+type Mode = "focused" | "jianghu";
 
 interface ShortcutListProps {
   items: ShortcutItem[];
   gap?: string;
+  mode?: Mode;
 }
 
-const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
+const ShortcutList = ({
+  items,
+  gap = "gap-4",
+  mode = "focused",
+}: ShortcutListProps) => {
+  const isJianghu = mode === "jianghu";
+  const textPrimary = isJianghu ? "text-white!" : "text-black dark:text-white";
+  const textMuted = isJianghu
+    ? "text-white/50"
+    : "text-black/50 dark:text-white/50";
+  const textHover = isJianghu
+    ? "hover:text-white/70"
+    : "hover:text-black/70 dark:hover:text-white/70";
+
   return (
     <div
       className={`flex items-center justify-center ${gap} py-2 bg-transparent`}
@@ -51,18 +66,18 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
                   <div className="flex items-center gap-1">
                     {keys.map((k, i) => (
                       <span key={k} className="flex items-center gap-1">
-                        <Kbd>{k}</Kbd>
+                        <Kbd mode={mode}>{k}</Kbd>
                         {i < keys.length - 1 && (
-                          <span className="text-[10px] text-white/50">
-                            +
-                          </span>
+                          <span className={`text-[10px] ${textMuted}`}>+</span>
                         )}
                       </span>
                     ))}
                   </div>
                 )}
             {label && (
-              <span className="text-[10px] uppercase tracking-widest">
+              <span
+                className={`text-[10px] uppercase tracking-widest ${textPrimary}`}
+              >
                 {label}
               </span>
             )}
@@ -76,7 +91,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
               href={href}
               key={id}
               target={target}
-              className="flex items-center gap-1.5  text-white hover:text-white/70 transition-colors"
+              className={`flex items-center gap-1.5 ${textPrimary} ${textHover} transition-colors`}
             >
               {content}
             </Link>
@@ -89,7 +104,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
             <button
               key={id}
               onClick={onClick}
-              className="flex items-center gap-1.5  text-white hover:text-white/70 transition-colors"
+              className={`flex items-center gap-1.5 ${textPrimary} ${textHover} transition-colors`}
             >
               {content}
             </button>
@@ -97,7 +112,7 @@ const ShortcutList = ({ items, gap = "gap-4" }: ShortcutListProps) => {
         }
 
         return (
-          <div key={id} className="flex items-center gap-1.5 text-white">
+          <div key={id} className={`flex items-center gap-1.5 ${textPrimary}`}>
             {content}
           </div>
         );
@@ -112,4 +127,5 @@ export type {
   LinkShortcutItem,
   ButtonShortcutItem,
   StaticShortcutItem,
+  Mode,
 };
