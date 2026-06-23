@@ -11,7 +11,7 @@ type Props = {
 };
 
 const VideoWithPlaceholder = ({ src, className, placeholder }: Props) => {
-  const { videoRef, videoLoaded } = useVideoWithPlaceholder({ src, placeholder });
+  const { videoRef, videoReady: videoLoaded } = useVideoWithPlaceholder({ src, placeholder });
 
   return (
     <>

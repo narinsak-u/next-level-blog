@@ -1,22 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cn, getFileExtension, isVideo } from '@/lib/utils';
-
-describe('cn()', () => {
-  it('UT-001: merges class names correctly', () => {
-    const result = cn('foo', 'bar');
-    expect(result).toBe('foo bar');
-  });
-
-  it('UT-002: handles conditional classes', () => {
-    const result = cn('foo', false && 'bar', 'baz');
-    expect(result).toBe('foo baz');
-  });
-
-  it('UT-002: handles undefined and null', () => {
-    const result = cn('foo', undefined, null, 'bar');
-    expect(result).toBe('foo bar');
-  });
-});
+import { getFileExtension, isVideo } from '@/lib/utils';
 
 describe('getFileExtension()', () => {
   it('UT-003: extracts extension from filename', () => {

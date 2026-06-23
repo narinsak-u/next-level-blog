@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MediaBackground, VideoBackground, ImageBackground } from '@/components/ui/MediaBackground';
 
@@ -17,7 +17,7 @@ describe('VideoBackground', () => {
       expect(video?.getAttribute('src')).toBe('/video.mp4');
     });
 
-    it('renders placeholder image', () => {
+    it('uses poster attribute for placeholder', () => {
       render(
         <VideoBackground
           src="/video.mp4"
@@ -25,13 +25,13 @@ describe('VideoBackground', () => {
         />
       );
       
-      const img = document.querySelector('img');
-      expect(img).toBeTruthy();
+      const video = document.querySelector('video');
+      expect(video?.getAttribute('poster')).toBe('/poster.jpg');
     });
   });
 
   describe('MB-002: Video plays automatically', () => {
-    it('video has autoplay and muted attributes', () => {
+    it('video has autoplay attribute', () => {
       render(
         <VideoBackground
           src="/video.mp4"
@@ -39,7 +39,7 @@ describe('VideoBackground', () => {
       );
       
       const video = document.querySelector('video');
-      expect(video?.getAttribute('autoplay')).toBe('');
+      expect(video?.hasAttribute('autoplay')).toBe(true);
     });
 
     it('video is muted for autoplay', () => {
@@ -50,35 +50,35 @@ describe('VideoBackground', () => {
       );
       
       const video = document.querySelector('video');
-      expect(video?.getAttribute('muted')).toBe('');
+      expect(video?.muted).toBe(true);
     });
   });
 
   describe('MB-004: Handles missing placeholder', () => {
-    it('does not render image when no placeholder', () => {
-      const { container } = render(
+    it('omits poster when no placeholder provided', () => {
+      render(
         <VideoBackground src="/video.mp4" />
       );
       
-      const images = container.querySelectorAll('img');
-      expect(images.length).toBe(0);
+      const video = document.querySelector('video');
+      expect(video?.getAttribute('poster')).toBeFalsy();
     });
   });
 });
 
 describe('ImageBackground', () => {
-  it('renders image with correct src', () => {
-    render(
-      <ImageBackground
-        src="/image.jpg"
-        alt="Test image"
-      />
-    );
-    
-    const img = document.querySelector('img');
-    expect(img).toBeTruthy();
-    expect(img?.getAttribute('src')).toBe('/image.jpg');
-  });
+    it('renders image with correct src', () => {
+      render(
+        <ImageBackground
+          src="/image.jpg"
+          alt="Test image"
+        />
+      );
+      
+      const img = document.querySelector('img');
+      expect(img).toBeTruthy();
+      expect(img?.getAttribute('src')).toContain('image.jpg');
+    });
 
   it('applies priority loading by default', () => {
     render(

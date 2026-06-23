@@ -1,79 +1,72 @@
-import { describe, it, expect, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
-import { useTheme } from '@/hooks/useTheme';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { renderHook } from "@testing-library/react";
+import { useMantineColorScheme } from "@mantine/core";
+import { useTheme } from "@/hooks/useTheme";
 
-const mockToggleColorScheme = vi.fn();
-const mockSetColorScheme = vi.fn();
+const toggleColorScheme = vi.fn();
+const setColorScheme = vi.fn();
 
-vi.mock('@mantine/core', () => ({
-  useMantineColorScheme: () => ({
-    colorScheme: 'light',
-    toggleColorScheme: mockToggleColorScheme,
-    setColorScheme: mockSetColorScheme,
-  }),
-}));
+beforeEach(() => {
+  toggleColorScheme.mockClear();
+  setColorScheme.mockClear();
+  vi.mocked(useMantineColorScheme).mockReturnValue({
+    colorScheme: "light",
+    toggleColorScheme,
+    setColorScheme,
+  } as never);
+});
 
-describe('useTheme', () => {
-  describe('isDark', () => {
-    it('TH-001: returns true when colorScheme is dark', () => {
-      vi.mock('@mantine/core', () => ({
-        useMantineColorScheme: () => ({
-          colorScheme: 'dark',
-          toggleColorScheme: mockToggleColorScheme,
-          setColorScheme: mockSetColorScheme,
-        }),
-      }));
+describe("useTheme", () => {
+  it("TH-001: returns isDark=true when colorScheme is dark", () => {
+    vi.mocked(useMantineColorScheme).mockReturnValueOnce({
+      colorScheme: "dark",
+      toggleColorScheme,
+      setColorScheme,
+    } as never);
 
-      const { result } = renderHook(() => useTheme());
-      expect(result.current.isDark).toBe(true);
-      expect(result.current.isLight).toBe(false);
-    });
+    const { result } = renderHook(() => useTheme());
+    expect(result.current.isDark).toBe(true);
+    expect(result.current.isLight).toBe(false);
   });
 
-  describe('isLight', () => {
-    it('TH-002: returns true when colorScheme is light', () => {
-      const { result } = renderHook(() => useTheme());
-      expect(result.current.isLight).toBe(true);
-      expect(result.current.isDark).toBe(false);
-    });
+  it("TH-002: returns isLight=true when colorScheme is light", () => {
+    const { result } = renderHook(() => useTheme());
+    expect(result.current.isLight).toBe(true);
+    expect(result.current.isDark).toBe(false);
   });
 
-  describe('toggle()', () => {
-    it('TH-003: calls toggleColorScheme', () => {
-      const { result } = renderHook(() => useTheme());
-      result.current.toggle();
-      expect(mockToggleColorScheme).toHaveBeenCalled();
-    });
+  it("TH-003: toggle calls toggleColorScheme", () => {
+    const { result } = renderHook(() => useTheme());
+    result.current.toggle();
+    expect(toggleColorScheme).toHaveBeenCalled();
   });
 
-  describe('setDark()', () => {
-    it('TH-004: sets dark mode', () => {
-      const { result } = renderHook(() => useTheme());
-      result.current.setDark();
-      expect(mockSetColorScheme).toHaveBeenCalledWith('dark');
-    });
+  it("TH-004: setDark calls setColorScheme with 'dark'", () => {
+    const { result } = renderHook(() => useTheme());
+    result.current.setDark();
+    expect(setColorScheme).toHaveBeenCalledWith("dark");
   });
 
-  describe('setLight()', () => {
-    it('TH-005: sets light mode', () => {
-      const { result } = renderHook(() => useTheme());
-      result.current.setLight();
-      expect(mockSetColorScheme).toHaveBeenCalledWith('light');
-    });
+  it("TH-005: setLight calls setColorScheme with 'light'", () => {
+    const { result } = renderHook(() => useTheme());
+    result.current.setLight();
+    expect(setColorScheme).toHaveBeenCalledWith("light");
   });
 
-  describe('isAuto', () => {
-    it('TH-002: returns true when colorScheme is auto', () => {
-      vi.mock('@mantine/core', () => ({
-        useMantineColorScheme: () => ({
-          colorScheme: 'auto',
-          toggleColorScheme: mockToggleColorScheme,
-          setColorScheme: mockSetColorScheme,
-        }),
-      }));
+  it("TH-006: setAuto calls setColorScheme with 'auto'", () => {
+    const { result } = renderHook(() => useTheme());
+    result.current.setAuto();
+    expect(setColorScheme).toHaveBeenCalledWith("auto");
+  });
 
-      const { result } = renderHook(() => useTheme());
-      expect(result.current.isAuto).toBe(true);
-    });
+  it("TH-007: returns isAuto=true when colorScheme is auto", () => {
+    vi.mocked(useMantineColorScheme).mockReturnValueOnce({
+      colorScheme: "auto",
+      toggleColorScheme,
+      setColorScheme,
+    } as never);
+
+    const { result } = renderHook(() => useTheme());
+    expect(result.current.isAuto).toBe(true);
   });
 });

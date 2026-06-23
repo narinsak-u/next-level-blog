@@ -47,12 +47,12 @@ const SocialFloatingButton = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="social-floating-btn bg-transparent hover:bg-black/5 dark:hover:bg-white/10"
+            className="social-floating-btn bg-transparent border-white! text-white hover:bg-white/10"
           >
-            <Icon className="size-5 text-black dark:text-white" />
+            <Icon className="size-5 text-white" />
           </ActionIcon>
         ))}
-        <div className="bg-black dark:bg-white h-10 w-0.5 mx-auto" />
+        <div className="bg-white h-10 w-0.5 mx-auto" />
       </Box>
     </Box>
   );

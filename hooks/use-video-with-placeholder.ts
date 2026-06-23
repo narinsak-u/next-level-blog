@@ -7,45 +7,33 @@ interface UseVideoWithPlaceholderOptions {
 
 const useVideoWithPlaceholder = ({
   src,
-  placeholder,
 }: UseVideoWithPlaceholderOptions) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development" && !placeholder) {
-      console.warn("No placeholder provided for video");
-    }
-  }, [placeholder]);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleVideoReady = () => setVideoLoaded(true);
+    const handleCanPlay = () => {
+      setVideoReady(true);
+      video.play().catch(() => {});
+    };
 
-    video.addEventListener("loadeddata", handleVideoReady);
-    video.addEventListener("canplay", handleVideoReady);
-    video.load();
-
-    if (video.readyState >= 2) {
-      setVideoLoaded(true);
+    if (video.readyState >= 3) {
+      handleCanPlay();
+      return;
     }
 
+    video.addEventListener("canplay", handleCanPlay, { once: true });
+    video.load();
+
     return () => {
-      video.removeEventListener("loadeddata", handleVideoReady);
-      video.removeEventListener("canplay", handleVideoReady);
+      video.removeEventListener("canplay", handleCanPlay);
     };
   }, [src]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video && videoLoaded) {
-      video.play();
-    }
-  }, [videoLoaded]);
-
-  return { videoRef, videoLoaded };
+  return { videoRef, videoReady };
 };
 
 export default useVideoWithPlaceholder;
