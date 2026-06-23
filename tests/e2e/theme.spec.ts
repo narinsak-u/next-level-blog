@@ -27,7 +27,7 @@ test.describe('Theme Switching', () => {
     }
   });
 
-  test('THEME-003: Theme persists after reload', async ({ page, context }) => {
+  test('THEME-003: Theme persists after reload', async ({ page }) => {
     await page.goto('/');
     
     const themeToggle = page.locator('[role="radiogroup"]');
