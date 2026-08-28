@@ -1,7 +1,7 @@
 import type { PostQueryPage } from "@/app/posts/helpers/post-query";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { fetchPosts } from "@/app/posts/actions/posts";
-import { postKeys } from "@/app/posts/query-keys";
+import { postKeys, type PostCategoryQueryKey } from "@/app/posts/query-keys";
 
 const POSTS_PER_PAGE = 6;
 const STALE_TIME = 5 * 60 * 1000;
@@ -13,7 +13,13 @@ interface Props {
 
 const useFetchPosts = ({ categoryName }: Props) => {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteQuery({
+    useInfiniteQuery<
+      PostQueryPage,
+      Error,
+      InfiniteData<PostQueryPage>,
+      PostCategoryQueryKey,
+      string | null
+    >({
       queryKey: postKeys.byCategory(categoryName),
       initialPageParam: null,
       staleTime: STALE_TIME,

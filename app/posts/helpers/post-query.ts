@@ -3,7 +3,7 @@ import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-e
 
 export interface PostQueryOptions {
   category?: string;
-  cursor?: string;
+  cursor?: string | null;
   pageSize?: number;
   status?: string;
 }

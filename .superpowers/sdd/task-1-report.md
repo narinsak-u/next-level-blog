@@ -106,3 +106,21 @@ Updated `useFetchPosts` to consume the cursor-based `fetchPosts` result page con
 
 - No known concerns for the migrated hook contract.
 - Per task instructions, formatters, linters, project-wide builds, and project-wide test suites were not run.
+
+## Task 1 Re-review Fix: Strict Cursor Parameter Typing
+
+### Changes
+
+- Explicitly typed `useInfiniteQuery` with `string | null` page parameters and `InfiniteData<PostQueryPage>`.
+- Added the named `PostCategoryQueryKey` contract to the query-key module.
+- Allowed `PostQueryOptions.cursor` to accept the hook's initial `null` cursor; the action already omits falsy cursors from the Notion request.
+- Preserved the existing runtime/test contract, including the initial `cursor: null` call.
+
+### Verification
+
+- `bun x tsc --noEmit --pretty false` — passed with no output.
+- `bun vitest run tests/unit/hooks/use-fetch-posts.test.ts tests/unit/helpers/post-query.test.ts` — passed (`2` files, `4` tests).
+
+### Concerns
+
+- No known concerns. The targeted strict TypeScript check and pagination tests pass.
