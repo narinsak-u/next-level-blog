@@ -12,7 +12,6 @@ type Props = {
 
 const RelatedPostsServer = async ({ postData }: Props) => {
   const { items } = await fetchPosts({
-    category: postData.category || undefined,
     pageSize: RELATED_POST_CANDIDATE_LIMIT,
   });
   const relatedPosts = selectRelatedPosts(items, postData, RELATED_POST_LIMIT);

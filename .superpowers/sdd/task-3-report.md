@@ -11,7 +11,7 @@ Implemented server-side bounded related-post selection and removed full-list art
   - Prioritizes shared-tag matches.
   - Uses same-category posts without shared tags as fallback candidates.
   - Preserves source ordering within each priority group and caps the result at the requested limit.
-- Added `RelatedPostsServer`, which fetches at most six post summaries (category-scoped when the article has a category), selects at most three related posts, and reuses the existing `RelatedPosts` presentation.
+- Added `RelatedPostsServer`, which fetches at most six unfiltered post summaries, selects at most three related posts, and reuses the existing `RelatedPosts` presentation.
 - Changed `RelatedPosts` to render the already-selected server results while preserving its existing grid/list presentation and `No post matched...` fallback.
 - Removed `RelatedPostsWrapper` and its client-side `allPosts` query.
 - Removed `QueryClient`, `fetchAllPosts` prefetching, and `HydrationBoundary` from the article layout.
@@ -48,4 +48,17 @@ Implemented server-side bounded related-post selection and removed full-list art
 
 ## Concerns
 
-The server query is intentionally bounded to six summaries. When a category is present, it uses the category filter; when it is empty, it queries the first six global summaries. A shared-tag post outside that bounded candidate set cannot be selected, which is the explicit performance trade-off for removing the full-list article hydration.
+The server query is intentionally bounded to six summaries and is unfiltered so shared-tag posts from any category can be considered before same-category fallback. A shared-tag post outside that bounded candidate set cannot be selected, which is the explicit performance trade-off for removing the full-list article hydration.
+
+## Verification
+
+Commands run in `D:/Github/next-level-blog/.worktrees/cms-content-performance`:
+
+```text
+$ bun vitest run tests/unit/helpers/related-posts.test.ts
+Test Files  1 passed (1)
+Tests  3 passed (3)
+
+$ bun x tsc --noEmit --pretty false
+Passed with no output.
+```
