@@ -8,7 +8,9 @@ vi.mock("@/app/posts/components/Content", () => ({
 }));
 
 vi.mock("@/app/posts/components/AISummaryPopup", () => ({
-  AISummaryPopup: () => null,
+  AISummaryPopup: () => (
+    <div data-testid="ai-summary-popup-marker">AI summary popup</div>
+  ),
 }));
 
 vi.mock("@/components/common/ScrollToTop", () => ({
@@ -37,6 +39,7 @@ describe("PostPageClient", () => {
     expect(screen.getByTestId("article-content")).toHaveTextContent(
       "Article content",
     );
+    expect(screen.getByTestId("ai-summary-popup-marker")).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

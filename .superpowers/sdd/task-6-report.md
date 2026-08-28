@@ -57,3 +57,19 @@ No known concerns. The summary logic was moved without changing its cache TTL, l
   ```
 
 - Ran `bun x tsc --noEmit --pretty false` successfully with no output.
+
+## Task 6 Test Hardening
+
+- Updated the `AISummaryPopup` mock in `PostPageClient.test.tsx` to render an `ai-summary-popup-marker` test ID.
+- Asserted the marker appears alongside article content, proving `PostPageClient` composes the real `PostSummaryClient` while its presentation dependency is mocked.
+- Preserved the initial lazy behavior assertion: the initial render does not call `fetch`.
+- Verification:
+
+  ```text
+  bun x vitest run tests/integration/components/PostPageClient.test.tsx tests/integration/components/AISummaryPopup.test.tsx
+  Test Files  2 passed (2)
+  Tests  7 passed (7)
+
+  bun x tsc --noEmit --pretty false
+  Passed with no output.
+  ```
