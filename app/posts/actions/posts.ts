@@ -7,10 +7,49 @@ import { PageDataSchema, PageDataSchemaType } from "@/types";
 import { defaultImage } from "@/site/data";
 import { DEFAULT_DATE, DEFAULT_DESCRIPTION } from "@/lib/constants";
 import type { ExtendedRecordMap } from "notion-types";
-import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints";
+import { buildPostFilter, mapPostQueryPage } from "@/app/posts/helpers/post-query";
+import type {
+  PostQueryOptions,
+  PostQueryPage,
+} from "@/app/posts/helpers/post-query";
 
 // --- Types & Constants ---
 const DEFAULT_POST_LIMIT = 6;
+
+// --- Exported Actions ---
+
+/**
+ * Fetches posts from Notion with optional filtering and pagination.
+ */
+export const fetchPosts = cache(
+  async (
+    options: PostQueryOptions = {},
+  ): Promise<PostQueryPage> => {
+    const {
+      category,
+      cursor,
+      pageSize = DEFAULT_POST_LIMIT,
+      status = "Done",
+    } = options;
+
+    const filter = buildPostFilter(status, category);
+
+    try {
+      const response = await officialClient.dataSources.query({
+        data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
+        filter,
+        page_size: pageSize,
+        ...(cursor ? { start_cursor: cursor } : {}),
+        sorts: [{ timestamp: "created_time", direction: "descending" }],
+      });
+
+      return mapPostQueryPage(response, mapNotionResultsToPosts);
+    } catch (error) {
+      console.error("Failed to fetch posts from Notion:", error);
+      return { items: [], nextCursor: null, hasMore: false };
+    }
+  },
+);
 
 interface PageWithTimestamps {
   id: string;
@@ -31,11 +70,6 @@ interface PageProperty {
   Status?: { status?: { name?: string } };
 }
 
-// --- Internal Mapping Logic ---
-/**
- * Maps Notion database results to our clean application Post type.
- * Private to this module.
- */
 const mapNotionResultsToPosts = (data: unknown[]): PageDataSchemaType[] => {
   try {
     if (!data.length) return [];
@@ -92,60 +126,6 @@ const mapNotionResultsToPosts = (data: unknown[]): PageDataSchemaType[] => {
   }
 };
 
-// --- Exported Actions ---
-
-/**
- * Fetches posts from Notion with optional filtering and pagination.
- */
-export const fetchPosts = cache(
-  async (
-    options: {
-      category?: string;
-      limit?: number;
-      page?: number;
-      status?: string;
-    } = {},
-  ): Promise<PageDataSchemaType[]> => {
-    const {
-      category,
-      limit = DEFAULT_POST_LIMIT,
-      page = 1,
-      status = "Done",
-    } = options;
-
-    const statusFilter: QueryDataSourceParameters["filter"] = {
-      property: "Status",
-      status: { equals: status },
-    };
-
-    const categoryFilter: QueryDataSourceParameters["filter"] | null = category
-      ? { property: "Category", select: { equals: category } }
-      : null;
-
-    const filter: QueryDataSourceParameters["filter"] = categoryFilter
-      ? { and: [statusFilter, categoryFilter] }
-      : statusFilter;
-
-    try {
-      const response = await officialClient.dataSources.query({
-        data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
-        filter,
-        sorts: [{ timestamp: "created_time", direction: "descending" }],
-      });
-
-      const results = response.results;
-      if (!results.length) return [];
-
-      // Apply pagination manually since we're using dataSources.query
-      const paginatedResults = results.slice((page - 1) * limit, page * limit);
-      return mapNotionResultsToPosts(paginatedResults);
-    } catch (error) {
-      console.error("Failed to fetch posts from Notion:", error);
-      return [];
-    }
-  },
-);
-
 export const fetchPostDates = cache(
   async (): Promise<{
     dates: Record<string, number>;
@@ -194,7 +174,8 @@ export const fetchPostDates = cache(
  * Convenience wrapper to fetch all posts.
  */
 export const fetchAllPosts = cache(async (): Promise<PageDataSchemaType[]> => {
-  return fetchPosts({ limit: 100 }); // Reasonable upper bound for "all"
+  const page = await fetchPosts({ pageSize: 100 });
+  return page.items;
 });
 
 /**
