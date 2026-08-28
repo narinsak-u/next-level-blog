@@ -13,16 +13,12 @@ export default function PostPageClient({
   recordMap,
   slug,
 }: PostPageClientProps) {
-  return (
-    <article>
-      {recordMap ? (
-        <>
-          <Content recordMap={recordMap} />
-          <PostSummaryClient recordMap={recordMap} slug={slug} />
-        </>
-      ) : (
-        <p role="status">Article content is temporarily unavailable.</p>
-      )}
-    </article>
+  return recordMap ? (
+    <>
+      <Content recordMap={recordMap} />
+      <PostSummaryClient recordMap={recordMap} slug={slug} />
+    </>
+  ) : (
+    <p role="status">Article content is temporarily unavailable.</p>
   );
 }

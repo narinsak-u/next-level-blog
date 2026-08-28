@@ -25,11 +25,11 @@ describe("PostPageClient", () => {
     localStorage.clear();
   });
 
-  it("PP-001: renders article content without requesting AI summary before interaction", () => {
+  it("PP-001: preserves the successful content and summary tree", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
-    render(
+    const { container } = render(
       <PostPageClient
         recordMap={{} as ExtendedRecordMap}
         slug="test-slug"
@@ -40,15 +40,19 @@ describe("PostPageClient", () => {
       "Article content",
     );
     expect(screen.getByTestId("ai-summary-popup-marker")).toBeInTheDocument();
+    expect(container.firstElementChild).toBe(
+      screen.getByTestId("article-content"),
+    );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("PP-002: shows a stable content-unavailable state while preserving the article shell", () => {
+  it("PP-002: shows a stable content-unavailable state for a null record map", () => {
     render(<PostPageClient recordMap={null} slug="test-slug" />);
 
-    expect(screen.getByRole("article")).toBeInTheDocument();
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
     expect(
       screen.getByText("Article content is temporarily unavailable."),
     ).toBeInTheDocument();
   });
+
 });
