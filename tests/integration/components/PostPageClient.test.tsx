@@ -1,21 +1,14 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import type { ExtendedRecordMap } from "notion-types";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import PostPageClient from "@/app/posts/[slug]/components/PostPageClient";
-
-const { summaryClientSpy } = vi.hoisted(() => ({
-  summaryClientSpy: vi.fn(),
-}));
 
 vi.mock("@/app/posts/components/Content", () => ({
   default: () => <article data-testid="article-content">Article content</article>,
 }));
 
-vi.mock("@/app/posts/[slug]/components/PostSummaryClient", () => ({
-  default: (props: unknown) => {
-    summaryClientSpy(props);
-    return <div data-testid="summary-client" />;
-  },
+vi.mock("@/app/posts/components/AISummaryPopup", () => ({
+  AISummaryPopup: () => null,
 }));
 
 vi.mock("@/components/common/ScrollToTop", () => ({
@@ -23,10 +16,6 @@ vi.mock("@/components/common/ScrollToTop", () => ({
 }));
 
 describe("PostPageClient", () => {
-  beforeEach(() => {
-    summaryClientSpy.mockClear();
-    localStorage.clear();
-  });
 
   afterEach(() => {
     cleanup();
@@ -48,7 +37,6 @@ describe("PostPageClient", () => {
     expect(screen.getByTestId("article-content")).toHaveTextContent(
       "Article content",
     );
-    expect(summaryClientSpy).toHaveBeenCalledTimes(1);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

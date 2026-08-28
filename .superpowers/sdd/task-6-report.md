@@ -44,3 +44,16 @@ Passed with no output.
 ## Concerns
 
 No known concerns. The summary logic was moved without changing its cache TTL, lazy request trigger, abort behavior, stream parsing, retry path, or error messages.
+
+## Follow-up Verification
+
+- Updated `PostPageClient.test.tsx` to mount the real `PostSummaryClient`; only `Content`, `AISummaryPopup`, and `ScrollToTop` are mocked as lightweight presentation dependencies.
+- Confirmed the initial render displays article content without invoking `fetch`.
+- Ran `bun x vitest run tests/integration/components/PostPageClient.test.tsx tests/integration/components/AISummaryPopup.test.tsx`:
+
+  ```text
+  Test Files  2 passed (2)
+  Tests  7 passed (7)
+  ```
+
+- Ran `bun x tsc --noEmit --pretty false` successfully with no output.
