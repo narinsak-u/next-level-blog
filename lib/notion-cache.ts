@@ -5,6 +5,15 @@ import unofficialClient from "@/lib/notion-api";
 
 export const NOTION_CACHE_REVALIDATE_SECONDS = 300;
 export const DEFAULT_CACHED_POST_PAGE_SIZE = 6;
+export const NOTION_POSTS_CACHE_TAG = "notion:posts";
+export const NOTION_POST_DATES_CACHE_TAG = "notion:post-dates";
+
+export const buildPostCacheTag = (postId: string): string =>
+  `notion:post:${postId}`;
+
+export const buildStaticPageCacheTag = (
+  type: "about" | "note" | "project",
+): string => `notion:page:${type}`;
 
 type CacheablePostQueryOptions = Pick<
   PostQueryOptions,
@@ -65,7 +74,7 @@ export async function getCachedPostMetadata(postId: string) {
         page_id: postId,
       }),
     [buildPostMetadataCacheKey(postId)],
-    cacheOptions(`notion:post:${postId}`),
+    cacheOptions(buildPostCacheTag(postId)),
   );
 
   return cached();
@@ -75,7 +84,7 @@ export async function getCachedPostContent(pageId: string) {
   const cached = unstable_cache(
     () => unofficialClient.getPage(pageId),
     [buildPostContentCacheKey(pageId)],
-    cacheOptions(`notion:post:${pageId}`),
+    cacheOptions(buildPostCacheTag(pageId)),
   );
 
   return cached();
@@ -88,7 +97,7 @@ export async function getCachedStaticPageContent(
   const cached = unstable_cache(
     () => unofficialClient.getPage(pageId),
     [buildStaticPageCacheKey(type, pageId)],
-    cacheOptions(`notion:page:${type}`),
+    cacheOptions(buildStaticPageCacheTag(type)),
   );
 
   return cached();
@@ -111,7 +120,7 @@ export async function getCachedPostDates(
       return response as unknown as NotionQueryResponse;
     },
     [buildPostDatesCacheKey(dataSourceId)],
-    cacheOptions("notion:post-dates"),
+    cacheOptions(NOTION_POST_DATES_CACHE_TAG),
   );
 
   return cached();
@@ -138,7 +147,7 @@ export async function getCachedPostList(
       return response as unknown as NotionQueryResponse;
     },
     [buildPostListCacheKey(dataSourceId, options)],
-    cacheOptions("notion:posts"),
+    cacheOptions(NOTION_POSTS_CACHE_TAG),
   );
 
   return cached();

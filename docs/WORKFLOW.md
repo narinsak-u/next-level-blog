@@ -78,24 +78,22 @@ GET /posts
 ```
 GET /posts/[slug]
   └─ layout.tsx (Server Component)
-       ├─ Promise.all([
-       │     fetchPostById(slug),          ← React.cache() deduplicates with generateMetadata
-       │     queryClient.prefetchQuery()   ← parallel with post fetch
-       │   ])
-       ├─ <HydrationBoundary>
+       ├─ fetchPostById(slug)
        └─ <ContentBody>
               ├─ <ContentTitle>
-                               ├─ <ShareGroup>               (share buttons)
-              ├─ <RelatedPostsWrapper>
-              │     └─ <RelatedPosts>       (getRelatedPosts → same tags, max 3)
+              ├─ <ShareGroup>               (share buttons)
+              ├─ <RelatedPostsServer>
+              │     ├─ Fetches at most 6 unfiltered post summaries
+              │     ├─ Selects at most 3 related posts server-side
+              │     └─ Prioritizes shared tags, then same-category fallback
               └─ <Suspense>
                     └─ <Comments>           ← dynamic import, ssr: false (giscus)
 
-  └─ page.tsx (Server Component)
+  └─ page.tsx (Server Component, revalidate = 300s)
        ├─ fetchPostContent(slug)
        │     └─ notion-client (unofficial) → ExtendedRecordMap
        └─ <Suspense fallback={<Loader />}>
-              └─ <Content recordMap={...} />
+              └─ <Content recordMap... />
                     ├─ NotionRenderer (react-notion-x)
                     └─ Dynamic imports: Code, Equation, PDF, Modal, Tweet
 ```
@@ -128,14 +126,16 @@ GET /about | /note | /hobbies
 ### 5. ISR Revalidation (`/api/revalidate`)
 
 ```
-GET /api/revalidate?secret=<SECRET>&path=<PATH>
+POST /api/revalidate
+  ├─ Authorization: Bearer ${REVALIDATION_SECRET}
+  ├─ JSON body: { paths?: string[], tags?: string[] }
   └─ route.ts (Route Handler)
-       ├─ Validate secret === REVALIDATION_SECRET
-       ├─ revalidatePath(path)   ← Next.js ISR on-demand
-       └─ Returns { revalidated: true, now: Date }
+       ├─ Reject invalid credentials with 401
+       ├─ Reject invalid or empty payloads with 400
+       ├─ revalidatePath(path) for each requested path
+       ├─ revalidateTag(tag, "max") for each requested cache tag
+       └─ Returns { revalidated: true }
 ```
-
----
 
 ## State Management Layers
 

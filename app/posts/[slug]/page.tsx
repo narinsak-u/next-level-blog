@@ -7,6 +7,8 @@ import { siteMetadata } from "@/site/siteMetadata";
 import PostPageClient from "./components/PostPageClient";
 import Loader from "@/components/common/Loader";
 
+export const revalidate = 300;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
