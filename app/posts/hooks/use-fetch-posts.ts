@@ -1,7 +1,7 @@
-import { PageDataSchemaType } from "@/types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import type { PostQueryPage } from "@/app/posts/helpers/post-query";
+import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { fetchPosts } from "@/app/posts/actions/posts";
-import { postKeys } from "@/app/posts/query-keys";
+import { postKeys, type PostCategoryQueryKey } from "@/app/posts/query-keys";
 
 const POSTS_PER_PAGE = 6;
 const STALE_TIME = 5 * 60 * 1000;
@@ -13,34 +13,33 @@ interface Props {
 
 const useFetchPosts = ({ categoryName }: Props) => {
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteQuery({
+    useInfiniteQuery<
+      PostQueryPage,
+      Error,
+      InfiniteData<PostQueryPage>,
+      PostCategoryQueryKey,
+      string | null
+    >({
       queryKey: postKeys.byCategory(categoryName),
-      initialPageParam: 1,
+      initialPageParam: null,
       staleTime: STALE_TIME,
       maxPages: MAX_PAGES,
 
-      queryFn: async ({ pageParam }) => {
-        return (await fetchPosts({
+      queryFn: ({ pageParam }) =>
+        fetchPosts({
           category: categoryName,
-          limit: POSTS_PER_PAGE,
-          page: pageParam,
-        })) as PageDataSchemaType[];
-      },
+          cursor: pageParam,
+          pageSize: POSTS_PER_PAGE,
+        }),
 
-      getNextPageParam(lastPage, allPages) {
-        if (!lastPage || lastPage.length === 0) {
-          return undefined;
-        }
-        if (lastPage.length < POSTS_PER_PAGE) {
-          return undefined;
-        }
-        return allPages.length + 1;
+      getNextPageParam(lastPage: PostQueryPage) {
+        return lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined;
       },
 
       placeholderData: (previousData) => previousData,
     });
 
-  const posts = data?.pages.flatMap((page) => page || []) ?? [];
+  const posts = data?.pages.flatMap((page) => page.items) ?? [];
 
   return {
     posts,

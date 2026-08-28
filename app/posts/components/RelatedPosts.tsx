@@ -1,6 +1,5 @@
 "use client";
 
-import useGetRelatedPosts from "@/app/posts/hooks/use-get-related-posts";
 import { PageDataSchemaType } from "@/types";
 import { Center, Text } from "@mantine/core";
 import { PostCardList } from "@/app/posts/components/PostCard";
@@ -12,15 +11,10 @@ type Props = {
   postData: PageDataSchemaType;
 };
 
-const RelatedPosts = ({ postData, posts }: Props) => {
+const RelatedPosts = ({ posts }: Props) => {
   const { isGrid } = useLayoutStore();
-  const { relatedPosts } = useGetRelatedPosts({
-    posts,
-    postTags: postData.tags,
-    postId: postData.id,
-  });
 
-  if (relatedPosts.length === 0)
+  if (posts.length === 0)
     return (
       <Center mt={30}>
         <Text>No post matched... 😕</Text>
@@ -33,7 +27,7 @@ const RelatedPosts = ({ postData, posts }: Props) => {
 
   return (
     <div className={containerClass}>
-      {relatedPosts.map((post) =>
+      {posts.map((post) =>
         isGrid ? (
           <MorePost key={post.id} post={post} />
         ) : (
