@@ -38,6 +38,31 @@ describe("Notion API configuration", () => {
       buildNotionApiBaseUrl("https://future-shawl-a38.notion.site/"),
     ).toBe("https://future-shawl-a38.notion.site/api/v3");
   });
+  it("rejects copied Notion page URLs with a pathname", async () => {
+    process.env.NODE_ENV = "test";
+    const { buildNotionApiBaseUrl } = await import("@/lib/notion-api");
+
+    expect(() =>
+      buildNotionApiBaseUrl(
+        "https://future-shawl-a38.notion.site/8f7c6d5e4b3a2910",
+      ),
+    ).toThrow("NOTION_PUBLIC_SITE_URL must be an HTTP(S) origin URL");
+  });
+
+  it("rejects published site URLs with a query or fragment", async () => {
+    process.env.NODE_ENV = "test";
+    const { buildNotionApiBaseUrl } = await import("@/lib/notion-api");
+
+    expect(() =>
+      buildNotionApiBaseUrl(
+        "https://future-shawl-a38.notion.site?workspace=published",
+      ),
+    ).toThrow("NOTION_PUBLIC_SITE_URL must be an HTTP(S) origin URL");
+    expect(() =>
+      buildNotionApiBaseUrl("https://future-shawl-a38.notion.site#published"),
+    ).toThrow("NOTION_PUBLIC_SITE_URL must be an HTTP(S) origin URL");
+  });
+
 
   it("throws an actionable error when the published site URL is missing in production", async () => {
     process.env.NODE_ENV = "production";
