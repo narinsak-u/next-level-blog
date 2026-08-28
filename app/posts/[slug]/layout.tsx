@@ -6,14 +6,9 @@ import "katex/dist/katex.min.css";
 import Layout from "@/app/_layout/components/Layout";
 import SpotlightClient from "@/components/common/SpotlightClient";
 
-import { fetchPostById, fetchAllPosts } from "@/app/posts/actions/posts";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
+import { fetchPostById } from "@/app/posts/actions/posts";
 import ContentBody from "@/app/posts/components/ContentBody";
+import RelatedPostsServer from "@/app/posts/components/RelatedPostsServer";
 import Loader from "@/components/common/Loader";
 import PageLayout from "@/app/_layout/components/PageLayout";
 import { siteMetadata } from "@/site/siteMetadata";
@@ -30,15 +25,7 @@ type Props = {
 const layout = async ({ children, params }: Props) => {
   const { slug } = await params;
 
-  const queryClient = new QueryClient();
-
-  const [postData] = await Promise.all([
-    fetchPostById(slug),
-    queryClient.prefetchQuery({
-      queryKey: useFetchAllPosts.getQueryKey(),
-      queryFn: () => fetchAllPosts(),
-    }),
-  ]);
+  const postData = await fetchPostById(slug);
 
   if (!postData) return <Loader />;
 
@@ -65,11 +52,12 @@ const layout = async ({ children, params }: Props) => {
                 />
               ) : null}
             </div>
-            <HydrationBoundary state={dehydrate(queryClient)}>
-              <ContentBody postData={postData}>
-                <div>{children}</div>
-              </ContentBody>
-            </HydrationBoundary>
+            <ContentBody
+              postData={postData}
+              relatedPosts={<RelatedPostsServer postData={postData} />}
+            >
+              <div>{children}</div>
+            </ContentBody>
           </div>
         </PageLayout>
       </Layout>

@@ -6,6 +6,8 @@ import TagPageClient from "@/app/tags/components/TagPageClient";
 import useFetchAllPosts from "@/app/posts/hooks/use-fetch-all-posts";
 import { fetchAllPosts } from "@/app/posts/actions/posts";
 
+export const revalidate = 300;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
