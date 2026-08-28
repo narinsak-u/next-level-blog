@@ -42,7 +42,7 @@ const Post = async ({ params }: Props) => {
 
   return (
     <Suspense fallback={<Loader />}>
-      {recordMap && <PostPageClient recordMap={recordMap} slug={slug} />}
+      <PostPageClient recordMap={recordMap} slug={slug} />
     </Suspense>
   );
 };

@@ -171,6 +171,17 @@ export const fetchAllPosts = cache(async (): Promise<PageDataSchemaType[]> => {
   return page.items;
 });
 
+const getNotionEndpointHostname = (): string => {
+  const configuredEndpoint = process.env.NOTION_PUBLIC_SITE_URL;
+  if (!configuredEndpoint) return "unknown";
+
+  try {
+    return new URL(configuredEndpoint).hostname;
+  } catch {
+    return "invalid";
+  }
+};
+
 /**
  * Fetches a single post by its ID.
  */
@@ -205,8 +216,10 @@ export const fetchPostContent = cache(
 
     try {
       return await getCachedPostContent(pageId);
-    } catch (error) {
-      console.error(`Failed to fetch content for page ${pageId}:`, error);
+    } catch {
+      console.error(
+        `Failed to fetch content for page ${pageId} from ${getNotionEndpointHostname()}`,
+      );
       return null;
     }
   },
@@ -230,8 +243,10 @@ export const fetchStaticPageContent = cache(
 
     try {
       return await getCachedStaticPageContent(type, pageId);
-    } catch (error) {
-      console.error(`Failed to fetch content for page ${pageId}:`, error);
+    } catch {
+      console.error(
+        `Failed to fetch content for page ${pageId} from ${getNotionEndpointHostname()}`,
+      );
       return null;
     }
   },

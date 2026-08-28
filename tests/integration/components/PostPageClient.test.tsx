@@ -42,4 +42,13 @@ describe("PostPageClient", () => {
     expect(screen.getByTestId("ai-summary-popup-marker")).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it("PP-002: shows a stable content-unavailable state while preserving the article shell", () => {
+    render(<PostPageClient recordMap={null} slug="test-slug" />);
+
+    expect(screen.getByRole("article")).toBeInTheDocument();
+    expect(
+      screen.getByText("Article content is temporarily unavailable."),
+    ).toBeInTheDocument();
+  });
 });
