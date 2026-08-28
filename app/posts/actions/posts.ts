@@ -1,13 +1,18 @@
 "use server";
 
 import { cache } from "react";
-import { notion as officialClient } from "@/lib/notion-client";
-import unofficialClient from "@/lib/notion-api";
+import {
+  getCachedPostContent,
+  getCachedPostDates,
+  getCachedPostList,
+  getCachedPostMetadata,
+  getCachedStaticPageContent,
+} from "@/lib/notion-cache";
 import { PageDataSchema, PageDataSchemaType } from "@/types";
 import { defaultImage } from "@/site/data";
 import { DEFAULT_DATE, DEFAULT_DESCRIPTION } from "@/lib/constants";
 import type { ExtendedRecordMap } from "notion-types";
-import { buildPostFilter, mapPostQueryPage } from "@/app/posts/helpers/post-query";
+import { mapPostQueryPage } from "@/app/posts/helpers/post-query";
 import type {
   PostQueryOptions,
   PostQueryPage,
@@ -32,16 +37,11 @@ export const fetchPosts = cache(
       status = "Done",
     } = options;
 
-    const filter = buildPostFilter(status, category);
-
     try {
-      const response = await officialClient.dataSources.query({
-        data_source_id: process.env.NOTION_DATA_SOURCE_ID as string,
-        filter,
-        page_size: pageSize,
-        ...(cursor ? { start_cursor: cursor } : {}),
-        sorts: [{ timestamp: "created_time", direction: "descending" }],
-      });
+      const response = await getCachedPostList(
+        process.env.NOTION_DATA_SOURCE_ID as string,
+        { category, cursor, pageSize, status },
+      );
 
       return mapPostQueryPage(response, mapNotionResultsToPosts);
     } catch (error) {
@@ -135,14 +135,7 @@ export const fetchPostDates = cache(
       const dataSourceId = process.env.NOTION_DATA_SOURCE_ID as string;
       console.log("fetchPostDates - Using data_source_id:", dataSourceId);
 
-      const response = await officialClient.dataSources.query({
-        data_source_id: dataSourceId,
-        filter: {
-          property: "Status",
-          status: { equals: "Done" },
-        },
-        sorts: [{ timestamp: "created_time", direction: "ascending" }],
-      });
+      const response = await getCachedPostDates(dataSourceId);
 
       const results = response.results;
       console.log("fetchPostDates - Notion results count:", results.length);
@@ -184,9 +177,9 @@ export const fetchAllPosts = cache(async (): Promise<PageDataSchemaType[]> => {
 export const fetchPostById = cache(
   async (postId: string): Promise<PageDataSchemaType | null> => {
     try {
-      const page = (await officialClient.pages.retrieve({
-        page_id: postId,
-      })) as unknown as PageWithTimestamps & { properties?: PageProperty };
+      const page = (await getCachedPostMetadata(postId)) as unknown as PageWithTimestamps & {
+        properties?: PageProperty;
+      };
 
       if (!page) return null;
 
@@ -211,7 +204,7 @@ export const fetchPostContent = cache(
     if (!pageId) return null;
 
     try {
-      return await unofficialClient.getPage(pageId);
+      return await getCachedPostContent(pageId);
     } catch (error) {
       console.error(`Failed to fetch content for page ${pageId}:`, error);
       return null;
@@ -233,6 +226,13 @@ export const fetchStaticPageContent = cache(
     };
 
     const pageId = process.env[envMap[type]] as string;
-    return fetchPostContent(pageId);
+    if (!pageId) return null;
+
+    try {
+      return await getCachedStaticPageContent(type, pageId);
+    } catch (error) {
+      console.error(`Failed to fetch content for page ${pageId}:`, error);
+      return null;
+    }
   },
 );
