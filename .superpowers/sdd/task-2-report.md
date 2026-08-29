@@ -1,46 +1,52 @@
-# Task 2 Report: Show content fetch failure state
+# Task 2 Report: Add persistent Notion cache wrappers
 
-## Status
+## Scope
 
-DONE
+Implemented persistent Next.js caching for all Notion reads used by the post actions. Task 1 code was not changed except for the required integration in `app/posts/actions/posts.ts`.
 
-## Files
+## Changes
 
-- `app/posts/[slug]/page.tsx`
-  - Passes a missing record map through to the client boundary instead of omitting the post content boundary.
-- `app/posts/[slug]/components/PostPageClient.tsx`
-  - Accepts `ExtendedRecordMap | null`.
-  - Renders `Article content is temporarily unavailable.` only for a missing record map, without adding a wrapper.
-  - Preserves the prior successful fragment containing `Content` and `PostSummaryClient` unchanged.
-- `app/posts/actions/posts.ts`
-  - Sanitizes content-fetch failure logs to page ID and configured Notion endpoint hostname only.
-- `tests/integration/components/PostPageClient.test.tsx`
-  - Covers the missing record-map fallback and verifies the successful DOM tree has no added wrapper.
+- Added `lib/notion-cache.ts` with five-minute `unstable_cache` wrappers for:
+  - Post metadata (`pages.retrieve`)
+  - Post content record maps (`getPage`)
+  - Static page content (`getPage` with a page-type cache key)
+  - Post dates (`dataSources.query`)
+  - Cursor-paginated post list pages (`dataSources.query`)
+- Added stable cache-key builders that include every result-affecting input, including data source ID, status, category, cursor, and page size for list pages.
+- Applied the required cache tags:
+  - `notion:posts`
+  - `notion:post:{id}`
+  - `notion:page:{type}`
+  - `notion:post-dates`
+- Kept content caches bounded at five-minute revalidation so signed Notion asset URLs are not cached indefinitely.
+- Routed all Notion reads in `posts.ts` through the cache wrappers while preserving existing `[]`/`null` fallbacks and error logging. React `cache()` remains only around action functions for request-level deduplication.
+- Added focused unit tests for key stability, tag/revalidation configuration, API routing, and signed-content cache lifetime.
 
-## Commit
+## TDD Evidence
 
-`fix(posts): preserve content success markup`
+1. Added `tests/unit/lib/notion-cache.test.ts` before the cache implementation.
+2. Ran the focused test red:
 
-## Test
+   ```text
+   bun vitest run tests/unit/lib/notion-cache.test.ts
+   Error: Failed to resolve import "@/lib/notion-cache"
+   ```
 
-Command:
+3. Implemented the cache wrappers and `posts.ts` integration.
+4. Ran the focused tests green:
 
-```text
-bun vitest run tests/integration/components/PostPageClient.test.tsx
-```
+   ```text
+   bun vitest run tests/unit/lib/notion-cache.test.ts tests/unit/helpers/post-query.test.ts
+   Test Files 2 passed; Tests 8 passed
+   ```
 
-Output:
+5. Ran the TypeScript check:
 
-```text
- RUN  v4.1.0 D:/Github/next-level-blog/.worktrees/published-notion-domain
-
-
- Test Files  1 passed (1)
-      Tests  2 passed (2)
-   Start at  23:43:04
-   Duration 1.79s (transform 124ms, setup 172ms, import 372ms, tests 67ms, environment 946ms)
-```
+   ```text
+   bun x tsc --noEmit --pretty false
+   passed with no output
+   ```
 
 ## Concerns
 
-None known. The existing metadata error handling remains unchanged; content-fetch logs no longer include caught error objects.
+- Cache key values are built from Notion IDs and query strings; these are expected to be stable deployment inputs. No known functional concerns remain.
