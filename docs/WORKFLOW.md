@@ -209,6 +209,7 @@ Two separate Notion clients are used together:
 ```env
 NOTION_TOKEN                # Official client auth
 NOTION_DATA_SOURCE_ID       # Database for post queries
+NOTION_PUBLIC_SITE_URL      # Published Notion workspace domain for page content
 NOTION_ABOUT_PAGE_ID        # About static page
 NOTION_NOTE_PAGE_ID         # Notes static page
 NOTION_PROJECT_PAGE_ID      # Projects/Hobbies static page
@@ -218,6 +219,12 @@ NEXT_PUBLIC_REPO            # Giscus comments
 NEXT_PUBLIC_REPO_ID         # Giscus comments
 NEXT_PUBLIC_CATEGORY_ID     # Giscus discussion category
 ```
+
+`NOTION_PUBLIC_SITE_URL` must identify the published Notion workspace domain (for
+example, `https://future-shawl-a38.notion.site`). Every page rendered through
+`notion-client` must be published under this configured domain. Set this
+variable in Vercel Production and Preview environments whenever those
+environments render deployed content.
 
 ---
 
